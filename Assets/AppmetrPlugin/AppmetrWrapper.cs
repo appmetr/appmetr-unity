@@ -15,7 +15,7 @@ public class AppmetrWrapper : MonoBehaviour
 			JsonValue value = JsonValue.Parse(command);
 			if (value != null)
 			{
-				onExecutePixAPICommand(value);
+				onExecuteAppmetrCommand(value);
 			}
 		}
 		catch(ArgumentException e)
@@ -24,7 +24,7 @@ public class AppmetrWrapper : MonoBehaviour
 		}
 	}
 	
-	private static void onExecutePixAPICommand(JsonValue command)
+	private static void onExecuteAppmetrCommand(JsonValue command)
 	{
 		JsonValue typeValue = command["type"];
 		if (typeValue == null)

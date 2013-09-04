@@ -7,8 +7,6 @@ public class AppMetrIntegration implements AppMetrListener
 {
 	private static final String TAG = "AppMetrIntegration";
 
-	private static native void nativeExecuteCommand(String command);
-
 	private static Exception msLastCommandError;
 
 	public static final int INVALID_COMMAND = 1;
@@ -43,7 +41,7 @@ public class AppMetrIntegration implements AppMetrListener
 	{
 		msLastCommandError = null;
 
-		nativeExecuteCommand(command.toString());
+		// .. onExecuteCommand(command.toString());
 
 		if (msLastCommandError != null)
 		{
