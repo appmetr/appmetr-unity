@@ -2,9 +2,12 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Web.Script.Serialization;
+using System.Json;
 
 public class AppmetrPluginAndroid : MonoBehaviour
 {
+	private static string msDefaultPaymentProcessor = "google_checkout";
+
 	private static AndroidJavaObject currentActivity;
 	
 	private static AndroidJavaClass clsConnect;
@@ -26,8 +29,24 @@ public class AppmetrPluginAndroid : MonoBehaviour
 		}
 	}
 	
+	public static void SetDefaultPaymentProcessor(string processor)
+	{
+		msDefaultPaymentProcessor = processor;
+	}
+
+	private static JsonObject paymentWithPaymentProcessor(string serializedPayment)
+	{
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(serializedPayment);
+		if (msDefaultPaymentProcessor != null && !json.ContainsKey("processor"))
+		{
+			json.Add("processor", msDefaultPaymentProcessor);
+		}
+		return json;
+	}
+	
 	public static void SetupWithToken(string token)
 	{
+		Connect.CallStatic("setup", token, null);
 	}
 
 	public static void SetupWithUserID(string userID)
@@ -36,8 +55,11 @@ public class AppmetrPluginAndroid : MonoBehaviour
 
 	public static void AttachProperties(string properties)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("attachProperties", json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (json != null)
+		{
+			Connect.CallStatic("attachProperties", json);
+		}
 	}
 
 	public static void TrackSession()
@@ -47,8 +69,11 @@ public class AppmetrPluginAndroid : MonoBehaviour
 
 	public static void TrackSession(string properties)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("trackSession", json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (json != null)
+		{
+			Connect.CallStatic("trackSession", json);
+		}	
 	}
 
 	public static void TrackLevel(int level)
@@ -58,8 +83,11 @@ public class AppmetrPluginAndroid : MonoBehaviour
 
 	public static void TrackLevel(int level, string properties)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("trackLevel", level, json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (json != null)
+		{
+			Connect.CallStatic("trackLevel", level, json);
+		}
 	}
 
 	public static void TrackEvent(string _event)
@@ -69,39 +97,57 @@ public class AppmetrPluginAndroid : MonoBehaviour
 
 	public static void TrackEvent(string _event, string properties)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("trackEvent", _event, json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (json != null)
+		{
+			Connect.CallStatic("trackEvent", _event, json);
+		}
 	}
 
 	public static void TrackPayment(string payment)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(payment);
-		Connect.CallStatic("trackPayment", json);
+		JsonObject json = paymentWithPaymentProcessor(payment);
+		if (json != null)
+		{
+			Connect.CallStatic("trackPayment", json);
+		}	
 	}
 
 	public static void TrackPayment(string payment, string properties)
 	{
-		object jsonPayment = new JavaScriptSerializer.Deserialize<object>(payment);
-		object jsonProperties = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("trackPayment", jsonPayment, jsonProperties);
+		JsonObject jsonPayment = paymentWithPaymentProcessor(payment);
+		JsonObject jsonProperties = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (jsonPayment != null && jsonProperties != null)
+		{
+			Connect.CallStatic("trackPayment", jsonPayment, jsonProperties);
+		}
 	}
 
 	public static void TrackGameState(string state, string properties)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(properties);
-		Connect.CallStatic("trackGameState", state, json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+		if (json != null)
+		{
+			Connect.CallStatic("trackGameState", state, json);
+		}	
 	}
 
 	public static void TrackOptions(string options, string commandId)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(options);
-		Connect.CallStatic("trackOptions", commandId, json);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(options);
+		if (json != null)
+		{
+			Connect.CallStatic("trackOptions", commandId, json);
+		}	
 	}
 
 	public static void TrackOptions(string options, string commandId, string code, string message)
 	{
-		object json = new JavaScriptSerializer.Deserialize<object>(options);
-		Connect.CallStatic("trackOptionsError", commandId, json, code, message);
+		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(options);
+		if (json != null)
+		{
+			Connect.CallStatic("trackOptionsError", commandId, json, code, message);
+		}	
 	}
 
 	public static void TrackExperimentStart(string experiment, string group)
