@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AppmetrPluginIOS : MonoBehaviour
+public class AppmetrPluginIOS : AppmetrWrapper
 {
 	#region	Interface to native implementation
 	

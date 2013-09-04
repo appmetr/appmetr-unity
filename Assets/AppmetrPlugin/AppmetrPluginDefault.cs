@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AppmetrPluginDefault : MonoBehaviour
+public class AppmetrPluginDefault : AppmetrWrapper
 {
 	public static void SetupWithToken(string token) {}
 

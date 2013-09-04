@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Web.Script.Serialization;
 using System.Json;
 
-public class AppmetrPluginAndroid : MonoBehaviour
+public class AppmetrPluginAndroid : AppmetrWrapper
 {
 	private static string msDefaultPaymentProcessor = "google_checkout";
 

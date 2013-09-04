@@ -29,24 +29,35 @@ NSDictionary *deserializeJson(const char* properties)
 	return nil;
 }
 
-NSString* CreateNSString(const char* string)
+NSString* createNSString(const char* string)
 {
 	if (string)
 		return [NSString stringWithUTF8String: string];
 	else
 		return [NSString stringWithUTF8String: ""];
 }
+
+NSDictionary* paymentWithPaymentProcessor(NSDictionary *json)
+{
+	if (![json objectForKey:@"processor"])
+	{
+		json = [[json mutableCopy] autorelease];
+		[json setValue:kPaymentProcessor forKey:@"processor"];
+	}
+	
+	return json;
+}
 	
 extern "C" {
 
 	void _setupWithToken(const char* token)
 	{
-		[AppMetr setupWithToken:CreateNSString(token)];
+		[AppMetr setupWithToken:createNSString(token)];
 	}
 	
 	void _setupWithUserID(const char* userID)
 	{
-		[AppMetr setupWithUserID:CreateNSString(userID)];
+		[AppMetr setupWithUserID:createNSString(userID)];
 	}
 
 	void _attachProperties(const char* properties)
@@ -88,7 +99,7 @@ extern "C" {
 	
 	void _trackEvent(const char* event)
 	{
-		[AppMetr trackEvent:CreateNSString(event)];
+		[AppMetr trackEvent:createNSString(event)];
 	}
 	
 	void _trackEvent(const char* event, const char* properties)
@@ -96,7 +107,7 @@ extern "C" {
 		NSDictionary *json = deserializeJson(properties);
 		if (json)
 		{
-			[AppMetr trackEvent:CreateNSString(event) properties:json];
+			[AppMetr trackEvent:createNSString(event) properties:json];
 		}
 	}
 	
@@ -105,6 +116,7 @@ extern "C" {
 		NSDictionary *json = deserializeJson(payment);
 		if (json)
 		{
+			json = paymentWithPaymentProcessor(json);
 			[AppMetr trackPayment:json];
 		}
 	}
@@ -115,6 +127,7 @@ extern "C" {
 		NSDictionary *jsonProperties = deserializeJson(properties);
 		if (jsonPayment && jsonProperties)
 		{
+			jsonPayment = paymentWithPaymentProcessor(jsonPayment);
 			[AppMetr trackPayment:jsonPayment properties:jsonProperties];
 		}
 	}
@@ -124,7 +137,7 @@ extern "C" {
 		NSDictionary *json = deserializeJson(properties);
 		if (json)
 		{
-			[AppMetr trackPayment:CreateNSString(state) properties:json];
+			[AppMetr trackPayment:createNSString(state) properties:json];
 		}
 	}
 	
@@ -133,7 +146,7 @@ extern "C" {
 		NSDictionary *json = deserializeJson(options);
 		if (json)
 		{
-			[AppMetr trackOptions:json forCommand:CreateNSString(commandId)];
+			[AppMetr trackOptions:json forCommand:createNSString(commandId)];
 		}
 	}
 	
@@ -142,18 +155,18 @@ extern "C" {
 		NSDictionary *json = deserializeJson(options);
 		if (json)
 		{
-			[AppMetr trackOptions:json forCommand:CreateNSString(commandId) errorCode:CreateNSString(code) errorMessage:CreateNSString(message)];
+			[AppMetr trackOptions:json forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
 		}
 	}
 	
 	void _trackExperimentStart(const char* experiment, const char* group)
 	{
-		[AppMetr trackExperimentStart:CreateNSString(experiment) group:CreateNSString(group)];
+		[AppMetr trackExperimentStart:createNSString(experiment) group:createNSString(group)];
 	}
 	
 	void _trackExperimentEnd(const char* experiment)
 	{
-		[AppMetr trackExperimentEnd:CreateNSString(experiment)];
+		[AppMetr trackExperimentEnd:createNSString(experiment)];
 	}
 	
 	void _pullCommands()
