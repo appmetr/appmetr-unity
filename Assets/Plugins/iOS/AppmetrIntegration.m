@@ -55,7 +55,7 @@ NSString * const kAppMetrToken = @"29cbd610-de0f-4bea-ae31-c9c192d006a1";
 		NSString *serializedData = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 		if(serializedData)
 		{
-			// .. onExecuteCommand([serializedData UTF8String]);
+			UnitySendMessage("AppmetrWrapper", "onExecuteCommand", [serializedData UTF8String]);
 		}
 	}
 }
