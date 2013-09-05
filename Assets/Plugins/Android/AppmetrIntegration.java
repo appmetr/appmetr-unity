@@ -41,7 +41,7 @@ public class AppMetrIntegration implements AppMetrListener
 	{
 		msLastCommandError = null;
 
-		// .. onExecuteCommand(command.toString());
+		UnityPlayer.UnitySendMessage("AppmetrWrapper", "onExecuteCommand", command.toString());
 
 		if (msLastCommandError != null)
 		{
