@@ -6,52 +6,52 @@ public class AppmetrPluginIOS : AppmetrWrapper
 	#region	Interface to native implementation
 	
 	[DllImport("__Internal")]
-	private static extern void _setupWithToken(const char* token);
+	private static extern void _setupWithToken(string token);
 	
 	[DllImport("__Internal")]
-	private static extern void _setupWithUserID(const char* userID);
+	private static extern void _setupWithUserID(string userID);
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties(const char* properties);
+	private static extern void _attachProperties(string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackSessionWithProperties(const char* properties);
+	private static extern void _trackSessionWithProperties(string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackLevel(int level, const char* properties);
+	private static extern void _trackLevel(int level, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEvent(const char* _event);
+	private static extern void _trackEvent(string _event);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEvent(const char* _event, const char* properties);
+	private static extern void _trackEvent(string _event, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(const char* payment);
+	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(const char* payment, const char* properties);
+	private static extern void _trackPayment(string payment, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackGameState(const char* state, const char* properties);
+	private static extern void _trackGameState(string state, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(const char* options, const char* commandId);
+	private static extern void _trackOptions(string options, string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(const char* options, const char* commandId, const char* code, const char* message);
+	private static extern void _trackOptions(string options, string commandId, string code, string message);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackExperimentStart(const char* experiment, const char* group);
+	private static extern void _trackExperimentStart(string experiment, string group);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackExperimentEnd(const char* experiment);
+	private static extern void _trackExperimentEnd(string experiment);
 	
 	[DllImport("__Internal")]
 	private static extern void _pullCommands();
@@ -162,4 +162,9 @@ public class AppmetrPluginIOS : AppmetrWrapper
 	}
 	
 	#endregion
+	
+	void Start()
+	{
+		TrackSession();
+	}
 }

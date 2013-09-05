@@ -8,3 +8,7 @@ using AppmetrPlatformPlugin = AppmetrPluginIOS;
 #else
 using AppmetrPlatformPlugin = AppmetrPluginDefault;
 #endif
+
+public class AppmetrPlugin : AppmetrWrapper
+{
+}

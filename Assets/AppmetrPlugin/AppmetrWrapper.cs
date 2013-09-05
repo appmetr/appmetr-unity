@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Json;
 
 public class AppmetrWrapper : MonoBehaviour
 {
@@ -12,7 +11,7 @@ public class AppmetrWrapper : MonoBehaviour
 	{
 		try
 		{
-			JsonValue value = JsonValue.Parse(command);
+			Hashtable value = (Hashtable)MiniJSON.jsonDecode(command);
 			if (value != null)
 			{
 				onExecuteAppmetrCommand(value);
@@ -24,15 +23,9 @@ public class AppmetrWrapper : MonoBehaviour
 		}
 	}
 	
-	private static void onExecuteAppmetrCommand(JsonValue command)
+	private static void onExecuteAppmetrCommand(Hashtable command)
 	{
-		JsonValue typeValue = command["type"];
-		if (typeValue == null)
-		{
-			throw new ArgumentException("Invalid type of command");
-		}
-
-		string type = typeValue.ToString();
+		string type = (string)command["type"];
 	}
 	
 	private static void setLastCommandError(int type, string message) {}

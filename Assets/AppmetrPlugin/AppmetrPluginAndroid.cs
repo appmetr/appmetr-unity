@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
-using System.Web.Script.Serialization;
-using System.Json;
 
 public class AppmetrPluginAndroid : AppmetrWrapper
 {
@@ -11,42 +9,46 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 	private static AndroidJavaObject currentActivity;
 	
 	private static AndroidJavaClass clsConnect;
+	private static AndroidJavaClass clsConnectHelper;
+	
 	private static AndroidJavaClass Connect
 	{
 		get
 		{
+			getActivity();
 			if (clsConnect == null)
 			{
-				Debug.Log("C#: Loading AppmetrPlugin");
-			
-				AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
-				currentActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-				
 				clsConnect = new AndroidJavaClass("com.appmetr.android.AppMetr");
 			}
-			
 			return clsConnect;
 		}
 	}
-	
-	public static void SetDefaultPaymentProcessor(string processor)
-	{
-		msDefaultPaymentProcessor = processor;
-	}
 
-	private static JsonObject paymentWithPaymentProcessor(string serializedPayment)
+	private static AndroidJavaClass ConnectHelper
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(serializedPayment);
-		if (msDefaultPaymentProcessor != null && !json.ContainsKey("processor"))
+		get
 		{
-			json.Add("processor", msDefaultPaymentProcessor);
+			getActivity();
+			if (clsConnectHelper == null)
+			{
+				clsConnectHelper = new AndroidJavaClass("com.appmetr.android.integration.AppMetrHelper");
+			}
+			return clsConnectHelper;
 		}
-		return json;
+	}
+	
+	private static void getActivity()
+	{
+		if (clsConnect == null && clsConnectHelper == null)
+		{
+			AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
+			currentActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+		}
 	}
 	
 	public static void SetupWithToken(string token)
 	{
-		Connect.CallStatic("setup", token, null);
+		//Connect.CallStatic("setup", token, null);
 	}
 
 	public static void SetupWithUserID(string userID)
@@ -55,25 +57,17 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 
 	public static void AttachProperties(string properties)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (json != null)
-		{
-			Connect.CallStatic("attachProperties", json);
-		}
+		ConnectHelper.CallStatic("attachProperties", properties);
 	}
 
 	public static void TrackSession()
 	{
-		Connect.CallStatic("trackSession");
+		ConnectHelper.CallStatic("trackSession");
 	}
 
 	public static void TrackSession(string properties)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (json != null)
-		{
-			Connect.CallStatic("trackSession", json);
-		}	
+		ConnectHelper.CallStatic("trackSession", properties);
 	}
 
 	public static void TrackLevel(int level)
@@ -83,71 +77,50 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 
 	public static void TrackLevel(int level, string properties)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (json != null)
-		{
-			Connect.CallStatic("trackLevel", level, json);
-		}
+//		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+//		if (json != null)
+//		{
+//			Connect.CallStatic("trackLevel", level, json);
+//		}
 	}
 
 	public static void TrackEvent(string _event)
 	{
-		Connect.CallStatic("trackEvent", _event);
+		ConnectHelper.CallStatic("trackEvent", _event);
 	}
 
 	public static void TrackEvent(string _event, string properties)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (json != null)
-		{
-			Connect.CallStatic("trackEvent", _event, json);
-		}
+		ConnectHelper.CallStatic("trackEvent", _event, properties);
 	}
 
 	public static void TrackPayment(string payment)
 	{
-		JsonObject json = paymentWithPaymentProcessor(payment);
-		if (json != null)
-		{
-			Connect.CallStatic("trackPayment", json);
-		}	
+		ConnectHelper.CallStatic("trackPayment", payment);
 	}
 
 	public static void TrackPayment(string payment, string properties)
 	{
-		JsonObject jsonPayment = paymentWithPaymentProcessor(payment);
-		JsonObject jsonProperties = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (jsonPayment != null && jsonProperties != null)
-		{
-			Connect.CallStatic("trackPayment", jsonPayment, jsonProperties);
-		}
+		ConnectHelper.CallStatic("trackPayment", payment, properties);
 	}
 
 	public static void TrackGameState(string state, string properties)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-		if (json != null)
-		{
-			Connect.CallStatic("trackGameState", state, json);
-		}	
+//		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
+//		if (json != null)
+//		{
+//			Connect.CallStatic("trackGameState", state, json);
+//		}	
 	}
 
 	public static void TrackOptions(string options, string commandId)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(options);
-		if (json != null)
-		{
-			Connect.CallStatic("trackOptions", commandId, json);
-		}	
+		ConnectHelper.CallStatic("trackOptions", commandId, options);
 	}
 
 	public static void TrackOptions(string options, string commandId, string code, string message)
 	{
-		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(options);
-		if (json != null)
-		{
-			Connect.CallStatic("trackOptionsError", commandId, json, code, message);
-		}	
+		ConnectHelper.CallStatic("trackOptionsError", commandId, options, code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string group)
