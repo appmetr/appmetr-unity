@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 
 public class AppmetrPluginIOS : AppmetrWrapper
 {
@@ -108,7 +110,7 @@ public class AppmetrPluginIOS : AppmetrWrapper
 
 	public static void TrackEvent(string _event, string properties)
 	{
-		_trackEvent(level, properties);
+		_trackEvent(_event, properties);
 	}
 
 	public static void TrackPayment(string payment)
@@ -162,9 +164,4 @@ public class AppmetrPluginIOS : AppmetrWrapper
 	}
 	
 	#endregion
-	
-	void Start()
-	{
-		TrackSession();
-	}
 }
