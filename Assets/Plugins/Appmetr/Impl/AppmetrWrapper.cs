@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿#define USE_EXCEPTION
+
+using UnityEngine;
 using System;
 using System.Collections;
-
-#define USE_EXCEPTION
 
 public class AppmetrWrapper
 {
