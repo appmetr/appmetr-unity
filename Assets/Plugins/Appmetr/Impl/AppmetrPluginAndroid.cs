@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public class AppmetrPluginAndroid : AppmetrWrapper
+public class AppmetrPluginAndroid
 {
 	private static AndroidJavaObject currentActivity;
 	
@@ -49,9 +50,10 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 		Connect.CallStatic("setup", token, null, null);
 	}
 
-	public static void AttachProperties(string properties)
+	public static void AttachProperties(IDictionary<string, string> properties)
 	{
-		ConnectHelper.CallStatic("attachProperties", properties);
+		string value = MiniJSON.jsonEncode(properties);
+		ConnectHelper.CallStatic("attachProperties", value);
 	}
 
 	public static void TrackSession()
@@ -59,9 +61,10 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 		ConnectHelper.CallStatic("trackSession");
 	}
 
-	public static void TrackSession(string properties)
+	public static void TrackSession(IDictionary<string, string> properties)
 	{
-		ConnectHelper.CallStatic("trackSession", properties);
+		string value = MiniJSON.jsonEncode(properties);
+		ConnectHelper.CallStatic("trackSession", value);
 	}
 
 	public static void TrackLevel(int level)
@@ -74,28 +77,34 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 		ConnectHelper.CallStatic("trackEvent", _event);
 	}
 
-	public static void TrackEvent(string _event, string properties)
+	public static void TrackEvent(string _event, IDictionary<string, string> properties)
 	{
-		ConnectHelper.CallStatic("trackEvent", _event, properties);
+		string value = MiniJSON.jsonEncode(properties);
+		ConnectHelper.CallStatic("trackEvent", _event, value);
 	}
 
-	public static void TrackPayment(string payment)
+	public static void TrackPayment(IDictionary<string, string> payment)
 	{
-		ConnectHelper.CallStatic("trackPayment", payment);
+		string value = MiniJSON.jsonEncode(payment);
+		ConnectHelper.CallStatic("trackPayment", value);
 	}
 
-	public static void TrackPayment(string payment, string properties)
+	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
 	{
-		ConnectHelper.CallStatic("trackPayment", payment, properties);
+		string paymentValue = MiniJSON.jsonEncode(payment);
+		string propertiesValue = MiniJSON.jsonEncode(properties);
+		ConnectHelper.CallStatic("trackPayment", paymentValue, propertiesValue);
 	}
 
-	public static void TrackOptions(string options, string commandId)
+	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
-		ConnectHelper.CallStatic("trackOptions", commandId, options);
+		string value = MiniJSON.jsonEncode(options);
+		ConnectHelper.CallStatic("trackOptions", commandId, value);
 	}
 
-	public static void TrackOptions(string options, string commandId, string code, string message)
+	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
 	{
-		ConnectHelper.CallStatic("trackOptionsError", commandId, options, code, message);
+		string value = MiniJSON.jsonEncode(options);
+		ConnectHelper.CallStatic("trackOptionsError", commandId, value, code, message);
 	}
 }

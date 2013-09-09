@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public class AppmetrPluginIOS : AppmetrWrapper
+public class AppmetrPluginIOS
 {
 	#region	Interface to native implementation
 	
@@ -49,9 +50,10 @@ public class AppmetrPluginIOS : AppmetrWrapper
 		_setupWithToken(token);
 	}
 
-	public static void AttachProperties(string properties)
+	public static void AttachProperties(IDictionary<string, string> properties)
 	{
-		_attachProperties(properties);
+		string value = MiniJSON.jsonEncode(properties);
+		_attachProperties(value);
 	}
 
 	public static void TrackSession()
@@ -59,9 +61,10 @@ public class AppmetrPluginIOS : AppmetrWrapper
 		_trackSession();
 	}
 
-	public static void TrackSession(string properties)
+	public static void TrackSession(IDictionary<string, string> properties)
 	{
-		_trackSessionWithProperties(properties);
+		string value = MiniJSON.jsonEncode(properties);
+		_trackSessionWithProperties(value);
 	}
 
 	public static void TrackLevel(int level)
@@ -74,29 +77,35 @@ public class AppmetrPluginIOS : AppmetrWrapper
 		_trackEvent(_event);
 	}
 
-	public static void TrackEvent(string _event, string properties)
+	public static void TrackEvent(string _event, IDictionary<string, string> properties)
 	{
-		_trackEvent(_event, properties);
+		string value = MiniJSON.jsonEncode(properties);
+		_trackEvent(_event, value);
 	}
 
-	public static void TrackPayment(string payment)
+	public static void TrackPayment(IDictionary<string, string> payment)
 	{
-		_trackPayment(payment);
+		string value = MiniJSON.jsonEncode(payment);
+		_trackPayment(value);
 	}
 
-	public static void TrackPayment(string payment, string properties)
+	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
 	{
-		_trackPayment(payment, properties);
+		string paymentValue = MiniJSON.jsonEncode(payment);
+		string propertiesValue = MiniJSON.jsonEncode(properties);
+		_trackPayment(paymentValue, propertiesValue);
 	}
 	
-	public static void TrackOptions(string options, string commandId)
+	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
-		_trackOptions(options, commandId);
+		string value = MiniJSON.jsonEncode(options);
+		_trackOptions(value, commandId);
 	}
 	
-	public static void TrackOptions(string options, string commandId, string code, string message)
+	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
 	{
-		_trackOptions(options, commandId, code, message);
+		string value = MiniJSON.jsonEncode(options);
+		_trackOptions(value, commandId, code, message);
 	}
 	
 	#endregion
