@@ -4,8 +4,6 @@ using System.Runtime.InteropServices;
 
 public class AppmetrPluginAndroid : AppmetrWrapper
 {
-	private static string msDefaultPaymentProcessor = "google_checkout";
-
 	private static AndroidJavaObject currentActivity;
 	
 	private static AndroidJavaClass clsConnect;
@@ -48,11 +46,7 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 	
 	public static void SetupWithToken(string token)
 	{
-		//Connect.CallStatic("setup", token, null);
-	}
-
-	public static void SetupWithUserID(string userID)
-	{
+		Connect.CallStatic("setup", token, null, null);
 	}
 
 	public static void AttachProperties(string properties)
@@ -75,15 +69,6 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 		Connect.CallStatic("trackLevel", level);
 	}
 
-	public static void TrackLevel(int level, string properties)
-	{
-//		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-//		if (json != null)
-//		{
-//			Connect.CallStatic("trackLevel", level, json);
-//		}
-	}
-
 	public static void TrackEvent(string _event)
 	{
 		ConnectHelper.CallStatic("trackEvent", _event);
@@ -104,15 +89,6 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 		ConnectHelper.CallStatic("trackPayment", payment, properties);
 	}
 
-	public static void TrackGameState(string state, string properties)
-	{
-//		JsonObject json = new JavaScriptSerializer.Deserialize<JsonObject>(properties);
-//		if (json != null)
-//		{
-//			Connect.CallStatic("trackGameState", state, json);
-//		}	
-	}
-
 	public static void TrackOptions(string options, string commandId)
 	{
 		ConnectHelper.CallStatic("trackOptions", commandId, options);
@@ -121,29 +97,5 @@ public class AppmetrPluginAndroid : AppmetrWrapper
 	public static void TrackOptions(string options, string commandId, string code, string message)
 	{
 		ConnectHelper.CallStatic("trackOptionsError", commandId, options, code, message);
-	}
-
-	public static void TrackExperimentStart(string experiment, string group)
-	{
-		Connect.CallStatic("trackExperimentStart", experiment, group);
-	}
-
-	public static void TrackExperimentEnd(string experiment)
-	{
-		Connect.CallStatic("trackExperimentEnd", experiment);
-	}
-
-	public static void PullCommands()
-	{
-		Connect.CallStatic("pullCommands");
-	}
-
-	public static void Flush()
-	{
-		Connect.CallStatic("flush");
-	}
-
-	public static void SetDebugLoggingEnabled(bool debugLoggingEnabled)
-	{
 	}
 }

@@ -1,5 +1,6 @@
 #include "AppMetr.h"
 #include "AppMetrImpl.h"
+#include "AppmetrIntegration.h"
 #import "CJSONDeserializer.h"
 
 NSDictionary *deserializeJson(const char* properties)
@@ -52,14 +53,10 @@ extern "C" {
 
 	void _setupWithToken(const char* token)
 	{
-		[AppMetr setupWithToken:createNSString(token)];
+		AppmetrIntegration* listener = 0;
+		[AppMetr setupWithToken:createNSString(token) delegate:listener];
 	}
 	
-	void _setupWithUserID(const char* userID)
-	{
-		[AppMetr setupWithUserID:createNSString(userID)];
-	}
-
 	void _attachProperties(const char* properties)
 	{
 		NSDictionary *json = deserializeJson(properties);
@@ -86,15 +83,6 @@ extern "C" {
 	void _trackLevel(int level)
 	{
 		[AppMetr trackLevel:level];
-	}
-	
-	void _trackLevel(int level, const char* properties)
-	{
-		NSDictionary *json = deserializeJson(properties);
-		if (json)
-		{
-			[AppMetr trackLevel:level properties:json];
-		}
 	}
 	
 	void _trackEvent(const char* event)
@@ -132,15 +120,6 @@ extern "C" {
 		}
 	}
 	
-	void _trackGameState(const char* state, const char* properties)
-	{
-		NSDictionary *json = deserializeJson(properties);
-		if (json)
-		{
-			[AppMetr trackPayment:createNSString(state) properties:json];
-		}
-	}
-	
 	void _trackOptions(const char* options, const char* commandId)
 	{
 		NSDictionary *json = deserializeJson(options);
@@ -157,31 +136,6 @@ extern "C" {
 		{
 			[AppMetr trackOptions:json forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
 		}
-	}
-	
-	void _trackExperimentStart(const char* experiment, const char* group)
-	{
-		[AppMetr trackExperimentStart:createNSString(experiment) group:createNSString(group)];
-	}
-	
-	void _trackExperimentEnd(const char* experiment)
-	{
-		[AppMetr trackExperimentEnd:createNSString(experiment)];
-	}
-	
-	void _pullCommands()
-	{
-		[AppMetr pullCommands];
-	}
-
-	void _flush()
-	{
-		[AppMetr flush];
-	}
-	
-	void _setDebugLoggingEnabled(bool debugLoggingEnabled)
-	{
-		[AppMetr setDebugLoggingEnabled:debugLoggingEnabled];
 	}
 	
 }
