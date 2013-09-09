@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 using AppmetrPlatformPlugin = AppmetrPluginAndroid;
-#elif UNITY_IPHONE
+#elif UNITY_IPHONE && !UNITY_EDITOR
 using AppmetrPlatformPlugin = AppmetrPluginIOS;
 #else
 using AppmetrPlatformPlugin = AppmetrPluginDefault;
