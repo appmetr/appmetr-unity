@@ -135,6 +135,10 @@ public class AppMetrSample : MonoBehaviour
 		{
 			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
 			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			if ((key == "" && !checkDictionary(sessionProperties)) || sessionProperties.ContainsKey(key))
+			{
+				key = pair.Key;
+			}
 			tempList.Add(key, value);
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
@@ -174,6 +178,10 @@ public class AppMetrSample : MonoBehaviour
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
 			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			if ((key == "" && !checkDictionary(levelProperties)) || levelProperties.ContainsKey(key))
+			{
+				key = pair.Key;
+			}
 			tempList.Add(key, value);
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
@@ -213,6 +221,10 @@ public class AppMetrSample : MonoBehaviour
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
 			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			if ((key == "" && !checkDictionary(eventProperties)) || eventProperties.ContainsKey(key))
+			{
+				key = pair.Key;
+			}
 			tempList.Add(key, value);
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
@@ -249,6 +261,10 @@ public class AppMetrSample : MonoBehaviour
 		{
 			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
 			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			if ((key == "" && !checkDictionary(paymentList)) || paymentList.ContainsKey(key))
+			{
+				key = pair.Key;
+			}
 			tempList.Add(key, value);
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
@@ -278,6 +294,10 @@ public class AppMetrSample : MonoBehaviour
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
 			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			if ((key == "" && !checkDictionary(paymentProperties)) || paymentProperties.ContainsKey(key))
+			{
+				key = pair.Key;
+			}
 			tempList.Add(key, value);
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
@@ -307,6 +327,7 @@ public class AppMetrSample : MonoBehaviour
 			if (fieldTrackLevel == "")
 			{
 				// error
+				showAlert("Please fill in all fields");
 			}
 			else
 			{
@@ -325,6 +346,7 @@ public class AppMetrSample : MonoBehaviour
 			if (fieldTrackEvent == "")
 			{
 				// error
+				showAlert("Please fill in all fields");
 			}
 			else
 			{
@@ -354,6 +376,7 @@ public class AppMetrSample : MonoBehaviour
 			else
 			{
 				// error
+				showAlert("Please fill in all fields");
 			}
 		}
 	}
@@ -369,6 +392,10 @@ public class AppMetrSample : MonoBehaviour
 				return false;
 		}
 		return true;
+	}
+	
+	private void showAlert(string message)
+	{
 	}
 	
 	#endregion
