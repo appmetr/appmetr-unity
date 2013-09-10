@@ -75,6 +75,11 @@ public class AppmetrPluginAndroid
 		Connect.CallStatic("trackLevel", level);
 	}
 
+	public static void TrackLevel(int level, IDictionary<string, string> properties)
+	{
+		Connect.CallStatic("trackLevel", level);
+	}
+
 	public static void TrackEvent(string _event)
 	{
 		ConnectHelper.CallStatic("trackEvent", _event);

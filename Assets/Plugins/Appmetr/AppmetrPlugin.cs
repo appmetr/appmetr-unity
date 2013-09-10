@@ -38,6 +38,11 @@ public class AppmetrPlugin : MonoBehaviour
 		AppmetrPlatformPlugin.TrackLevel(level);
 	}
 	
+	public static void TrackLevel(int level, IDictionary<string, string> properties)
+	{
+		AppmetrPlatformPlugin.TrackLevel(level, properties);
+	}
+	
 	public static void TrackEvent(string _event)
 	{
 		AppmetrPlatformPlugin.TrackEvent(_event);

@@ -85,6 +85,11 @@ extern "C" {
 		[AppMetr trackLevel:level];
 	}
 	
+	void _trackLevel(int level, const char* properties)
+	{
+		[AppMetr trackLevel:level];
+	}
+	
 	void _trackEvent(const char* event)
 	{
 		[AppMetr trackEvent:createNSString(event)];

@@ -15,6 +15,8 @@ public class AppmetrPluginDefault
 
 	public static void TrackLevel(int level) {}
 
+	public static void TrackLevel(int level, IDictionary<string, string> properties) {}
+
 	public static void TrackEvent(string _event) {}
 
 	public static void TrackEvent(string _event, IDictionary<string, string> properties) {}

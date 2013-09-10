@@ -25,6 +25,9 @@ public class AppmetrPluginIOS
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
+	private static extern void _trackLevel(int level, string properties);
+	
+	[DllImport("__Internal")]
 	private static extern void _trackEvent(string _event);
 	
 	[DllImport("__Internal")]
@@ -69,6 +72,11 @@ public class AppmetrPluginIOS
 	}
 
 	public static void TrackLevel(int level)
+	{
+		_trackLevel(level);
+	}
+
+	public static void TrackLevel(int level, IDictionary<string, string> properties)
 	{
 		_trackLevel(level);
 	}
