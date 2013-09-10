@@ -10,3 +10,5 @@
 *.pidb
 *.userprefs
 *.suo
+*.exe
+*.apk

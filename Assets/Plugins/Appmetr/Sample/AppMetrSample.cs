@@ -6,6 +6,7 @@ using System;
 
 public class AppMetrSample : MonoBehaviour
 {
+	[SerializeField]
 	private string token = "";
 	
 	private string fieldTrackSession = "";
