@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_ANDROID
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -6,6 +7,7 @@ using System.Runtime.InteropServices;
 public class AppmetrPluginAndroid
 {
 	private static AndroidJavaObject currentActivity;
+	private static AndroidJavaObject applicationContext;
 	
 	private static AndroidJavaClass clsConnect;
 	private static AndroidJavaClass clsConnectHelper;
@@ -42,12 +44,13 @@ public class AppmetrPluginAndroid
 		{
 			AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
 			currentActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+			applicationContext = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		}
 	}
 	
 	public static void SetupWithToken(string token)
 	{
-		Connect.CallStatic("setup", token, null, null);
+		Connect.CallStatic("setup", token, applicationContext, null);
 	}
 
 	public static void AttachProperties(IDictionary<string, string> properties)
@@ -108,3 +111,4 @@ public class AppmetrPluginAndroid
 		ConnectHelper.CallStatic("trackOptionsError", commandId, value, code, message);
 	}
 }
+#endif

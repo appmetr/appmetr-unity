@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if !UNITY_IPHONE && !UNITY_ANDROID
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,3 +27,4 @@ public class AppmetrPluginDefault
 
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message) {}
 }
+#endif
