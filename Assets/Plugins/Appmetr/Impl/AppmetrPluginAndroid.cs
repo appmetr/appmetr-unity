@@ -45,7 +45,7 @@ public class AppmetrPluginAndroid
 			getActivity();
 			if (clsConnectImpl == null)
 			{
-				clsConnectImpl = new AndroidJavaClass("com.appmetr.android.AppMetrImpl");
+				clsConnectImpl = new AndroidJavaClass("AppMetrImpl");
 			}
 			return clsConnectImpl;
 		}
@@ -82,8 +82,7 @@ public class AppmetrPluginAndroid
 
 	public static void TrackSession()
 	{
-		//ConnectImpl.CallStatic("trackSession");
-		Connect.CallStatic("trackSession");
+		ConnectImpl.CallStatic("trackSession");
 	}
 
 	public static void TrackSession(IDictionary<string, string> properties)

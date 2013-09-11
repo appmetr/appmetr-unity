@@ -1,4 +1,4 @@
-package com.appmetr.android;
+//package com.appmetr.android;
 
 import android.util.Log;
 import com.appmetr.android.AppMetr;
@@ -6,12 +6,13 @@ import com.appmetr.android.integration.AppMetrHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.Map;
+import java.util.HashMap;
+import java.util.zip.DataFormatException;
 
 public class AppMetrImpl
 {
-	private static Map keyMap = new Map();
-	private static Map keyOptionalMap = new Map();
+	private static HashMap keyMap = new HashMap();
+	private static HashMap keyOptionalMap = new HashMap();
 	
 	private static void removeKeys()
 	{
@@ -68,13 +69,13 @@ public class AppMetrImpl
 		removeKeys();
     }
 
-    public static void trackPayment()
+    public static void trackPayment() throws DataFormatException
 	{
 		AppMetr.trackPayment(new JSONObject(keyMap));
 		removeKeys();
     }
 
-    public static void trackPaymentWithProperties()
+    public static void trackPaymentWithProperties() throws DataFormatException
 	{
 		AppMetr.trackPayment(new JSONObject(keyMap), new JSONObject(keyOptionalMap));
 		removeKeys();
