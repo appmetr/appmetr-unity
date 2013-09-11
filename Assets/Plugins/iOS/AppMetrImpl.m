@@ -1,34 +1,55 @@
-#include "AppMetr.h"
-#include "AppMetrImpl.h"
-#include "AppmetrIntegration.h"
-#import "CJSONDeserializer.h"
+#import "AppMetrImpl.h"
 
-NSDictionary *deserializeJson(const char* properties)
+static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
+
+@implementation AppMetrImpl
+
+@synthesize keyValueDict = keyValueDict_;
+@synthesize keyValueDictOptional = keyValueDictOptional_;
+
++ (void)initialize
 {
-	@try
+	if (self == [AppMetrImpl class])
 	{
-		NSError *jsonError = nil;
-		CJSONDeserializer *deserializer = [CJSONDeserializer deserializer];
-		NSString *jsonString = [NSString stringWithUTF8String:properties];
-		NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-		NSDictionary *result = [deserializer deserializeAsDictionary:jsonData
-															   error:&jsonError];
-		if(!jsonError)
-		{
-			assert(result);
-			return result;
-		}
-
-		NSLog(@"An error occured while partsing JSON: %@", jsonError);
+		_sharedInstance = [[self alloc] init];
 	}
-	@catch(NSException *exception)
-	{
-		NSLog(@"An exception throwed while partsing JSON: %@",
-				exception.description);
-	}
-
-	return nil;
 }
+
++ (AppMetrImpl*)sharedAppMetrImpl
+{
+	return _sharedInstance;
+}
+
+- (id)init
+{
+	self = [super init];
+	return self;
+}
+
+- (void)setKey:(NSString*)key Value:(NSString*)value
+{
+	if (!keyValueDict_)
+		keyValueDict_ = [[NSMutableDictionary alloc] init];
+	[keyValueDict_ setObject:value forKey:key];
+}
+
+- (void)setKeyOptional:(NSString*)key Value:(NSString*)value
+{
+	if (!keyValueDictOptional_)
+		keyValueDictOptional_ = [[NSMutableDictionary alloc] init];
+	[keyValueDictOptional_ setObject:value forKey:key];
+}
+
+- (void)resetDict
+{
+	if (keyValueDict_)
+		[keyValueDict_ removeAllObjects];
+	if (keyValueDictOptional_)
+		[keyValueDictOptional_ removeAllObjects];
+}
+
+@end
+
 
 NSString* createNSString(const char* string)
 {
@@ -51,19 +72,26 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *json)
 	
 extern "C" {
 
+	void _setKeyValue(const char* key, const char* value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKey:createNSString(key) Value:createNSString(value)];
+	}
+	
+	void _setKeyValueOptional(const char* key, const char* value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKeyOptional:createNSString(key) Value:createNSString(value)];
+	}
+
 	void _setupWithToken(const char* token)
 	{
 		AppmetrIntegration* listener = 0;
 		[AppMetr setupWithToken:createNSString(token) delegate:listener];
 	}
-	
-	void _attachProperties(const char* properties)
+
+	void _attachProperties()
 	{
-		NSDictionary *json = deserializeJson(properties);
-		if (json)
-		{
-			[AppMetr attachProperties:json];
-		}
+		[AppMetr attachProperties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackSession()
@@ -71,13 +99,10 @@ extern "C" {
 		[AppMetr trackSession];
 	}
 	
-	void _trackSessionWithProperties(const char* properties)
+	void _trackSessionWithProperties()
 	{
-		NSDictionary *json = deserializeJson(properties);
-		if (json)
-		{
-			[AppMetr trackSessionWithProperties:json];
-		}
+		[AppMetr trackSessionWithProperties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackLevel(int level)
@@ -85,9 +110,10 @@ extern "C" {
 		[AppMetr trackLevel:level];
 	}
 	
-	void _trackLevel(int level, const char* properties)
+	void _trackLevelWithProperties(int level)
 	{
-		[AppMetr trackLevel:level];
+		[AppMetr trackLevel:level properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackEvent(const char* event)
@@ -95,52 +121,34 @@ extern "C" {
 		[AppMetr trackEvent:createNSString(event)];
 	}
 	
-	void _trackEvent(const char* event, const char* properties)
+	void _trackEventWithProperties(const char* event)
 	{
-		NSDictionary *json = deserializeJson(properties);
-		if (json)
-		{
-			[AppMetr trackEvent:createNSString(event) properties:json];
-		}
+		[AppMetr trackEvent:createNSString(event) properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackPayment(const char* payment)
+	void _trackPayment()
 	{
-		NSDictionary *json = deserializeJson(payment);
-		if (json)
-		{
-			json = paymentWithPaymentProcessor(json);
-			[AppMetr trackPayment:json];
-		}
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackPayment(const char* payment, const char* properties)
+	void _trackPaymentWithProperties()
 	{
-		NSDictionary *jsonPayment = deserializeJson(payment);
-		NSDictionary *jsonProperties = deserializeJson(properties);
-		if (jsonPayment && jsonProperties)
-		{
-			jsonPayment = paymentWithPaymentProcessor(jsonPayment);
-			[AppMetr trackPayment:jsonPayment properties:jsonProperties];
-		}
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackOptions(const char* options, const char* commandId)
+	void _trackOptions(const char* commandId)
 	{
-		NSDictionary *json = deserializeJson(options);
-		if (json)
-		{
-			[AppMetr trackOptions:json forCommand:createNSString(commandId)];
-		}
+		[AppMetr trackOptions:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] forCommand:createNSString(commandId)];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackOptions(const char* options, const char* commandId, const char* code, const char* message)
+	void _trackOptions(const char* commandId, const char* code, const char* message)
 	{
-		NSDictionary *json = deserializeJson(options);
-		if (json)
-		{
-			[AppMetr trackOptions:json forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
-		}
+		[AppMetr trackOptions:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 }

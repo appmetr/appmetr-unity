@@ -8,42 +8,48 @@ using System.Runtime.InteropServices;
 public class AppmetrPluginIOS
 {
 	#region	Interface to native implementation
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValue(string key, string value);
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValueOptional(string key, string value);
 	
 	[DllImport("__Internal")]
 	private static extern void _setupWithToken(string token);
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties(string properties);
+	private static extern void _attachProperties();
 	
 	[DllImport("__Internal")]
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackSessionWithProperties(string properties);
+	private static extern void _trackSessionWithProperties();
 	
 	[DllImport("__Internal")]
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackLevel(int level, string properties);
+	private static extern void _trackLevelWithProperties(int level);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackEvent(string _event);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEvent(string _event, string properties);
+	private static extern void _trackEventWithProperties(string _event);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(string payment);
+	private static extern void _trackPayment();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(string payment, string properties);
+	private static extern void _trackPaymentWithProperties();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string options, string commandId);
+	private static extern void _trackOptions(string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string options, string commandId, string code, string message);
+	private static extern void _trackOptions(string commandId, string code, string message);
 	
 	#endregion
 
@@ -56,8 +62,11 @@ public class AppmetrPluginIOS
 
 	public static void AttachProperties(IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		_attachProperties(value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_attachProperties();
 	}
 
 	public static void TrackSession()
@@ -67,8 +76,11 @@ public class AppmetrPluginIOS
 
 	public static void TrackSession(IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		_trackSessionWithProperties(value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackSessionWithProperties();
 	}
 
 	public static void TrackLevel(int level)
@@ -78,7 +90,11 @@ public class AppmetrPluginIOS
 
 	public static void TrackLevel(int level, IDictionary<string, string> properties)
 	{
-		_trackLevel(level);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackLevelWithProperties(level);
 	}
 
 	public static void TrackEvent(string _event)
@@ -88,33 +104,51 @@ public class AppmetrPluginIOS
 
 	public static void TrackEvent(string _event, IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		_trackEvent(_event, value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackEventWithProperties(_event);
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment)
 	{
-		string value = MiniJSON.jsonEncode(payment);
-		_trackPayment(value);
+		foreach (KeyValuePair<string, string> pair in payment)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackPayment();
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
 	{
-		string paymentValue = MiniJSON.jsonEncode(payment);
-		string propertiesValue = MiniJSON.jsonEncode(properties);
-		_trackPayment(paymentValue, propertiesValue);
+		foreach (KeyValuePair<string, string> pair in payment)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValueOptional(pair.Key, pair.Value);
+		}
+		_trackPaymentWithProperties();
 	}
 	
 	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
-		string value = MiniJSON.jsonEncode(options);
-		_trackOptions(value, commandId);
+		foreach (KeyValuePair<string, string> pair in options)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackOptions(commandId);
 	}
 	
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
 	{
-		string value = MiniJSON.jsonEncode(options);
-		_trackOptions(value, commandId, code, message);
+		foreach (KeyValuePair<string, string> pair in options)
+		{
+			_setKeyValue(pair.Key, pair.Value);
+		}
+		_trackOptions(commandId, code, message);
 	}
 	
 	#endregion
