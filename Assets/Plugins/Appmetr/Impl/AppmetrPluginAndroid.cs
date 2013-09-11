@@ -11,6 +11,7 @@ public class AppmetrPluginAndroid
 	
 	private static AndroidJavaClass clsConnect;
 	private static AndroidJavaClass clsConnectHelper;
+	private static AndroidJavaClass clsConnectImpl;
 	
 	private static AndroidJavaClass Connect
 	{
@@ -37,6 +38,19 @@ public class AppmetrPluginAndroid
 			return clsConnectHelper;
 		}
 	}
+
+	private static AndroidJavaClass ConnectImpl
+	{
+		get
+		{
+			getActivity();
+			if (clsConnectImpl == null)
+			{
+				clsConnectImpl = new AndroidJavaClass("com.appmetr.android.AppMetrImpl");
+			}
+			return clsConnectImpl;
+		}
+	}
 	
 	private static void getActivity()
 	{
@@ -55,65 +69,85 @@ public class AppmetrPluginAndroid
 
 	public static void AttachProperties(IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		ConnectHelper.CallStatic("attachProperties", value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("attachProperties");
 	}
 
 	public static void TrackSession()
 	{
-		ConnectHelper.CallStatic("trackSession");
+		ConnectImpl.CallStatic("trackSession");
 	}
 
 	public static void TrackSession(IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		ConnectHelper.CallStatic("trackSession", value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("trackSessionWithProperties");
 	}
 
 	public static void TrackLevel(int level)
 	{
-		Connect.CallStatic("trackLevel", level);
+		ConnectImpl.CallStatic("trackLevel", level);
 	}
 
 	public static void TrackLevel(int level, IDictionary<string, string> properties)
 	{
-		Connect.CallStatic("trackLevel", level);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("trackLevelWithProperties", level);
 	}
 
 	public static void TrackEvent(string _event)
 	{
-		ConnectHelper.CallStatic("trackEvent", _event);
+		ConnectImpl.CallStatic("trackEvent", _event);
 	}
 
 	public static void TrackEvent(string _event, IDictionary<string, string> properties)
 	{
-		string value = MiniJSON.jsonEncode(properties);
-		ConnectHelper.CallStatic("trackEvent", _event, value);
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("trackEventWithProperties", _event);
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment)
 	{
-		string value = MiniJSON.jsonEncode(payment);
-		ConnectHelper.CallStatic("trackPayment", value);
+		foreach (KeyValuePair<string, string> pair in payment)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("trackPayment");
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
 	{
-		string paymentValue = MiniJSON.jsonEncode(payment);
-		string propertiesValue = MiniJSON.jsonEncode(properties);
-		ConnectHelper.CallStatic("trackPayment", paymentValue, propertiesValue);
+		foreach (KeyValuePair<string, string> pair in payment)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKeyOptional", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("trackPaymentWithProperties");
 	}
 
 	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
-		string value = MiniJSON.jsonEncode(options);
-		ConnectHelper.CallStatic("trackOptions", commandId, value);
+		ConnectImpl.CallStatic("trackOptions", commandId);
 	}
 
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
 	{
-		string value = MiniJSON.jsonEncode(options);
-		ConnectHelper.CallStatic("trackOptionsError", commandId, value, code, message);
+		ConnectImpl.CallStatic("trackOptions", commandId, code, message);
 	}
 }
 #endif
