@@ -7,7 +7,7 @@ using System;
 public class AppMetrSample : MonoBehaviour
 {
 	[SerializeField]
-	private string token = "";
+	private string token = "a9a83077-4451-4c61-8de4-bc0910828008";
 	
 	private string fieldTrackLevel = "";
 	private string fieldTrackEvent = "";
@@ -61,11 +61,16 @@ public class AppMetrSample : MonoBehaviour
 	
 	void Start()
 	{
+#if UNITY_ANDROID
+		if (Application.platform == RuntimePlatform.Android)
+			UnityEngine.AndroidJNI.AttachCurrentThread();
+#endif
+
+		AppmetrPlugin.Setup(token);
 	}
 
 	void Awake()
 	{
-		AppmetrPlugin.Setup(token);
 	}
 	
 	void OnDisable()

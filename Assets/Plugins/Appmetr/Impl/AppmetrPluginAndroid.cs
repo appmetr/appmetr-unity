@@ -6,12 +6,11 @@ using System.Runtime.InteropServices;
 
 public class AppmetrPluginAndroid
 {
-	private static AndroidJavaObject currentActivity;
-	private static AndroidJavaObject applicationContext;
+	private static AndroidJavaObject currentActivity = null;
 	
-	private static AndroidJavaClass clsConnect;
-	private static AndroidJavaClass clsConnectHelper;
-	private static AndroidJavaClass clsConnectImpl;
+	private static AndroidJavaClass clsConnect = null;
+	private static AndroidJavaClass clsConnectHelper = null;
+	private static AndroidJavaClass clsConnectImpl = null;
 	
 	private static AndroidJavaClass Connect
 	{
@@ -54,17 +53,22 @@ public class AppmetrPluginAndroid
 	
 	private static void getActivity()
 	{
-		if (clsConnect == null && clsConnectHelper == null)
+		if (currentActivity == null)
 		{
 			AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"); 
 			currentActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-			applicationContext = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		}
 	}
 	
 	public static void SetupWithToken(string token)
 	{
-		Connect.CallStatic("setup", token, applicationContext, null);
+		getActivity();
+		
+		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
+        {
+            Connect.CallStatic("setup", token, context, null);
+        }));
 	}
 
 	public static void AttachProperties(IDictionary<string, string> properties)
@@ -78,7 +82,8 @@ public class AppmetrPluginAndroid
 
 	public static void TrackSession()
 	{
-		ConnectImpl.CallStatic("trackSession");
+		//ConnectImpl.CallStatic("trackSession");
+		Connect.CallStatic("trackSession");
 	}
 
 	public static void TrackSession(IDictionary<string, string> properties)

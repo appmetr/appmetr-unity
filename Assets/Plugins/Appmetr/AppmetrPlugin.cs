@@ -3,15 +3,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID// && !UNITY_EDITOR
 using AppmetrPlatformPlugin = AppmetrPluginAndroid;
-#elif UNITY_IPHONE && !UNITY_EDITOR
+#elif UNITY_IPHONE// && !UNITY_EDITOR
 using AppmetrPlatformPlugin = AppmetrPluginIOS;
 #else
 using AppmetrPlatformPlugin = AppmetrPluginDefault;
 #endif
 
-public class AppmetrPlugin : MonoBehaviour
+public class AppmetrPlugin
 {
 	public static void Setup(string token)
 	{
