@@ -56,6 +56,9 @@ public class AppMetrSample : MonoBehaviour
 	private string paymentLastKey = "";
 	private string paymentPropLastKey = "";
 	
+	private bool isShowAlert = false;
+	private string alertMessage = "";
+	
 	void Start()
 	{
 	}
@@ -80,12 +83,12 @@ public class AppMetrSample : MonoBehaviour
 		fieldWidth = Screen.width * 0.35f;
 		propFieldWidth = Screen.width * 0.2f;
 		
-		maxPropFields = (int)((Screen.height / 2) / (fieldHeight + propFieldIndent));
+		maxPropFields = (int)((Screen.height * 0.55f) / (fieldHeight + propFieldIndent));
 		
-		float spacer = 80;
+		float spacer = 40;
 		selectedTrack = GUI.SelectionGrid (new Rect(centerX - 300, spacer, 600, 40), selectedTrack, trackLabels, 4);
 		
-		spacer += 60;
+		spacer += 50;
 		
 		if (selectedTrack == ID_SESSION)
 		{
@@ -108,13 +111,19 @@ public class AppMetrSample : MonoBehaviour
 		{
 			doTrack();
 		}
+		
+		if (isShowAlert)
+		{
+			float width = Screen.width * 0.9f;
+			GUI.Label(new Rect (Screen.width / 2 - width / 2, Screen.height - 95, width, 24), alertMessage);
+		}
 	}
 	
 	private void doSessionGUI(float spacer)
 	{
 		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
 		
-		spacer += 40;
+		spacer += 30;
 		
 		if (sessionProperties.Count < maxPropFields && GUI.Button(new Rect(leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
 		{
@@ -155,7 +164,7 @@ public class AppMetrSample : MonoBehaviour
 		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelLevel);
 		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
 		
-		spacer += 40;
+		spacer += 30;
 		
 		fieldTrackLevel = GUI.TextField(new Rect(leftFieldCenter - fieldWidth / 2, spacer, fieldWidth, fieldHeight), fieldTrackLevel);
 		
@@ -198,7 +207,7 @@ public class AppMetrSample : MonoBehaviour
 		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelEvent);
 		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
 		
-		spacer += 40;
+		spacer += 30;
 		
 		fieldTrackEvent = GUI.TextField(new Rect(leftFieldCenter - fieldWidth / 2, spacer, fieldWidth, fieldHeight), fieldTrackEvent);
 		
@@ -241,7 +250,7 @@ public class AppMetrSample : MonoBehaviour
 		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelPayment);
 		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
 		
-		spacer += 40;
+		spacer += 30;
 		if (paymentList.Count < maxPropFields && GUI.Button(new Rect(leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
 		{
 			if (!paymentList.ContainsKey(""))
@@ -311,6 +320,8 @@ public class AppMetrSample : MonoBehaviour
 	
 	private void doTrack()
 	{
+		isShowAlert = false;
+		
 		if (selectedTrack == ID_SESSION)
 		{
 			if (checkDictionary(sessionProperties))
@@ -396,6 +407,8 @@ public class AppMetrSample : MonoBehaviour
 	
 	private void showAlert(string message)
 	{
+		alertMessage = message;
+		isShowAlert = true;
 	}
 	
 	#endregion
