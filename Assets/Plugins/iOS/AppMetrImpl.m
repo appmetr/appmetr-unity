@@ -6,6 +6,7 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 
 @synthesize keyValueDict = keyValueDict_;
 @synthesize keyValueDictOptional = keyValueDictOptional_;
+@synthesize appMetrListener = appMetrListener_;
 
 + (void)initialize
 {
@@ -23,7 +24,17 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 - (id)init
 {
 	self = [super init];
+	
+	[appMetrListener_ release];
+	appMetrListener_ = [[AppMetrListener alloc] init];
+	
 	return self;
+}
+
+- (void)dealloc
+{
+	[appMetrListener_ release];
+	[super dealloc];
 }
 
 - (void)setKey:(NSString*)key Value:(NSString*)value
@@ -84,8 +95,7 @@ extern "C" {
 
 	void _setupWithToken(const char* token)
 	{
-		AppmetrIntegration* listener = 0;
-		[AppMetr setupWithToken:createNSString(token) delegate:listener];
+		[AppMetr setupWithToken:createNSString(token) delegate:[[AppMetrImpl sharedAppMetrImpl] appMetrListener]];
 	}
 
 	void _attachProperties()

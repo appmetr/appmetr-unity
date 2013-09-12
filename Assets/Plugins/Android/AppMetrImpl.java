@@ -3,17 +3,22 @@
 import android.util.Log;
 import com.appmetr.android.AppMetr;
 import com.appmetr.android.integration.AppMetrHelper;
+import com.appmetr.android.AppMetrListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.zip.DataFormatException;
+import java.lang.SecurityException;
+import android.content.Context;
+//import com.unity3d.player.UnityPlayer;
 
 public class AppMetrImpl
 {
 	private static Map<String, String> keyMap = new HashMap<String, String>();
 	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
-	
+
 	private static void removeKeys()
 	{
 		keyMap.clear();
@@ -28,6 +33,17 @@ public class AppMetrImpl
     public static void setKeyOptional(String key, String value)
 	{
 		keyOptionalMap.put(key, value);
+	}
+	
+	public static void setup(String token, Context context) throws DataFormatException, SecurityException
+	{
+		AppMetr.setup(token, context, null);
+//		AppMetr.setup(token, context, new AppMetrListener()	{
+//            @Override public void executeCommand(JSONObject command) throws Throwable
+//			{
+//				//UnityPlayer.UnitySendMessage("AppMetrWrapper", "onExecuteCommand", command.toString());
+//            }
+//        });
 	}
 	
     public static void attachProperties()
