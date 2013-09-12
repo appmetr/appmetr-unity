@@ -11,8 +11,8 @@ import java.util.zip.DataFormatException;
 
 public class AppMetrImpl
 {
-	private static HashMap keyMap = new HashMap();
-	private static HashMap keyOptionalMap = new HashMap();
+	private static Map<String, String> keyMap = new HashMap<String, String>();
+	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
 	
 	private static void removeKeys()
 	{

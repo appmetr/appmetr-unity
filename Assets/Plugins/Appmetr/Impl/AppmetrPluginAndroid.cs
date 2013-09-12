@@ -96,9 +96,6 @@ public class AppmetrPluginAndroid
 
 	public static void TrackSession()
 	{
-		string url = ConnectInstance.Call<string>("getWebServiceUrl");
-		Debug.Log("AppMetr server URL: " + url);
-		
 		ConnectImpl.CallStatic("trackSession");
 	}
 
