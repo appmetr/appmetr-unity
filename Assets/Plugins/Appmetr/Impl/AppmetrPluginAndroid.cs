@@ -25,6 +25,20 @@ public class AppmetrPluginAndroid
 		}
 	}
 
+	private static AndroidJavaObject connectInstance;
+	private static AndroidJavaObject ConnectInstance
+	{
+		get
+		{
+			getActivity();
+			if (connectInstance == null)
+			{
+				connectInstance = Connect.CallStatic<AndroidJavaObject>("getInstance");
+			}
+			return connectInstance;
+		}
+	}
+	
 	private static AndroidJavaClass ConnectHelper
 	{
 		get
@@ -82,6 +96,9 @@ public class AppmetrPluginAndroid
 
 	public static void TrackSession()
 	{
+		string url = ConnectInstance.Call<string>("getWebServiceUrl");
+		Debug.Log("AppMetr server URL: " + url);
+		
 		ConnectImpl.CallStatic("trackSession");
 	}
 
