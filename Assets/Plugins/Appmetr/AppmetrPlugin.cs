@@ -18,11 +18,6 @@ public class AppmetrPlugin
 		AppmetrPlatformPlugin.SetupWithToken(token);
 	}
 	
-	public static void AttachProperties(IDictionary<string, string> properties)
-	{
-		AppmetrPlatformPlugin.AttachProperties(properties);
-	}
-	
 	public static void TrackSession()
 	{
 		AppmetrPlatformPlugin.TrackSession();

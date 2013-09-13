@@ -45,12 +45,6 @@ public class AppMetrImpl
 //            }
 //        });
 	}
-	
-    public static void attachProperties()
-	{
-		AppMetr.attachProperties(new JSONObject(keyMap));
-		removeKeys();
-    }
 
     public static void trackSession()
 	{

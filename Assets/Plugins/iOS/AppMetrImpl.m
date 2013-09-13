@@ -97,12 +97,6 @@ extern "C" {
 	{
 		[AppMetr setupWithToken:createNSString(token) delegate:[[AppMetrImpl sharedAppMetrImpl] appMetrListener]];
 	}
-
-	void _attachProperties()
-	{
-		[AppMetr attachProperties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
-		[[AppMetrImpl sharedAppMetrImpl] resetDict];
-	}
 	
 	void _trackSession()
 	{

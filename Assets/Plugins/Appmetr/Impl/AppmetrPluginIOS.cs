@@ -19,9 +19,6 @@ public class AppmetrPluginIOS
 	private static extern void _setupWithToken(string token);
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties();
-	
-	[DllImport("__Internal")]
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
@@ -58,15 +55,6 @@ public class AppmetrPluginIOS
 	public static void SetupWithToken(string token)
 	{
 		_setupWithToken(token);
-	}
-
-	public static void AttachProperties(IDictionary<string, string> properties)
-	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValue(pair.Key, pair.Value);
-		}
-		_attachProperties();
 	}
 
 	public static void TrackSession()

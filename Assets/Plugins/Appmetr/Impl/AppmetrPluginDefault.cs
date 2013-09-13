@@ -7,8 +7,6 @@ public class AppmetrPluginDefault
 {
 	public static void SetupWithToken(string token) {}
 
-	public static void AttachProperties(IDictionary<string, string> properties) {}
-
 	public static void TrackSession() {}
 
 	public static void TrackSession(IDictionary<string, string> properties) {}

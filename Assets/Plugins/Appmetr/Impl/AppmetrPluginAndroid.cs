@@ -86,15 +86,6 @@ public class AppmetrPluginAndroid
         }));
 	}
 
-	public static void AttachProperties(IDictionary<string, string> properties)
-	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("attachProperties");
-	}
-
 	public static void TrackSession()
 	{
 		ConnectImpl.CallStatic("trackSession");
