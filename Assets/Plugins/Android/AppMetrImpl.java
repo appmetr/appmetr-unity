@@ -96,9 +96,13 @@ public class AppMetrImpl
 	{
 		try
 		{
-			AppMetr.trackPayment(new JSONObject(keyMap));
+			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap));
 		}
 		catch (DataFormatException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+		catch (JSONException e)
 		{
 			Log.e(TAG, e.getMessage());
 		}
@@ -109,9 +113,13 @@ public class AppMetrImpl
 	{
 		try
 		{
-			AppMetr.trackPayment(new JSONObject(keyMap), new JSONObject(keyOptionalMap));
+			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap), new JSONObject(keyOptionalMap));
 		}
 		catch (DataFormatException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+		catch (JSONException e)
 		{
 			Log.e(TAG, e.getMessage());
 		}
@@ -125,4 +133,14 @@ public class AppMetrImpl
     public static void trackOptions(String commandId, String errorCode, String errorMessage)
 	{
 	}
+
+    private static JSONObject paymentWithPaymentProcessor(Map<String, String> payment) throws JSONException
+	{
+		JSONObject ret = new JSONObject(payment);
+        if (!ret.has("processor"))
+		{
+            ret.put("processor", "google_checkout");
+        }
+        return ret;
+    }
 }
