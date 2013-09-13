@@ -1,4 +1,4 @@
-//package com.appmetr.android;
+//package com.appmetr.android.impl;
 
 import android.util.Log;
 import com.appmetr.android.AppMetr;
@@ -12,10 +12,12 @@ import java.util.HashMap;
 import java.util.zip.DataFormatException;
 import java.lang.SecurityException;
 import android.content.Context;
-//import com.unity3d.player.UnityPlayer;
+import com.unity3d.player.UnityPlayer;
 
 public class AppMetrImpl
 {
+	private final static String TAG = "AppMetrImpl";
+	
 	private static Map<String, String> keyMap = new HashMap<String, String>();
 	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
 
@@ -35,15 +37,26 @@ public class AppMetrImpl
 		keyOptionalMap.put(key, value);
 	}
 	
-	public static void setup(String token, Context context) throws DataFormatException, SecurityException
+	public static void setup(String token, Context context)
 	{
-		AppMetr.setup(token, context, null);
-//		AppMetr.setup(token, context, new AppMetrListener()	{
-//            @Override public void executeCommand(JSONObject command) throws Throwable
-//			{
-//				//UnityPlayer.UnitySendMessage("AppMetrWrapper", "onExecuteCommand", command.toString());
-//            }
-//        });
+		try
+		{
+			//AppMetr.setup(token, context, null);
+			AppMetr.setup(token, context, new AppMetrListener()	{
+				@Override
+				public void executeCommand(JSONObject command) throws Throwable {
+					UnityPlayer.UnitySendMessage("AppMetrWrapper", "onExecuteCommand", command.toString());
+				}
+			});
+		}	
+		catch (DataFormatException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+		catch (SecurityException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 	}
 
     public static void trackSession()
@@ -79,15 +92,29 @@ public class AppMetrImpl
 		removeKeys();
     }
 
-    public static void trackPayment() throws DataFormatException
+    public static void trackPayment()
 	{
-		AppMetr.trackPayment(new JSONObject(keyMap));
+		try
+		{
+			AppMetr.trackPayment(new JSONObject(keyMap));
+		}
+		catch (DataFormatException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 		removeKeys();
     }
 
-    public static void trackPaymentWithProperties() throws DataFormatException
+    public static void trackPaymentWithProperties()
 	{
-		AppMetr.trackPayment(new JSONObject(keyMap), new JSONObject(keyOptionalMap));
+		try
+		{
+			AppMetr.trackPayment(new JSONObject(keyMap), new JSONObject(keyOptionalMap));
+		}
+		catch (DataFormatException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 		removeKeys();
     }
 
