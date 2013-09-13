@@ -1,4 +1,4 @@
-﻿#if UNITY_IPHONE
+﻿#if UNITY_IOS
 using UnityEngine;
 using System;
 using System.Collections;

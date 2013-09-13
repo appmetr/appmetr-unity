@@ -1,4 +1,4 @@
-﻿#if !UNITY_IPHONE && !UNITY_ANDROID
+﻿#if UNITY_EDITOR || (!UNITY_IOS && !UNITY_ANDROID)
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
