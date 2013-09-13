@@ -49,7 +49,7 @@ public class AppmetrPluginIOS
 	private static extern void _trackOptions(string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(string commandId, string code, string message);
 	
 	#endregion
 
@@ -148,7 +148,7 @@ public class AppmetrPluginIOS
 		{
 			_setKeyValue(pair.Key, pair.Value);
 		}
-		_trackOptions(commandId, code, message);
+		_trackOptionsWithErrorCode(commandId, code, message);
 	}
 	
 	#endregion

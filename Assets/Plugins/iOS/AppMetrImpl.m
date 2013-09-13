@@ -155,7 +155,7 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackOptions(const char* commandId, const char* code, const char* message)
+	void _trackOptionsWithErrorCode(const char* commandId, const char* code, const char* message)
 	{
 		[AppMetr trackOptions:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
