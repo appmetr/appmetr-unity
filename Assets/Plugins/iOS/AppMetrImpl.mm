@@ -70,6 +70,16 @@ NSString* createNSString(const char* string)
 		return [NSString stringWithUTF8String: ""];
 }
 
+NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
+{
+	if (![dict objectForKey:@"processor"])
+	{
+		dict = [[dict mutableCopy] autorelease];
+		[dict setValue:@"appstore" forKey:@"processor"];
+	}
+	return dict;
+}
+
 	
 extern "C" {
 
@@ -123,13 +133,13 @@ extern "C" {
 	
 	void _trackPayment()
 	{
-		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor(keyValueDict)]];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackPaymentWithProperties()
 	{
-		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor(keyValueDict)] properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
