@@ -70,16 +70,6 @@ NSString* createNSString(const char* string)
 		return [NSString stringWithUTF8String: ""];
 }
 
-NSDictionary* paymentWithPaymentProcessor(NSDictionary *json)
-{
-	if (![json objectForKey:@"processor"])
-	{
-		json = [[json mutableCopy] autorelease];
-		[json setValue:kPaymentProcessor forKey:@"processor"];
-	}
-	
-	return json;
-}
 	
 extern "C" {
 
