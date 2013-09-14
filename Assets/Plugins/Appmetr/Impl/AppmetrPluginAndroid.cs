@@ -59,7 +59,7 @@ public class AppmetrPluginAndroid
 			getActivity();
 			if (clsConnectImpl == null)
 			{
-				clsConnectImpl = new AndroidJavaClass("AppMetrImpl");
+				clsConnectImpl = new AndroidJavaClass("com.appmetr.android.impl.AppMetrImpl");
 			}
 			return clsConnectImpl;
 		}

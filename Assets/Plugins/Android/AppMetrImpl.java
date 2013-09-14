@@ -1,4 +1,4 @@
-//package com.appmetr.android.impl;
+package com.appmetr.android.impl;
 
 import android.util.Log;
 import com.appmetr.android.AppMetr;
