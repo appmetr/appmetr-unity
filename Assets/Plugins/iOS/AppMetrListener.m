@@ -36,7 +36,7 @@
 		NSString *serializedData = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 		if (serializedData)
 		{
-			UnitySendMessage("AppMetrWrapper", "onExecuteCommand", [serializedData UTF8String]);
+			UnitySendMessage("AppMetrCommandListener", "OnExecuteCommand", [serializedData UTF8String]);
 		}
 	}
 }

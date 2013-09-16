@@ -13,6 +13,7 @@ import java.util.zip.DataFormatException;
 import java.lang.SecurityException;
 import android.content.Context;
 import com.unity3d.player.UnityPlayer;
+import com.appmetr.android.impl.AppMetrListenerImpl;
 
 public class AppMetrImpl
 {
@@ -21,6 +22,8 @@ public class AppMetrImpl
 	private static Map<String, String> keyMap = new HashMap<String, String>();
 	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
 
+	private static AppMetrListener listener = new AppMetrListenerImpl();
+	
 	private static void removeKeys()
 	{
 		keyMap.clear();
@@ -42,12 +45,14 @@ public class AppMetrImpl
 		try
 		{
 			//AppMetr.setup(token, context, null);
-			AppMetr.setup(token, context, new AppMetrListener()	{
+			AppMetr.setup(token, context, listener);
+/*			AppMetr.setup(token, context, new AppMetrListener()	{
 				@Override
 				public void executeCommand(JSONObject command) throws Throwable {
-					UnityPlayer.UnitySendMessage("AppMetrWrapper", "onExecuteCommand", command.toString());
+					Log.i(TAG, "~~~~~~~~~~~~ Execute command: " + command.toString());
+					UnityPlayer.UnitySendMessage("AppMetrCommandListener", "OnExecuteCommand", command.toString());
 				}
-			});
+			});*/
 		}	
 		catch (DataFormatException e)
 		{
