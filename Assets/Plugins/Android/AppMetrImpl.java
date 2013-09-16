@@ -21,8 +21,6 @@ public class AppMetrImpl
 	
 	private static Map<String, String> keyMap = new HashMap<String, String>();
 	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
-
-	private static AppMetrListener listener = new AppMetrListenerImpl();
 	
 	private static void removeKeys()
 	{
@@ -44,15 +42,7 @@ public class AppMetrImpl
 	{
 		try
 		{
-			//AppMetr.setup(token, context, null);
-			AppMetr.setup(token, context, listener);
-/*			AppMetr.setup(token, context, new AppMetrListener()	{
-				@Override
-				public void executeCommand(JSONObject command) throws Throwable {
-					Log.i(TAG, "~~~~~~~~~~~~ Execute command: " + command.toString());
-					UnityPlayer.UnitySendMessage("AppMetrCommandListener", "OnExecuteCommand", command.toString());
-				}
-			});*/
+			AppMetr.setup(token, context, new AppMetrListenerImpl());
 		}	
 		catch (DataFormatException e)
 		{

@@ -7,7 +7,7 @@ public class AppMetrCommandListener : MonoBehaviour
 	
 	void OnExecuteCommand(string command)
 	{
-		Debug.Log("~~~~~~~~~~~~ Execute command:\n " + command);
+		Debug.Log("~~~~~~~~~~~~ Execute command:\n" + command);
 		
 		var handler = OnCommand;
 		if (handler != null)
