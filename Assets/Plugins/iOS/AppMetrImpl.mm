@@ -133,13 +133,13 @@ extern "C" {
 	
 	void _trackPayment()
 	{
-		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor(keyValueDict)]];
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor:([[AppMetrImpl sharedAppMetrImpl] keyValueDict])]];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackPaymentWithProperties()
 	{
-		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor(keyValueDict)] properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
+		[AppMetr trackPayment:[[AppMetrImpl sharedAppMetrImpl] paymentWithPaymentProcessor:([[AppMetrImpl sharedAppMetrImpl] keyValueDict])] properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
