@@ -1,11 +1,12 @@
+#!/usr/bin/perl 
+
 use File::Glob ':glob';
 
-if( $ARGV[1] ne "iPhone" )
-{
-	exit;
-}
+$installPath = $ARGV[0];
+$currDir = `pwd`;
+chomp $currDir;
 
-@files = bsd_glob( "Assets/Editor/postprocessbuildplayer_*", GLOB_NOCASE );
+@files = bsd_glob( "Assets/Editor/PostprocessBuildPlayer_*", GLOB_NOCASE );
 
 foreach $file( @files )
 {
