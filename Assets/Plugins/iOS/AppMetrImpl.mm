@@ -117,7 +117,8 @@ extern "C" {
 	
 	void _trackSessionWithProperties()
 	{
-		[AppMetr trackSessionWithProperties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackSessionWithProperties:dictCopy];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
@@ -128,7 +129,8 @@ extern "C" {
 	
 	void _trackLevelWithProperties(int level)
 	{
-		[AppMetr trackLevel:level properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackLevel:level properties:dictCopy];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
@@ -139,31 +141,37 @@ extern "C" {
 	
 	void _trackEventWithProperties(const char* event)
 	{
-		[AppMetr trackEvent:createNSString(event) properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDict]];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackEvent:createNSString(event) properties:dictCopy];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackPayment()
 	{
-		[AppMetr trackPayment:paymentWithPaymentProcessor([[AppMetrImpl sharedAppMetrImpl] keyValueDict])];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackPayment:paymentWithPaymentProcessor(dictCopy)];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackPaymentWithProperties()
 	{
-		[AppMetr trackPayment:paymentWithPaymentProcessor([[AppMetrImpl sharedAppMetrImpl] keyValueDict]) properties:[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional]];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		NSMutableDictionary* dictOptCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDictOptional] copy];
+		[AppMetr trackPayment:paymentWithPaymentProcessor(dictCopy) properties:dictOptCopy];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackOptions(const char* commandId)
 	{
-		[AppMetr trackOptions:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] forCommand:createNSString(commandId)];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackOptions:dictCopy forCommand:createNSString(commandId)];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
 	void _trackOptionsWithErrorCode(const char* commandId, const char* code, const char* message)
 	{
-		[AppMetr trackOptions:[[AppMetrImpl sharedAppMetrImpl] keyValueDict] forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr trackOptions:dictCopy forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
