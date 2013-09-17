@@ -81,7 +81,6 @@ public class AppmetrPluginAndroid
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
         {
-//            Connect.CallStatic("setup", token, context, null);
             ConnectImpl.CallStatic("setup", token, context);
         }));
 	}
