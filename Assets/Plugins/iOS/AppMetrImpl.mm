@@ -37,7 +37,14 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 	[super dealloc];
 }
 
-- (void)setKey:(NSString*)key Value:(NSString*)value
+- (void)setKeyString:(NSString*)key Value:(NSString*)value
+{
+	if (!keyValueDict_)
+		keyValueDict_ = [[NSMutableDictionary alloc] init];
+	[keyValueDict_ setObject:value forKey:key];
+}
+
+- (void)setKeyNumber:(NSString*)key Value:(NSNumber*)value
 {
 	if (!keyValueDict_)
 		keyValueDict_ = [[NSMutableDictionary alloc] init];
@@ -83,9 +90,14 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 	
 extern "C" {
 
-	void _setKeyValue(const char* key, const char* value)
+	void _setKeyValueString(const char* key, const char* value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKey:createNSString(key) Value:createNSString(value)];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyString:createNSString(key) Value:createNSString(value)];
+	}
+
+	void _setKeyValueNumber(const char* key, int value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:value];
 	}
 	
 	void _setKeyValueOptional(const char* key, const char* value)

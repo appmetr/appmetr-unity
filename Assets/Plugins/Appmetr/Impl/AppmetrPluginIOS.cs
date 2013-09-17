@@ -10,7 +10,10 @@ public class AppmetrPluginIOS
 	#region	Interface to native implementation
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValue(string key, string value);
+	private static extern void _setKeyValueString(string key, string value);
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValueNumber(string key, int value);
 
 	[DllImport("__Internal")]
 	private static extern void _setKeyValueOptional(string key, string value);
@@ -66,7 +69,7 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackSessionWithProperties();
 	}
@@ -80,7 +83,7 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackLevelWithProperties(level);
 	}
@@ -94,7 +97,7 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackEventWithProperties(_event);
 	}
@@ -103,7 +106,14 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in payment)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			if (validatePaymentNumberValue(pair.Key))
+			{
+				_setKeyValueNumber(pair.Key, Convert.ToInt32(pair.Value));
+			}
+			else
+			{
+				_setKeyValueString(pair.Key, pair.Value);
+			}
 		}
 		_trackPayment();
 	}
@@ -112,7 +122,14 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in payment)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			if (validatePaymentNumberValue(pair.Key))
+			{
+				_setKeyValueNumber(pair.Key, Convert.ToInt32(pair.Value));
+			}
+			else
+			{
+				_setKeyValueString(pair.Key, pair.Value);
+			}
 		}
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
@@ -125,7 +142,7 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in options)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackOptions(commandId);
 	}
@@ -134,9 +151,16 @@ public class AppmetrPluginIOS
 	{
 		foreach (KeyValuePair<string, string> pair in options)
 		{
-			_setKeyValue(pair.Key, pair.Value);
+			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackOptionsWithErrorCode(commandId, code, message);
+	}
+	
+	private static bool validatePaymentNumberValue(string key)
+	{
+		if (key == "psUserSpentCurrencyAmount" || key == "psReceivedCurrencyAmount" || key == "appCurrencyAmount")
+			return true;
+		return false;
 	}
 	
 	#endregion

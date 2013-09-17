@@ -16,7 +16,8 @@
 
 + (AppMetrImpl*)sharedAppMetrImpl;
 
-- (void)setKey:(NSString*)key Value:(NSString*)value;
+- (void)setKeyString:(NSString*)key Value:(NSString*)value;
+- (void)setKeyNumber:(NSString*)key Value:(NSNumber*)value;
 - (void)setKeyOptional:(NSString*)key Value:(NSString*)value;
 - (void)resetDict;
 
