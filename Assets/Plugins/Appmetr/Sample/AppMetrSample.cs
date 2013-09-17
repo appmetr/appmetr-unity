@@ -71,12 +71,19 @@ public class AppMetrSample : MonoBehaviour
 
 	void Awake()
 	{
+		AppMetrCommandListener.OnCommand += HandleAppMetrOnCommand; 
 	}
 	
 	void OnDisable()
 	{
+		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
 	}
 
+	public void HandleAppMetrOnCommand(string command)
+	{
+		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + command);
+	}
+	
 	#region GUI for sample app
 	
 	void OnGUI()
@@ -116,7 +123,7 @@ public class AppMetrSample : MonoBehaviour
 		{
 			doTrack();
 		}
-		
+
 		if (isShowAlert)
 		{
 			float width = Screen.width * 0.9f;

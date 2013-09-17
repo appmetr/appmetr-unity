@@ -13,7 +13,6 @@ public class AppMetrListenerImpl implements AppMetrListener
 	@Override
 	public void executeCommand(final JSONObject command) throws Throwable
 	{
-		Log.i(TAG, "~~~~~~~~~~~~ Execute command:\n" + command.toString());
 		UnityPlayer.UnitySendMessage("AppMetrCommandListener", "OnExecuteCommand", command.toString());
 	}
 }
