@@ -55,5 +55,7 @@ public void HandleOnCommand(string command)
 	Debug.Log("HandleOnCommand:\n" + command);
 }
 
+Пример использования плагина можно посмотреть в Plugins/Appmetr/Sample/AppMetrSample.cs
+
 ВАЖНО: Необходимо добавить игровой объект на сцену, назвав его "AppMetrCommandListener", 
  и подключить к объекту скрипт AppMetrCommandListener.cs.
