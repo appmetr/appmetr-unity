@@ -82,6 +82,8 @@ public class AppMetrSample : MonoBehaviour
 	public void HandleAppMetrOnCommand(string command)
 	{
 		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + command);
+		isShowAlert = true;
+		alertMessage = "Server command: " + command;
 	}
 	
 	#region GUI for sample app
@@ -127,7 +129,7 @@ public class AppMetrSample : MonoBehaviour
 		if (isShowAlert)
 		{
 			float width = Screen.width * 0.9f;
-			GUI.Label(new Rect (Screen.width / 2 - width / 2, Screen.height - 95, width, 24), alertMessage);
+			GUI.Label(new Rect (Screen.width / 2 - width / 2, Screen.height - 130, width, 72), alertMessage);
 		}
 	}
 	
