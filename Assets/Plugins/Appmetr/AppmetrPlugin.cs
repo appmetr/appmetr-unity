@@ -11,6 +11,10 @@ using AppmetrPlatformPlugin = AppmetrPluginIOS;
 using AppmetrPlatformPlugin = AppmetrPluginDefault;
 #endif
 
+/// <summary>
+/// The main class.
+/// Provides access to the functions of the library.
+/// </summary>
 public class AppmetrPlugin
 {
 	/// <summary>
