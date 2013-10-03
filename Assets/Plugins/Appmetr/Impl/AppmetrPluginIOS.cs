@@ -13,7 +13,7 @@ public class AppmetrPluginIOS
 	private static extern void _setKeyValueString(string key, string value);
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValueNumber(string key, int value);
+	private static extern void _setKeyValueNumber(string key, double value);
 
 	[DllImport("__Internal")]
 	private static extern void _setKeyValueOptional(string key, string value);
@@ -108,7 +108,7 @@ public class AppmetrPluginIOS
 		{
 			if (validatePaymentNumberValue(pair.Key))
 			{
-				_setKeyValueNumber(pair.Key, Convert.ToInt32(pair.Value));
+				_setKeyValueNumber(pair.Key, Convert.ToDouble(pair.Value));
 			}
 			else
 			{
@@ -124,7 +124,7 @@ public class AppmetrPluginIOS
 		{
 			if (validatePaymentNumberValue(pair.Key))
 			{
-				_setKeyValueNumber(pair.Key, Convert.ToInt32(pair.Value));
+				_setKeyValueNumber(pair.Key, Convert.ToDouble(pair.Value));
 			}
 			else
 			{

@@ -95,9 +95,9 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] setKeyString:createNSString(key) Value:createNSString(value)];
 	}
 
-	void _setKeyValueNumber(const char* key, int value)
+	void _setKeyValueNumber(const char* key, double value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithInt: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithDouble: value]];
 	}
 	
 	void _setKeyValueOptional(const char* key, const char* value)
