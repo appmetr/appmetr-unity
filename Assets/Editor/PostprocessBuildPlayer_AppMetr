@@ -19,17 +19,18 @@ install_path = sys.argv[1]
 target_platform = sys.argv[2]
  
 info_plist_path = os.path.join(install_path, 'Info.plist')
+
+appmetr_plist_path = os.path.join(install_path, '../Assets/Plugins/iOS/AppMetr.plist')
  
 file = open(info_plist_path, 'r')
 plist = file.read()
 file.close()
+
+file = open(appmetr_plist_path, 'r')
+appmetr_plist = file.read()
+file.close()
  
-elements_to_add = '''
-<key>trackInstallByApp</key>
-<false/>
-'''
- 
-plist = plist.replace('<key>', elements_to_add + '<key>', 1)
+plist = plist.replace('<key>', appmetr_plist + '<key>', 1)
  
 file = open(info_plist_path, 'w')
 file.write(plist)
