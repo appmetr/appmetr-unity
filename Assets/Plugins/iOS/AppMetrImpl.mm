@@ -161,6 +161,13 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
+	void _attachProperties()
+	{
+		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
+		[AppMetr attachProperties:dictCopy];
+		[[AppMetrImpl sharedAppMetrImpl] resetDict];
+	}
+	
 	void _trackOptions(const char* commandId)
 	{
 		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];

@@ -149,6 +149,15 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackPaymentWithProperties");
 	}
 
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("attachProperties");
+	}
+
 	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
 		ConnectImpl.CallStatic("trackOptions", commandId);

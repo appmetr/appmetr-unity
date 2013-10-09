@@ -23,6 +23,8 @@ public class AppmetrPluginDefault
 
 	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties) {}
 
+	public static void AttachProperties(IDictionary<string, string> properties) {}
+
 	public static void TrackOptions(IDictionary<string, string> options, string commandId) {}
 
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message) {}

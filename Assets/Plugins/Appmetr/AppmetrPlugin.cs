@@ -122,4 +122,15 @@ public class AppmetrPlugin
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment, properties);
 	}
+	
+	/// <summary>
+	/// Attachs the properties.
+	/// </summary>
+	/// <param name='properties'>
+	/// Properties.
+	/// </param>
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		AppmetrPlatformPlugin.AttachProperties(properties);
+	}
 }

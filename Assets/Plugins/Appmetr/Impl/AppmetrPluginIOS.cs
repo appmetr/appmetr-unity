@@ -46,6 +46,9 @@ public class AppmetrPluginIOS
 	private static extern void _trackPaymentWithProperties();
 	
 	[DllImport("__Internal")]
+	private static extern void _attachProperties();
+	
+	[DllImport("__Internal")]
 	private static extern void _trackOptions(string commandId);
 	
 	[DllImport("__Internal")]
@@ -145,6 +148,15 @@ public class AppmetrPluginIOS
 			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackOptions(commandId);
+	}
+
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValueString(pair.Key, pair.Value);
+		}
+		_attachProperties();
 	}
 	
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
