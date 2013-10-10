@@ -15,16 +15,26 @@ public class AppmetrPluginDefault
 
 	public static void TrackLevel(int level, IDictionary<string, string> properties) {}
 
-	public static void TrackEvent(string _event) {}
+	public static void TrackEvent(string eventName) {}
 
-	public static void TrackEvent(string _event, IDictionary<string, string> properties) {}
+	public static void TrackEvent(string eventName, IDictionary<string, string> properties) {}
 
 	public static void TrackPayment(IDictionary<string, string> payment) {}
 
 	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties) {}
 
+	public static void AttachProperties(IDictionary<string, string> properties) {}
+
 	public static void TrackOptions(IDictionary<string, string> options, string commandId) {}
 
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message) {}
+
+	public static void TrackExperimentStart(string experiment, string groupId) {}
+
+	public static void TrackExperimentEnd(string experiment) {}
+
+	public static void Identify(string userId) {}
+
+	public static void Flush() {}
 }
 #endif

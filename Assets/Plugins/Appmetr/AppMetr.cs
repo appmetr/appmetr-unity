@@ -15,7 +15,7 @@ using AppmetrPlatformPlugin = AppmetrPluginDefault;
 /// The main class.
 /// Provides access to the functions of the library.
 /// </summary>
-public class AppmetrPlugin
+public class AppMetr
 {
 	/// <summary>
 	/// Setting up plugin.
@@ -75,26 +75,26 @@ public class AppmetrPlugin
 	/// <summary>
 	/// Method for tracking game event as "track event" with parameter "event".
 	/// </summary>
-	/// <param name="_event">
+	/// <param name="eventName">
 	/// Required field. Displays event's named.
 	/// </param>
-	public static void TrackEvent(string _event)
+	public static void TrackEvent(string eventName)
 	{
-		AppmetrPlatformPlugin.TrackEvent(_event);
+		AppmetrPlatformPlugin.TrackEvent(eventName);
 	}
 	
 	/// <summary>
 	/// Method for tracking game event as "track event" with parameters "event","value" and "properties".
 	/// </summary>
-	/// <param name="_event">
+	/// <param name="eventName">
 	/// Required field. Displays event's named.
 	/// </param>
 	/// <param name="properties">
 	/// Additional parameters for event.
 	/// </param>
-	public static void TrackEvent(string _event, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
 	{
-		AppmetrPlatformPlugin.TrackEvent(_event, properties);
+		AppmetrPlatformPlugin.TrackEvent(eventName, properties);
 	}
 	
 	/// <summary>
@@ -121,5 +121,60 @@ public class AppmetrPlugin
 	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment, properties);
+	}
+	
+	/// <summary>
+	/// Methods for attaching user properties.
+	/// </summary>
+	/// <param name='properties'>
+	/// Properties.
+	/// </param>
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		AppmetrPlatformPlugin.AttachProperties(properties);
+	}
+	
+	/// <summary>
+	/// Registering start of experiment.
+	/// </summary>
+	/// <param name='experiment'>
+	/// Experiment.
+	/// </param>
+	/// <param name='groupId'>
+	/// Group identifier.
+	/// </param>
+	public static void TrackExperimentStart(string experiment, string groupId)
+	{
+		AppmetrPlatformPlugin.TrackExperimentStart(experiment, groupId);
+	}
+	
+	/// <summary>
+	/// Registering end of experiment.
+	/// </summary>
+	/// <param name='experiment'>
+	/// Experiment.
+	/// </param>
+	public static void TrackExperimentEnd(string experiment)
+	{
+		AppmetrPlatformPlugin.TrackExperimentEnd(experiment);
+	}
+	
+	/// <summary>
+	/// Identify user.
+	/// </summary>
+	/// <param name='userId'>
+	/// User identifier.
+	/// </param>
+	public static void Identify(string userId)
+	{
+		AppmetrPlatformPlugin.Identify(userId);
+	}
+	
+	/// <summary>
+	/// Force flush events on server. Flushing execute in new thread.
+	/// </summary>
+	public static void Flush()
+	{
+		AppmetrPlatformPlugin.Flush();
 	}
 }

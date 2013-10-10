@@ -34,10 +34,10 @@ public class AppmetrPluginIOS
 	private static extern void _trackLevelWithProperties(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEvent(string _event);
+	private static extern void _trackEvent(string eventName);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEventWithProperties(string _event);
+	private static extern void _trackEventWithProperties(string eventName);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackPayment();
@@ -46,10 +46,25 @@ public class AppmetrPluginIOS
 	private static extern void _trackPaymentWithProperties();
 	
 	[DllImport("__Internal")]
+	private static extern void _attachProperties();
+	
+	[DllImport("__Internal")]
 	private static extern void _trackOptions(string commandId);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackOptionsWithErrorCode(string commandId, string code, string message);
+	
+	[DllImport("__Internal")]
+	private static extern void _trackExperimentStart(string experiment, string groupId);
+	
+	[DllImport("__Internal")]
+	private static extern void _trackExperimentEnd(string experiment);
+	
+	[DllImport("__Internal")]
+	private static extern void _identify(string userId);
+	
+	[DllImport("__Internal")]
+	private static extern void _flush();
 	
 	#endregion
 
@@ -93,13 +108,13 @@ public class AppmetrPluginIOS
 		_trackEvent(_event);
 	}
 
-	public static void TrackEvent(string _event, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
 	{
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
 			_setKeyValueString(pair.Key, pair.Value);
 		}
-		_trackEventWithProperties(_event);
+		_trackEventWithProperties(eventName);
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment)
@@ -137,6 +152,15 @@ public class AppmetrPluginIOS
 		}
 		_trackPaymentWithProperties();
 	}
+
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			_setKeyValueString(pair.Key, pair.Value);
+		}
+		_attachProperties();
+	}
 	
 	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
@@ -154,6 +178,26 @@ public class AppmetrPluginIOS
 			_setKeyValueString(pair.Key, pair.Value);
 		}
 		_trackOptionsWithErrorCode(commandId, code, message);
+	}
+
+	public static void TrackExperimentStart(string experiment, string groupId)
+	{
+		_trackExperimentStart(experiment, groupId);
+	}
+
+	public static void TrackExperimentEnd(string experiment)
+	{
+		_trackExperimentEnd(experiment);
+	}
+
+	public static void Identify(string userId)
+	{
+		_identify(userId);
+	}
+
+	public static void Flush()
+	{
+		_flush();
 	}
 	
 	private static bool validatePaymentNumberValue(string key)

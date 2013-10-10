@@ -76,6 +76,11 @@ public class AppmetrPluginAndroid
 	
 	public static void SetupWithToken(string token)
 	{
+		if (Application.platform == RuntimePlatform.Android)
+		{
+			UnityEngine.AndroidJNI.AttachCurrentThread();
+		}
+		
 		getActivity();
 		
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
@@ -113,18 +118,18 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackLevelWithProperties", level);
 	}
 
-	public static void TrackEvent(string _event)
+	public static void TrackEvent(string eventName)
 	{
-		ConnectImpl.CallStatic("trackEvent", _event);
+		ConnectImpl.CallStatic("trackEvent", eventName);
 	}
 
-	public static void TrackEvent(string _event, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
 	{
 		foreach (KeyValuePair<string, string> pair in properties)
 		{
 			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
 		}
-		ConnectImpl.CallStatic("trackEventWithProperties", _event);
+		ConnectImpl.CallStatic("trackEventWithProperties", eventName);
 	}
 
 	public static void TrackPayment(IDictionary<string, string> payment)
@@ -149,6 +154,15 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackPaymentWithProperties");
 	}
 
+	public static void AttachProperties(IDictionary<string, string> properties)
+	{
+		foreach (KeyValuePair<string, string> pair in properties)
+		{
+			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+		}
+		ConnectImpl.CallStatic("attachProperties");
+	}
+
 	public static void TrackOptions(IDictionary<string, string> options, string commandId)
 	{
 		ConnectImpl.CallStatic("trackOptions", commandId);
@@ -157,6 +171,26 @@ public class AppmetrPluginAndroid
 	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
 	{
 		ConnectImpl.CallStatic("trackOptions", commandId, code, message);
+	}
+
+	public static void TrackExperimentStart(string experiment, string groupId)
+	{
+		ConnectImpl.CallStatic("trackExperimentStart", experiment, groupId);
+	}
+
+	public static void TrackExperimentEnd(string experiment)
+	{
+		ConnectImpl.CallStatic("trackExperimentEnd", experiment);
+	}
+
+	public static void Identify(string userId)
+	{
+		ConnectImpl.CallStatic("identify", userId);
+	}
+
+	public static void Flush()
+	{
+		ConnectImpl.CallStatic("flush");
 	}
 }
 #endif

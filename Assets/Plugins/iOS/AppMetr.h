@@ -43,6 +43,11 @@
 
 /**
  * Updating information about the user
+ */
++ (void)attachProperties;
+
+/**
+ * Updating information about the user
  * @param properties Information about the user
  */
 + (void)attachProperties:(NSDictionary *)properties;
@@ -116,6 +121,11 @@
 * Registering end of experiment
 */
 + (void)trackExperimentEnd:(NSString *)experiment;
+
+/**
+* Identify user
+*/
++ (void)identify:(NSString *)userId;
 
 /**
  * Pull remote commands
