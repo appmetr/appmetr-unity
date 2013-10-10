@@ -134,15 +134,15 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
-	void _trackEvent(const char* event)
+	void _trackEvent(const char* eventName)
 	{
-		[AppMetr trackEvent:createNSString(event)];
+		[AppMetr trackEvent:createNSString(eventName)];
 	}
 	
-	void _trackEventWithProperties(const char* event)
+	void _trackEventWithProperties(const char* eventName)
 	{
 		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];
-		[AppMetr trackEvent:createNSString(event) properties:dictCopy];
+		[AppMetr trackEvent:createNSString(eventName) properties:dictCopy];
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
@@ -182,4 +182,23 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
+	void _trackExperimentStart(const char* experiment, const char* groupId)
+	{
+		[AppMetr trackExperimentStart:createNSString(experiment) group:createNSString(groupId)];
+	}
+	
+	void _trackExperimentEnd(const char* experiment)
+	{
+		[AppMetr trackExperimentEnd:createNSString(experiment)];
+	}
+	
+	void _identify(const char* userId)
+	{
+		[AppMetr identify:createNSString(userId)];
+	}
+	
+	void _flush()
+	{
+		[AppMetr flush];
+	}
 }

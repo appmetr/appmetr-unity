@@ -135,6 +135,26 @@ public class AppMetrImpl
 	{
 	}
 
+    public static void trackExperimentStart(String experiment, String groupId)
+	{
+		AppMetr.trackExperimentStart(experiment, groupId);
+    }
+
+    public static void trackExperimentEnd(String experiment)
+	{
+		AppMetr.trackExperimentEnd(experiment);
+    }
+
+    public static void identify(String userId)
+	{
+		AppMetr.identify(userId);
+    }
+
+    public static void flush()
+	{
+		AppMetr.flush();
+    }
+
     private static JSONObject paymentWithPaymentProcessor(Map<String, String> payment) throws JSONException
 	{
 		JSONObject ret = new JSONObject(payment);

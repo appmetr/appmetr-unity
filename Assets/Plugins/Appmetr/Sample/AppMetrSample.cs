@@ -61,12 +61,7 @@ public class AppMetrSample : MonoBehaviour
 	
 	void Start()
 	{
-#if UNITY_ANDROID
-		if (Application.platform == RuntimePlatform.Android)
-			UnityEngine.AndroidJNI.AttachCurrentThread();
-#endif
-
-		AppmetrPlugin.Setup(token);
+		AppMetr.Setup(token);
 	}
 
 	void Awake()
@@ -340,11 +335,11 @@ public class AppMetrSample : MonoBehaviour
 		{
 			if (checkDictionary(sessionProperties))
 			{
-				AppmetrPlugin.TrackSession(sessionProperties);
+				AppMetr.TrackSession(sessionProperties);
 			}
 			else
 			{
-				AppmetrPlugin.TrackSession();
+				AppMetr.TrackSession();
 			}
 		}
 		else if (selectedTrack == ID_LEVEL)
@@ -358,11 +353,11 @@ public class AppMetrSample : MonoBehaviour
 			{
 				if (checkDictionary(levelProperties))
 				{
-					AppmetrPlugin.TrackLevel(Convert.ToInt32(fieldTrackLevel), levelProperties);
+					AppMetr.TrackLevel(Convert.ToInt32(fieldTrackLevel), levelProperties);
 				}
 				else
 				{
-					AppmetrPlugin.TrackLevel(Convert.ToInt32(fieldTrackLevel));
+					AppMetr.TrackLevel(Convert.ToInt32(fieldTrackLevel));
 				}
 			}
 		}
@@ -377,11 +372,11 @@ public class AppMetrSample : MonoBehaviour
 			{
 				if (checkDictionary(eventProperties))
 				{
-					AppmetrPlugin.TrackEvent(fieldTrackEvent, eventProperties);
+					AppMetr.TrackEvent(fieldTrackEvent, eventProperties);
 				}
 				else
 				{
-					AppmetrPlugin.TrackEvent(fieldTrackEvent);
+					AppMetr.TrackEvent(fieldTrackEvent);
 				}
 			}
 		}
@@ -391,11 +386,11 @@ public class AppMetrSample : MonoBehaviour
 			{
 				if (checkDictionary(paymentProperties))
 				{
-					AppmetrPlugin.TrackPayment(paymentList, paymentProperties);
+					AppMetr.TrackPayment(paymentList, paymentProperties);
 				}
 				else
 				{
-					AppmetrPlugin.TrackPayment(paymentList);
+					AppMetr.TrackPayment(paymentList);
 				}
 			}
 			else
