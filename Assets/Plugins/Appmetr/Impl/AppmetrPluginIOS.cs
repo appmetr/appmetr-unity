@@ -13,10 +13,19 @@ public class AppmetrPluginIOS
 	private static extern void _setKeyValueString(string key, string value);
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValueNumber(string key, double value);
+	private static extern void _setKeyValueFloat(string key, float value);
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValueOptional(string key, string value);
+	private static extern void _setKeyValueInt(string key, int value);
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValueStringOptional(string key, string value);
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValueFloatOptional(string key, float value);
+
+	[DllImport("__Internal")]
+	private static extern void _setKeyValueIntOptional(string key, int value);
 	
 	[DllImport("__Internal")]
 	private static extern void _setupWithToken(string token);
@@ -80,12 +89,9 @@ public class AppmetrPluginIOS
 		_trackSession();
 	}
 
-	public static void TrackSession(IDictionary<string, string> properties)
+	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(properties);
 		_trackSessionWithProperties();
 	}
 
@@ -94,12 +100,9 @@ public class AppmetrPluginIOS
 		_trackLevel(level);
 	}
 
-	public static void TrackLevel(int level, IDictionary<string, string> properties)
+	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(properties);
 		_trackLevelWithProperties(level);
 	}
 
@@ -108,75 +111,40 @@ public class AppmetrPluginIOS
 		_trackEvent(_event);
 	}
 
-	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(properties);
 		_trackEventWithProperties(eventName);
 	}
 
-	public static void TrackPayment(IDictionary<string, string> payment)
+	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		foreach (KeyValuePair<string, string> pair in payment)
-		{
-			if (validatePaymentNumberValue(pair.Key))
-			{
-				_setKeyValueNumber(pair.Key, Convert.ToDouble(pair.Value));
-			}
-			else
-			{
-				_setKeyValueString(pair.Key, pair.Value);
-			}
-		}
+		addProperties(payment);
 		_trackPayment();
 	}
 
-	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
+	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in payment)
-		{
-			if (validatePaymentNumberValue(pair.Key))
-			{
-				_setKeyValueNumber(pair.Key, Convert.ToDouble(pair.Value));
-			}
-			else
-			{
-				_setKeyValueString(pair.Key, pair.Value);
-			}
-		}
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValueOptional(pair.Key, pair.Value);
-		}
+		addProperties(payment);
+		addPropertiesOptional(properties);
 		_trackPaymentWithProperties();
 	}
 
-	public static void AttachProperties(IDictionary<string, string> properties)
+	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(properties);
 		_attachProperties();
 	}
 	
-	public static void TrackOptions(IDictionary<string, string> options, string commandId)
+	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
-		foreach (KeyValuePair<string, string> pair in options)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(options);
 		_trackOptions(commandId);
 	}
 	
-	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
+	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
-		foreach (KeyValuePair<string, string> pair in options)
-		{
-			_setKeyValueString(pair.Key, pair.Value);
-		}
+		addProperties(options);
 		_trackOptionsWithErrorCode(commandId, code, message);
 	}
 
@@ -198,6 +166,54 @@ public class AppmetrPluginIOS
 	public static void Flush()
 	{
 		_flush();
+	}
+	
+	private static void addProperties(IDictionary<string, object> properties)
+	{
+		foreach (KeyValuePair<string, object> pair in properties)
+		{
+			setKeyValue(pair.Key, pair.Value);
+		}
+	}
+	
+	private static void addPropertiesOptional(IDictionary<string, object> properties)
+	{
+		foreach (KeyValuePair<string, object> pair in properties)
+		{
+			setKeyValueOptional(pair.Key, pair.Value);
+		}
+	}
+	
+	private static void setKeyValue(string key, object value)
+	{
+		if (value.GetType() == typeof(string))
+		{
+			_setKeyValueString(key, value.ToString());
+		}
+		else if (value.GetType() == typeof(float))
+		{
+			_setKeyValueFloat(key, Convert.ToFloat(value));
+		}
+		else if (value.GetType() == typeof(int))
+		{
+			_setKeyValueInt(key, Convert.ToInt32(value));
+		}
+	}
+	
+	private static void setKeyValueOptional(string key, object value)
+	{
+		if (value.GetType() == typeof(string))
+		{
+			_setKeyValueStringOptional(key, value.ToString());
+		}
+		else if (value.GetType() == typeof(float))
+		{
+			_setKeyValueFloatOptional(key, Convert.ToFloat(value));
+		}
+		else if (value.GetType() == typeof(int))
+		{
+			_setKeyValueIntOptional(key, Convert.ToInt32(value));
+		}
 	}
 	
 	private static bool validatePaymentNumberValue(string key)

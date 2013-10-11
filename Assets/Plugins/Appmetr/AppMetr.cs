@@ -42,7 +42,7 @@ public class AppMetr
 	/// <param name="properties">
 	/// Properties for event.
 	/// </param>
-	public static void TrackSession(IDictionary<string, string> properties)
+	public static void TrackSession(IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.TrackSession(properties);
 	}
@@ -67,7 +67,7 @@ public class AppMetr
 	/// <param name="properties">
 	/// Aadditional parameter for this event.
 	/// </param>
-	public static void TrackLevel(int level, IDictionary<string, string> properties)
+	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.TrackLevel(level, properties);
 	}
@@ -92,7 +92,7 @@ public class AppMetr
 	/// <param name="properties">
 	/// Additional parameters for event.
 	/// </param>
-	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.TrackEvent(eventName, properties);
 	}
@@ -103,7 +103,7 @@ public class AppMetr
 	/// <param name="payment">
 	/// Required fields "psUserSpentCurrencyCode", "psUserSpentCurrencyAmount", "psReceivedCurrencyCode" and "psReceivedCurrencyAmount".
 	/// </param>
-	public static void TrackPayment(IDictionary<string, string> payment)
+	public static void TrackPayment(IDictionary<string, object> payment)
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment);
 	}
@@ -118,7 +118,7 @@ public class AppMetr
 	/// <param name="properties">
 	/// Additional information for event.
 	/// </param>
-	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
+	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment, properties);
 	}
@@ -129,7 +129,7 @@ public class AppMetr
 	/// <param name='properties'>
 	/// Properties.
 	/// </param>
-	public static void AttachProperties(IDictionary<string, string> properties)
+	public static void AttachProperties(IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.AttachProperties(properties);
 	}

@@ -51,7 +51,14 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 	[keyValueDict_ setObject:value forKey:key];
 }
 
-- (void)setKeyOptional:(NSString*)key Value:(NSString*)value
+- (void)setKeyStringOptional:(NSString*)key Value:(NSString*)value
+{
+	if (!keyValueDictOptional_)
+		keyValueDictOptional_ = [[NSMutableDictionary alloc] init];
+	[keyValueDictOptional_ setObject:value forKey:key];
+}
+
+- (void)setKeyNumberOptional:(NSString*)key Value:(NSNumber*)value
 {
 	if (!keyValueDictOptional_)
 		keyValueDictOptional_ = [[NSMutableDictionary alloc] init];
@@ -95,14 +102,29 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] setKeyString:createNSString(key) Value:createNSString(value)];
 	}
 
-	void _setKeyValueNumber(const char* key, double value)
+	void _setKeyValueFloat(const char* key, float value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithDouble: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithFloat: value]];
+	}
+
+	void _setKeyValueInt(const char* key, int value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithInteger: value]];
 	}
 	
-	void _setKeyValueOptional(const char* key, const char* value)
+	void _setKeyValueStringOptional(const char* key, const char* value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyOptional:createNSString(key) Value:createNSString(value)];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyStringOptional:createNSString(key) Value:createNSString(value)];
+	}
+
+	void _setKeyValueFloatOptional(const char* key, float value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:createNSString(key) Value:[NSNumber numberWithFloat: value]];
+	}
+
+	void _setKeyValueIntOptional(const char* key, int value)
+	{
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:createNSString(key) Value:[NSNumber numberWithInteger: value]];
 	}
 
 	void _setupWithToken(const char* token)

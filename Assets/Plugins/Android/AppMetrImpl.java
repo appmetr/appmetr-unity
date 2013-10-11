@@ -19,8 +19,8 @@ public class AppMetrImpl
 {
 	private final static String TAG = "AppMetrImpl";
 	
-	private static Map<String, String> keyMap = new HashMap<String, String>();
-	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
+	private static Map<String, Object> keyMap = new HashMap<String, Object>();
+	private static Map<String, Object> keyOptionalMap = new HashMap<String, Object>();
 	
 	private static void removeKeys()
 	{
@@ -28,12 +28,12 @@ public class AppMetrImpl
 		keyOptionalMap.clear();
 	}
 	
-    public static void setKey(String key, String value)
+    public static void setKeyValue(String key, Object value)
 	{
 		keyMap.put(key, value);
     }
 	
-    public static void setKeyOptional(String key, String value)
+    public static void setKeyValueOptional(String key, Object value)
 	{
 		keyOptionalMap.put(key, value);
 	}
@@ -155,7 +155,7 @@ public class AppMetrImpl
 		AppMetr.flush();
     }
 
-    private static JSONObject paymentWithPaymentProcessor(Map<String, String> payment) throws JSONException
+    private static JSONObject paymentWithPaymentProcessor(Map<String, Object> payment) throws JSONException
 	{
 		JSONObject ret = new JSONObject(payment);
         if (!ret.has("processor"))

@@ -95,11 +95,11 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackSession");
 	}
 
-	public static void TrackSession(IDictionary<string, string> properties)
+	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
+		foreach (KeyValuePair<string, object> pair in properties)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("trackSessionWithProperties");
 	}
@@ -109,11 +109,11 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackLevel", level);
 	}
 
-	public static void TrackLevel(int level, IDictionary<string, string> properties)
+	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
+		foreach (KeyValuePair<string, object> pair in properties)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("trackLevelWithProperties", level);
 	}
@@ -123,52 +123,52 @@ public class AppmetrPluginAndroid
 		ConnectImpl.CallStatic("trackEvent", eventName);
 	}
 
-	public static void TrackEvent(string eventName, IDictionary<string, string> properties)
+	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
+		foreach (KeyValuePair<string, object> pair in properties)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("trackEventWithProperties", eventName);
 	}
 
-	public static void TrackPayment(IDictionary<string, string> payment)
+	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		foreach (KeyValuePair<string, string> pair in payment)
+		foreach (KeyValuePair<string, object> pair in payment)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("trackPayment");
 	}
 
-	public static void TrackPayment(IDictionary<string, string> payment, IDictionary<string, string> properties)
+	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in payment)
+		foreach (KeyValuePair<string, object> pair in payment)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
-		foreach (KeyValuePair<string, string> pair in properties)
+		foreach (KeyValuePair<string, object> pair in properties)
 		{
-			ConnectImpl.CallStatic("setKeyOptional", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValueOptional", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("trackPaymentWithProperties");
 	}
 
-	public static void AttachProperties(IDictionary<string, string> properties)
+	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, string> pair in properties)
+		foreach (KeyValuePair<string, object> pair in properties)
 		{
-			ConnectImpl.CallStatic("setKey", pair.Key, pair.Value);
+			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
 		}
 		ConnectImpl.CallStatic("attachProperties");
 	}
 
-	public static void TrackOptions(IDictionary<string, string> options, string commandId)
+	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
 		ConnectImpl.CallStatic("trackOptions", commandId);
 	}
 
-	public static void TrackOptions(IDictionary<string, string> options, string commandId, string code, string message)
+	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
 		ConnectImpl.CallStatic("trackOptions", commandId, code, message);
 	}
