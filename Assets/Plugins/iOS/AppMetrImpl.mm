@@ -183,6 +183,11 @@ extern "C" {
 		[[AppMetrImpl sharedAppMetrImpl] resetDict];
 	}
 	
+	void _attachPropertiesNull()
+	{
+		[AppMetr attachProperties];
+	}
+	
 	void _attachProperties()
 	{
 		NSMutableDictionary* dictCopy = [[[AppMetrImpl sharedAppMetrImpl] keyValueDict] copy];

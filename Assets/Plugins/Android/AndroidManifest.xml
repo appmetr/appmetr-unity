@@ -27,7 +27,6 @@
 		
 		<meta-data android:name="appmetrUrl" android:value="http://appmetr.com/api"/>
 		<meta-data android:name="trackInstallByApp" android:value="true"/>
-		<meta-data android:name="trackSessionByApp" android:value="true"/>
 	</application>
 	
 	<uses-feature android:glEsVersion="0x00010001" />

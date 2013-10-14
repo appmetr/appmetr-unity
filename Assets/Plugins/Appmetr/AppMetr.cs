@@ -124,6 +124,14 @@ public class AppMetr
 	}
 	
 	/// <summary>
+	/// Methods for attaching only built-in user properties.
+	/// </summary>
+	public static void AttachProperties()
+	{
+		AppmetrPlatformPlugin.AttachProperties();
+	}
+
+	/// <summary>
 	/// Methods for attaching user properties.
 	/// </summary>
 	/// <param name='properties'>

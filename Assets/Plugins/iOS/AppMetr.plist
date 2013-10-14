@@ -2,5 +2,3 @@
 <string>http://appmetr.com/api</string>
 <key>trackInstallByApp</key>
 <true />
-<key>trackSessionByApp</key>
-<true />

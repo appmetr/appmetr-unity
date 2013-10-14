@@ -55,6 +55,9 @@ public class AppmetrPluginIOS
 	private static extern void _trackPaymentWithProperties();
 	
 	[DllImport("__Internal")]
+	private static extern void _attachPropertiesNull();
+	
+	[DllImport("__Internal")]
 	private static extern void _attachProperties();
 	
 	[DllImport("__Internal")]
@@ -129,7 +132,12 @@ public class AppmetrPluginIOS
 		addPropertiesOptional(properties);
 		_trackPaymentWithProperties();
 	}
-
+	
+	public static void AttachProperties()
+	{
+		_attachPropertiesNull();
+	}
+	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
 		addProperties(properties);

@@ -39,7 +39,6 @@
     NSString *mUserID;
     NSString *mVersion;
     BOOL mTrackInstallByApp;
-    BOOL mTrackSessionByApp;
 
     NSDate *mEnterBackgroundDate;
 
@@ -82,6 +81,12 @@
  * If value not set, the unique identifier of device will be used by default.
  */
 - (void)setupWithUserID:(NSString *)userID;
+
+/**
+ * Updating information about the user
+ * @param properties Information about the user
+ */
+- (void)attachProperties;
 
 /**
  * Updating information about the user

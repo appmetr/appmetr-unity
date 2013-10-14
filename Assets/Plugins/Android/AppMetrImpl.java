@@ -121,6 +121,11 @@ public class AppMetrImpl
 		removeKeys();
     }
 
+    public static void attachPropertiesNull()
+	{
+		AppMetr.attachProperties();
+	}
+
     public static void attachProperties()
 	{
 		AppMetr.attachProperties(new JSONObject(keyMap));

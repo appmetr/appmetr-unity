@@ -153,7 +153,12 @@ public class AppmetrPluginAndroid
 		}
 		ConnectImpl.CallStatic("trackPaymentWithProperties");
 	}
-
+	
+	public static void AttachProperties()
+	{
+		ConnectImpl.CallStatic("attachPropertiesNull");
+	}
+	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
 		foreach (KeyValuePair<string, object> pair in properties)
