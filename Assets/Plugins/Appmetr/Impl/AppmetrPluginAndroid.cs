@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using JsonFx.Json;
 
 public class AppmetrPluginAndroid
 {
@@ -97,11 +98,8 @@ public class AppmetrPluginAndroid
 
 	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("trackSessionWithProperties");
+		string json = new JsonWriter().Write(properties);
+		ConnectImpl.CallStatic("trackSessionWithProperties", json);
 	}
 
 	public static void TrackLevel(int level)
@@ -111,11 +109,8 @@ public class AppmetrPluginAndroid
 
 	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("trackLevelWithProperties", level);
+		string json = new JsonWriter().Write(properties);
+		ConnectImpl.CallStatic("trackLevelWithProperties", level, json);
 	}
 
 	public static void TrackEvent(string eventName)
@@ -125,33 +120,21 @@ public class AppmetrPluginAndroid
 
 	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("trackEventWithProperties", eventName);
+		string json = new JsonWriter().Write(properties);
+		ConnectImpl.CallStatic("trackEventWithProperties", eventName, json);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		foreach (KeyValuePair<string, object> pair in payment)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("trackPayment");
+		string json = new JsonWriter().Write(payment);
+		ConnectImpl.CallStatic("trackPayment", json);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, object> pair in payment)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKeyValueOptional", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("trackPaymentWithProperties");
+		string jsonPayment = new JsonWriter().Write(payment);
+		string jsonProperties = new JsonWriter().Write(payment);
+		ConnectImpl.CallStatic("trackPaymentWithProperties", jsonPayment, jsonProperties);
 	}
 	
 	public static void AttachProperties()
@@ -161,21 +144,20 @@ public class AppmetrPluginAndroid
 	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			ConnectImpl.CallStatic("setKeyValue", pair.Key, pair.Value);
-		}
-		ConnectImpl.CallStatic("attachProperties");
+		string json = new JsonWriter().Write(properties);
+		ConnectImpl.CallStatic("attachProperties", json);
 	}
 
 	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
-		ConnectImpl.CallStatic("trackOptions", commandId);
+		string json = new JsonWriter().Write(options);
+		ConnectImpl.CallStatic("trackOptions", json, commandId);
 	}
 
 	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
-		ConnectImpl.CallStatic("trackOptions", commandId, code, message);
+		string json = new JsonWriter().Write(options);
+		ConnectImpl.CallStatic("trackOptions", json, commandId, code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)

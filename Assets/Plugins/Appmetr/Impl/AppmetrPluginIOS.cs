@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using JsonFx.Json;
 
 public class AppmetrPluginIOS
 {
@@ -34,37 +35,37 @@ public class AppmetrPluginIOS
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackSessionWithProperties();
+	private static extern void _trackSessionWithProperties(const char* properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackLevelWithProperties(int level);
+	private static extern void _trackLevelWithProperties(int level, const char* properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackEvent(string eventName);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEventWithProperties(string eventName);
+	private static extern void _trackEventWithProperties(string eventName, const char* properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment();
+	private static extern void _trackPayment(const char* payment);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPaymentWithProperties();
+	private static extern void _trackPaymentWithProperties(const char* payment, const char* properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _attachPropertiesNull();
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties();
+	private static extern void _attachProperties(const char* properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string commandId);
+	private static extern void _trackOptions(const char* options, string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptionsWithErrorCode(string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(const char* options, string commandId, string code, string message);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentStart(string experiment, string groupId);
@@ -94,8 +95,8 @@ public class AppmetrPluginIOS
 
 	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		addProperties(properties);
-		_trackSessionWithProperties();
+		string json = new JsonWriter().Write(properties);
+		_trackSessionWithProperties(json);
 	}
 
 	public static void TrackLevel(int level)
@@ -105,8 +106,8 @@ public class AppmetrPluginIOS
 
 	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		addProperties(properties);
-		_trackLevelWithProperties(level);
+		string json = new JsonWriter().Write(properties);
+		_trackLevelWithProperties(level, json);
 	}
 
 	public static void TrackEvent(string _event)
@@ -116,21 +117,21 @@ public class AppmetrPluginIOS
 
 	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		addProperties(properties);
-		_trackEventWithProperties(eventName);
+		string json = new JsonWriter().Write(properties);
+		_trackEventWithProperties(eventName, json);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		addProperties(payment);
-		_trackPayment();
+		string json = new JsonWriter().Write(payment);
+		_trackPayment(json);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		addProperties(payment);
-		addPropertiesOptional(properties);
-		_trackPaymentWithProperties();
+		string jsonPayment = new JsonWriter().Write(payment);
+		string jsonProperties = new JsonWriter().Write(properties);
+		_trackPaymentWithProperties(jsonPayment, jsonProperties);
 	}
 	
 	public static void AttachProperties()
@@ -140,20 +141,20 @@ public class AppmetrPluginIOS
 	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		addProperties(properties);
-		_attachProperties();
+		string json = new JsonWriter().Write(properties);
+		_attachProperties(json);
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
-		addProperties(options);
-		_trackOptions(commandId);
+		string json = new JsonWriter().Write(options);
+		_trackOptions(json, commandId);
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
-		addProperties(options);
-		_trackOptionsWithErrorCode(commandId, code, message);
+		string json = new JsonWriter().Write(options);
+		_trackOptionsWithErrorCode(json, commandId, code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)

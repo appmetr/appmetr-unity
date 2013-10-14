@@ -59,10 +59,16 @@ public class AppMetrImpl
 		AppMetr.trackSession();
     }
 
-    public static void trackSessionWithProperties()
+    public static void trackSessionWithProperties(String properties)
 	{
-		AppMetr.trackSession(new JSONObject(keyMap));
-		removeKeys();
+		try
+		{
+			AppMetr.trackSession(new JSONObject(properties));
+		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 	}
 
     public static void trackLevel(int level)
@@ -70,28 +76,40 @@ public class AppMetrImpl
 		AppMetr.trackLevel(level);
     }
 
-    public static void trackLevelWithProperties(int level)
+    public static void trackLevelWithProperties(int level, String properties)
 	{
-		AppMetr.trackLevel(level, new JSONObject(keyMap));
-		removeKeys();
-    }
+		try
+		{
+			AppMetr.trackLevel(level, new JSONObject(properties));
+ 		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+   }
 
     public static void trackEvent(String event)
 	{
 		AppMetr.trackEvent(event);
     }
 
-    public static void trackEventWithProperties(String event)
-	{
-		AppMetr.trackEvent(event, new JSONObject(keyMap));
-		removeKeys();
-    }
-
-    public static void trackPayment()
+    public static void trackEventWithProperties(String event, String properties)
 	{
 		try
 		{
-			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap));
+			AppMetr.trackEvent(event, new JSONObject(properties));
+  		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+   }
+
+    public static void trackPayment(String payment)
+	{
+		try
+		{
+			AppMetr.trackPayment(new JSONObject(payment));
 		}
 		catch (DataFormatException e)
 		{
@@ -101,14 +119,13 @@ public class AppMetrImpl
 		{
 			Log.e(TAG, e.getMessage());
 		}
-		removeKeys();
     }
 
-    public static void trackPaymentWithProperties()
+    public static void trackPaymentWithProperties(String payment, String properties)
 	{
 		try
 		{
-			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap), new JSONObject(keyOptionalMap));
+			AppMetr.trackPayment(new JSONObject(payment), new JSONObject(properties));
 		}
 		catch (DataFormatException e)
 		{
@@ -118,7 +135,6 @@ public class AppMetrImpl
 		{
 			Log.e(TAG, e.getMessage());
 		}
-		removeKeys();
     }
 
     public static void attachPropertiesNull()
@@ -126,17 +142,23 @@ public class AppMetrImpl
 		AppMetr.attachProperties();
 	}
 
-    public static void attachProperties()
+    public static void attachProperties(String properties)
 	{
-		AppMetr.attachProperties(new JSONObject(keyMap));
-		removeKeys();
+		try
+		{
+			AppMetr.attachProperties(new JSONObject(properties));
+		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 	}
 
-    public static void trackOptions(String commandId)
+    public static void trackOptions(String options, String commandId)
 	{
     }
 
-    public static void trackOptions(String commandId, String errorCode, String errorMessage)
+    public static void trackOptions(String options, String commandId, String errorCode, String errorMessage)
 	{
 	}
 
