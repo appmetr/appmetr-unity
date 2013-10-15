@@ -18,7 +18,8 @@
 
 - (void)setKeyString:(NSString*)key Value:(NSString*)value;
 - (void)setKeyNumber:(NSString*)key Value:(NSNumber*)value;
-- (void)setKeyOptional:(NSString*)key Value:(NSString*)value;
+- (void)setKeyStringOptional:(NSString*)key Value:(NSString*)value;
+- (void)setKeyNumberOptional:(NSString*)key Value:(NSNumber*)value;
 - (void)resetDict;
 
 @end

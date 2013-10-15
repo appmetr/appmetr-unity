@@ -70,9 +70,6 @@ properties - дополнительные параметры
 payment - сведения о выполненной покупке
 properties - дополнительные параметры
 
-
-
-
 - AttachProperties
 Добавление параметров
 Параметры:
@@ -110,3 +107,6 @@ public void HandleOnCommand(string command) {
 }
 
 Пример использования плагина можно посмотреть в *Plugins/Appmetr/Sample/AppMetrSample.cs*.
+
+ВАЖНО:
+Библиотека не поддерживает Stripping Level = use micro mscorlib.

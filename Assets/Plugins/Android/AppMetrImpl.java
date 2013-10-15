@@ -19,8 +19,8 @@ public class AppMetrImpl
 {
 	private final static String TAG = "AppMetrImpl";
 	
-	private static Map<String, String> keyMap = new HashMap<String, String>();
-	private static Map<String, String> keyOptionalMap = new HashMap<String, String>();
+	private static Map<String, Object> keyMap = new HashMap<String, Object>();
+	private static Map<String, Object> keyOptionalMap = new HashMap<String, Object>();
 	
 	private static void removeKeys()
 	{
@@ -28,12 +28,12 @@ public class AppMetrImpl
 		keyOptionalMap.clear();
 	}
 	
-    public static void setKey(String key, String value)
+    public static void setKeyValue(String key, Object value)
 	{
 		keyMap.put(key, value);
     }
 	
-    public static void setKeyOptional(String key, String value)
+    public static void setKeyValueOptional(String key, Object value)
 	{
 		keyOptionalMap.put(key, value);
 	}
@@ -59,10 +59,16 @@ public class AppMetrImpl
 		AppMetr.trackSession();
     }
 
-    public static void trackSessionWithProperties()
+    public static void trackSessionWithProperties(String properties)
 	{
-		AppMetr.trackSession(new JSONObject(keyMap));
-		removeKeys();
+		try
+		{
+			AppMetr.trackSession(new JSONObject(properties));
+		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
 	}
 
     public static void trackLevel(int level)
@@ -70,28 +76,40 @@ public class AppMetrImpl
 		AppMetr.trackLevel(level);
     }
 
-    public static void trackLevelWithProperties(int level)
+    public static void trackLevelWithProperties(int level, String properties)
 	{
-		AppMetr.trackLevel(level, new JSONObject(keyMap));
-		removeKeys();
-    }
+		try
+		{
+			AppMetr.trackLevel(level, new JSONObject(properties));
+ 		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+   }
 
     public static void trackEvent(String event)
 	{
 		AppMetr.trackEvent(event);
     }
 
-    public static void trackEventWithProperties(String event)
-	{
-		AppMetr.trackEvent(event, new JSONObject(keyMap));
-		removeKeys();
-    }
-
-    public static void trackPayment()
+    public static void trackEventWithProperties(String event, String properties)
 	{
 		try
 		{
-			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap));
+			AppMetr.trackEvent(event, new JSONObject(properties));
+  		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+   }
+
+    public static void trackPayment(String payment)
+	{
+		try
+		{
+			AppMetr.trackPayment(new JSONObject(payment));
 		}
 		catch (DataFormatException e)
 		{
@@ -101,14 +119,13 @@ public class AppMetrImpl
 		{
 			Log.e(TAG, e.getMessage());
 		}
-		removeKeys();
     }
 
-    public static void trackPaymentWithProperties()
+    public static void trackPaymentWithProperties(String payment, String properties)
 	{
 		try
 		{
-			AppMetr.trackPayment(paymentWithPaymentProcessor(keyMap), new JSONObject(keyOptionalMap));
+			AppMetr.trackPayment(new JSONObject(payment), new JSONObject(properties));
 		}
 		catch (DataFormatException e)
 		{
@@ -118,20 +135,30 @@ public class AppMetrImpl
 		{
 			Log.e(TAG, e.getMessage());
 		}
-		removeKeys();
     }
 
-    public static void attachProperties()
+    public static void attachPropertiesNull()
 	{
-		AppMetr.attachProperties(new JSONObject(keyMap));
-		removeKeys();
+		AppMetr.attachProperties();
 	}
 
-    public static void trackOptions(String commandId)
+    public static void attachProperties(String properties)
+	{
+		try
+		{
+			AppMetr.attachProperties(new JSONObject(properties));
+		}
+		catch (JSONException e)
+		{
+			Log.e(TAG, e.getMessage());
+		}
+	}
+
+    public static void trackOptions(String options, String commandId)
 	{
     }
 
-    public static void trackOptions(String commandId, String errorCode, String errorMessage)
+    public static void trackOptions(String options, String commandId, String errorCode, String errorMessage)
 	{
 	}
 
@@ -155,7 +182,7 @@ public class AppMetrImpl
 		AppMetr.flush();
     }
 
-    private static JSONObject paymentWithPaymentProcessor(Map<String, String> payment) throws JSONException
+    private static JSONObject paymentWithPaymentProcessor(Map<String, Object> payment) throws JSONException
 	{
 		JSONObject ret = new JSONObject(payment);
         if (!ret.has("processor"))

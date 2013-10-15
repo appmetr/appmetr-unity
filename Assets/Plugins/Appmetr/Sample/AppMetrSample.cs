@@ -42,13 +42,13 @@ public class AppMetrSample : MonoBehaviour
 	
 	private int maxPropFields = 0;
 	
-	Dictionary<string, string> sessionProperties = new Dictionary<string, string>();
-	Dictionary<string, string> levelProperties = new Dictionary<string, string>();
-	Dictionary<string, string> eventProperties = new Dictionary<string, string>();
-	Dictionary<string, string> paymentProperties = new Dictionary<string, string>();
-	Dictionary<string, string> paymentList = new Dictionary<string, string>();
+	Dictionary<string, object> sessionProperties = new Dictionary<string, object>();
+	Dictionary<string, object> levelProperties = new Dictionary<string, object>();
+	Dictionary<string, object> eventProperties = new Dictionary<string, object>();
+	Dictionary<string, object> paymentProperties = new Dictionary<string, object>();
+	Dictionary<string, object> paymentList = new Dictionary<string, object>();
 
-	Dictionary<string, string> tempList = new Dictionary<string, string>();
+	Dictionary<string, object> tempList = new Dictionary<string, object>();
 	
 	private string sessionLastKey = "";
 	private string levelLastKey = "";
@@ -149,10 +149,10 @@ public class AppMetrSample : MonoBehaviour
 		
 		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
 		tempList.Clear();
-		foreach (KeyValuePair<string, string> pair in sessionProperties)
+		foreach (KeyValuePair<string, object> pair in sessionProperties)
 		{
 			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
 			if ((key == "" && !checkDictionary(sessionProperties)) || sessionProperties.ContainsKey(key))
 			{
 				key = pair.Key;
@@ -161,7 +161,7 @@ public class AppMetrSample : MonoBehaviour
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
 		sessionProperties.Clear();
-		foreach (KeyValuePair<string, string> pair in tempList)
+		foreach (KeyValuePair<string, object> pair in tempList)
 		{
 			sessionProperties.Add(pair.Key, pair.Value);
 			sessionLastKey = pair.Key;
@@ -192,10 +192,10 @@ public class AppMetrSample : MonoBehaviour
 		
 		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
 		tempList.Clear();
-		foreach (KeyValuePair<string, string> pair in levelProperties)
+		foreach (KeyValuePair<string, object> pair in levelProperties)
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
 			if ((key == "" && !checkDictionary(levelProperties)) || levelProperties.ContainsKey(key))
 			{
 				key = pair.Key;
@@ -204,7 +204,7 @@ public class AppMetrSample : MonoBehaviour
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
 		levelProperties.Clear();
-		foreach (KeyValuePair<string, string> pair in tempList)
+		foreach (KeyValuePair<string, object> pair in tempList)
 		{
 			levelProperties.Add(pair.Key, pair.Value);
 			levelLastKey = pair.Key;
@@ -235,10 +235,10 @@ public class AppMetrSample : MonoBehaviour
 		
 		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
 		tempList.Clear();
-		foreach (KeyValuePair<string, string> pair in eventProperties)
+		foreach (KeyValuePair<string, object> pair in eventProperties)
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
 			if ((key == "" && !checkDictionary(eventProperties)) || eventProperties.ContainsKey(key))
 			{
 				key = pair.Key;
@@ -247,7 +247,7 @@ public class AppMetrSample : MonoBehaviour
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
 		eventProperties.Clear();
-		foreach (KeyValuePair<string, string> pair in tempList)
+		foreach (KeyValuePair<string, object> pair in tempList)
 		{
 			eventProperties.Add(pair.Key, pair.Value);
 			eventLastKey = pair.Key;
@@ -275,10 +275,10 @@ public class AppMetrSample : MonoBehaviour
 	
 		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
 		tempList.Clear();
-		foreach (KeyValuePair<string, string> pair in paymentList)
+		foreach (KeyValuePair<string, object> pair in paymentList)
 		{
 			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
 			if ((key == "" && !checkDictionary(paymentList)) || paymentList.ContainsKey(key))
 			{
 				key = pair.Key;
@@ -287,7 +287,7 @@ public class AppMetrSample : MonoBehaviour
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
 		paymentList.Clear();
-		foreach (KeyValuePair<string, string> pair in tempList)
+		foreach (KeyValuePair<string, object> pair in tempList)
 		{
 			paymentList.Add(pair.Key, pair.Value);
 			paymentLastKey = pair.Key;
@@ -308,10 +308,10 @@ public class AppMetrSample : MonoBehaviour
 
 		fieldSpacer = spacer + propButtonHeight + propFieldIndent;
 		tempList.Clear();
-		foreach (KeyValuePair<string, string> pair in paymentProperties)
+		foreach (KeyValuePair<string, object> pair in paymentProperties)
 		{
 			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value);
+			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
 			if ((key == "" && !checkDictionary(paymentProperties)) || paymentProperties.ContainsKey(key))
 			{
 				key = pair.Key;
@@ -320,7 +320,7 @@ public class AppMetrSample : MonoBehaviour
 			fieldSpacer += fieldHeight + propFieldIndent;
 		}
 		paymentProperties.Clear();
-		foreach (KeyValuePair<string, string> pair in tempList)
+		foreach (KeyValuePair<string, object> pair in tempList)
 		{
 			paymentProperties.Add(pair.Key, pair.Value);
 			paymentPropLastKey = pair.Key;
@@ -401,12 +401,12 @@ public class AppMetrSample : MonoBehaviour
 		}
 	}
 	
-	private bool checkDictionary(IDictionary<string, string> dict)
+	private bool checkDictionary(IDictionary<string, object> dict)
 	{
 		if (dict.Count == 0)
 			return false;
 			
-		foreach (KeyValuePair<string, string> pair in dict)
+		foreach (KeyValuePair<string, object> pair in dict)
 		{
 			if (pair.Key == "")
 				return false;
