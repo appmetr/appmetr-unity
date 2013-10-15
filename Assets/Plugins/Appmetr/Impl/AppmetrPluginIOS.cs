@@ -35,37 +35,37 @@ public class AppmetrPluginIOS
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackSessionWithProperties(const char* properties);
+	private static extern void _trackSessionWithProperties(string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackLevelWithProperties(int level, const char* properties);
+	private static extern void _trackLevelWithProperties(int level, string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackEvent(string eventName);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEventWithProperties(string eventName, const char* properties);
+	private static extern void _trackEventWithProperties(string eventName, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(const char* payment);
+	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPaymentWithProperties(const char* payment, const char* properties);
+	private static extern void _trackPaymentWithProperties(string payment, string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _attachPropertiesNull();
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties(const char* properties);
+	private static extern void _attachProperties(string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(const char* options, string commandId);
+	private static extern void _trackOptions(string options, string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptionsWithErrorCode(const char* options, string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(string options, string commandId, string code, string message);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentStart(string experiment, string groupId);
@@ -176,55 +176,7 @@ public class AppmetrPluginIOS
 	{
 		_flush();
 	}
-	
-	private static void addProperties(IDictionary<string, object> properties)
-	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			setKeyValue(pair.Key, pair.Value);
-		}
-	}
-	
-	private static void addPropertiesOptional(IDictionary<string, object> properties)
-	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			setKeyValueOptional(pair.Key, pair.Value);
-		}
-	}
-	
-	private static void setKeyValue(string key, object value)
-	{
-		if (value.GetType() == typeof(string))
-		{
-			_setKeyValueString(key, value.ToString());
-		}
-		else if (value.GetType() == typeof(float))
-		{
-			_setKeyValueFloat(key, Convert.ToFloat(value));
-		}
-		else if (value.GetType() == typeof(int))
-		{
-			_setKeyValueInt(key, Convert.ToInt32(value));
-		}
-	}
-	
-	private static void setKeyValueOptional(string key, object value)
-	{
-		if (value.GetType() == typeof(string))
-		{
-			_setKeyValueStringOptional(key, value.ToString());
-		}
-		else if (value.GetType() == typeof(float))
-		{
-			_setKeyValueFloatOptional(key, Convert.ToFloat(value));
-		}
-		else if (value.GetType() == typeof(int))
-		{
-			_setKeyValueIntOptional(key, Convert.ToInt32(value));
-		}
-	}
-	
+			
 	private static bool validatePaymentNumberValue(string key)
 	{
 		if (key == "psUserSpentCurrencyAmount" || key == "psReceivedCurrencyAmount" || key == "appCurrencyAmount")
