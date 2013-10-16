@@ -17,7 +17,7 @@ if project.modified:
 
 install_path = sys.argv[1]
 target_platform = sys.argv[2]
- 
+  
 info_plist_path = os.path.join(install_path, 'Info.plist')
 
 appmetr_plist_path = os.path.join(install_path, '../Assets/Plugins/iOS/AppMetr.plist')

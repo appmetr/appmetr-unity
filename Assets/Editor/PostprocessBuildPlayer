@@ -6,7 +6,7 @@ $installPath = $ARGV[0];
 $currDir = `pwd`;
 chomp $currDir;
 
-@files = bsd_glob( "Assets/Editor/PostprocessBuildPlayer_*", GLOB_NOCASE );
+@files = bsd_glob( $currDir."/PostprocessBuildPlayer_*", GLOB_NOCASE );
 
 foreach $file( @files )
 {

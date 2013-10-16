@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using JsonFx.Json;
@@ -83,6 +84,16 @@ public class AppmetrPluginIOS
 
 	#region Declarations for non-native
 
+	private static string ToJson(IDictionary<string, object> properties) 
+	{
+		var json = new StringBuilder ();
+
+		var writer = new JsonWriter (json);
+		writer.Write(properties);
+
+		return json.ToString ();
+	}
+
 	public static void SetupWithToken(string token)
 	{
 		_setupWithToken(token);
@@ -95,8 +106,7 @@ public class AppmetrPluginIOS
 
 	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackSessionWithProperties(json);
+		_trackSessionWithProperties(ToJson(properties));
 	}
 
 	public static void TrackLevel(int level)
@@ -106,8 +116,7 @@ public class AppmetrPluginIOS
 
 	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackLevelWithProperties(level, json);
+		_trackLevelWithProperties(level, ToJson(properties));
 	}
 
 	public static void TrackEvent(string _event)
@@ -117,21 +126,17 @@ public class AppmetrPluginIOS
 
 	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackEventWithProperties(eventName, json);
+		_trackEventWithProperties(eventName, ToJson(properties));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		string json = new JsonWriter().Write(payment);
-		_trackPayment(json);
+		_trackPayment(ToJson(payment));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		string jsonPayment = new JsonWriter().Write(payment);
-		string jsonProperties = new JsonWriter().Write(properties);
-		_trackPaymentWithProperties(jsonPayment, jsonProperties);
+		_trackPaymentWithProperties(ToJson(payment), ToJson(properties));
 	}
 	
 	public static void AttachProperties()
@@ -141,20 +146,17 @@ public class AppmetrPluginIOS
 	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_attachProperties(json);
+		_attachProperties(ToJson(properties));
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
-		string json = new JsonWriter().Write(options);
-		_trackOptions(json, commandId);
+		_trackOptions(ToJson(options), commandId);
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
-		string json = new JsonWriter().Write(options);
-		_trackOptionsWithErrorCode(json, commandId, code, message);
+		_trackOptionsWithErrorCode(ToJson(options), commandId, code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)
