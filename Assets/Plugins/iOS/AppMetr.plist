@@ -1,4 +1,4 @@
 <key>appmetrUrl</key>
-<string>http://appmetr.com/api</string>
+<string>http://vkdev.pixapi.net/api</string>
 <key>trackInstallByApp</key>
-<true />
+<false />

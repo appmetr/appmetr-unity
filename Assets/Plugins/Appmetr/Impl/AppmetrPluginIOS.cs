@@ -2,6 +2,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using JsonFx.Json;
@@ -35,37 +36,37 @@ public class AppmetrPluginIOS
 	private static extern void _trackSession();
 	
 	[DllImport("__Internal")]
-	private static extern void _trackSessionWithProperties(const char* properties);
+	private static extern void _trackSessionWithProperties(string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackLevel(int level);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackLevelWithProperties(int level, const char* properties);
+	private static extern void _trackLevelWithProperties(int level, string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackEvent(string eventName);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackEventWithProperties(string eventName, const char* properties);
+	private static extern void _trackEventWithProperties(string eventName, string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPayment(const char* payment);
+	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackPaymentWithProperties(const char* payment, const char* properties);
+	private static extern void _trackPaymentWithProperties(string payment, string properties);
 	
 	[DllImport("__Internal")]
 	private static extern void _attachPropertiesNull();
 	
 	[DllImport("__Internal")]
-	private static extern void _attachProperties(const char* properties);
+	private static extern void _attachProperties(string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(const char* options, string commandId);
+	private static extern void _trackOptions(string options, string commandId);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptionsWithErrorCode(const char* options, string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(string options, string commandId, string code, string message);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentStart(string experiment, string groupId);
@@ -83,6 +84,16 @@ public class AppmetrPluginIOS
 
 	#region Declarations for non-native
 
+	private static string ToJson(IDictionary<string, object> properties) 
+	{
+		var json = new StringBuilder ();
+
+		var writer = new JsonWriter (json);
+		writer.Write(properties);
+
+		return json.ToString ();
+	}
+
 	public static void SetupWithToken(string token)
 	{
 		_setupWithToken(token);
@@ -95,8 +106,7 @@ public class AppmetrPluginIOS
 
 	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackSessionWithProperties(json);
+		_trackSessionWithProperties(ToJson(properties));
 	}
 
 	public static void TrackLevel(int level)
@@ -106,8 +116,7 @@ public class AppmetrPluginIOS
 
 	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackLevelWithProperties(level, json);
+		_trackLevelWithProperties(level, ToJson(properties));
 	}
 
 	public static void TrackEvent(string _event)
@@ -117,21 +126,17 @@ public class AppmetrPluginIOS
 
 	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_trackEventWithProperties(eventName, json);
+		_trackEventWithProperties(eventName, ToJson(properties));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		string json = new JsonWriter().Write(payment);
-		_trackPayment(json);
+		_trackPayment(ToJson(payment));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		string jsonPayment = new JsonWriter().Write(payment);
-		string jsonProperties = new JsonWriter().Write(properties);
-		_trackPaymentWithProperties(jsonPayment, jsonProperties);
+		_trackPaymentWithProperties(ToJson(payment), ToJson(properties));
 	}
 	
 	public static void AttachProperties()
@@ -141,20 +146,17 @@ public class AppmetrPluginIOS
 	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		string json = new JsonWriter().Write(properties);
-		_attachProperties(json);
+		_attachProperties(ToJson(properties));
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId)
 	{
-		string json = new JsonWriter().Write(options);
-		_trackOptions(json, commandId);
+		_trackOptions(ToJson(options), commandId);
 	}
 	
 	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
 	{
-		string json = new JsonWriter().Write(options);
-		_trackOptionsWithErrorCode(json, commandId, code, message);
+		_trackOptionsWithErrorCode(ToJson(options), commandId, code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)
@@ -176,55 +178,7 @@ public class AppmetrPluginIOS
 	{
 		_flush();
 	}
-	
-	private static void addProperties(IDictionary<string, object> properties)
-	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			setKeyValue(pair.Key, pair.Value);
-		}
-	}
-	
-	private static void addPropertiesOptional(IDictionary<string, object> properties)
-	{
-		foreach (KeyValuePair<string, object> pair in properties)
-		{
-			setKeyValueOptional(pair.Key, pair.Value);
-		}
-	}
-	
-	private static void setKeyValue(string key, object value)
-	{
-		if (value.GetType() == typeof(string))
-		{
-			_setKeyValueString(key, value.ToString());
-		}
-		else if (value.GetType() == typeof(float))
-		{
-			_setKeyValueFloat(key, Convert.ToFloat(value));
-		}
-		else if (value.GetType() == typeof(int))
-		{
-			_setKeyValueInt(key, Convert.ToInt32(value));
-		}
-	}
-	
-	private static void setKeyValueOptional(string key, object value)
-	{
-		if (value.GetType() == typeof(string))
-		{
-			_setKeyValueStringOptional(key, value.ToString());
-		}
-		else if (value.GetType() == typeof(float))
-		{
-			_setKeyValueFloatOptional(key, Convert.ToFloat(value));
-		}
-		else if (value.GetType() == typeof(int))
-		{
-			_setKeyValueIntOptional(key, Convert.ToInt32(value));
-		}
-	}
-	
+			
 	private static bool validatePaymentNumberValue(string key)
 	{
 		if (key == "psUserSpentCurrencyAmount" || key == "psReceivedCurrencyAmount" || key == "appCurrencyAmount")

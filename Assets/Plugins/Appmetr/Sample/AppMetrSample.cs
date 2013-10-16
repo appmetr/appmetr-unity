@@ -7,7 +7,7 @@ using System;
 public class AppMetrSample : MonoBehaviour
 {
 	[SerializeField]
-	private string token = "a9a83077-4451-4c61-8de4-bc0910828008";
+	private string token = "demo_token";
 	
 	private string fieldTrackLevel = "";
 	private string fieldTrackEvent = "";
@@ -62,6 +62,14 @@ public class AppMetrSample : MonoBehaviour
 	void Start()
 	{
 		AppMetr.Setup(token);
+
+		Dictionary<string, object> properties = new Dictionary<string, object>();
+		properties.Add ("int", 1);
+		properties.Add ("float", 1.99);
+		properties.Add ("date", "19.10.2013 12:35");
+		AppMetr.TrackSession (properties);
+
+		AppMetr.Flush();
 	}
 
 	void Awake()
