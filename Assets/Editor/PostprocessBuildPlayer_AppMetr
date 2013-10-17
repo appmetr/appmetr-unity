@@ -20,7 +20,7 @@ target_platform = sys.argv[2]
   
 info_plist_path = os.path.join(install_path, 'Info.plist')
 
-appmetr_plist_path = os.path.join(install_path, '../Assets/Plugins/iOS/AppMetr.plist')
+appmetr_plist_path = os.path.join(os.getcwd(), 'Assets/Plugins/iOS/AppMetr.plist')
  
 file = open(info_plist_path, 'r')
 plist = file.read()
