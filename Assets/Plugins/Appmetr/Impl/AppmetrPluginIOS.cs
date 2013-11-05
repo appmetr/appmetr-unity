@@ -63,10 +63,10 @@ public class AppmetrPluginIOS
 	private static extern void _attachProperties(string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string options, string commandId);
+	private static extern void _trackOptions(string commandId, string options);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptionsWithErrorCode(string options, string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(string commandId, string options, string code, string message);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentStart(string experiment, string groupId);
@@ -79,6 +79,9 @@ public class AppmetrPluginIOS
 	
 	[DllImport("__Internal")]
 	private static extern void _flush();
+	
+	[DllImport("__Internal")]
+	private static extern string _instanceIdentifier();
 	
 	#endregion
 
@@ -154,7 +157,7 @@ public class AppmetrPluginIOS
 		_trackOptions(ToJson(options), commandId);
 	}
 	
-	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
+	public static void TrackOptionsError(IDictionary<string, object> options, string commandId, string code, string message)
 	{
 		_trackOptionsWithErrorCode(ToJson(options), commandId, code, message);
 	}
@@ -177,6 +180,11 @@ public class AppmetrPluginIOS
 	public static void Flush()
 	{
 		_flush();
+	}
+
+	public static string GetInstanceIdentifier()
+	{
+		return _instanceIdentifier();
 	}
 			
 	private static bool validatePaymentNumberValue(string key)

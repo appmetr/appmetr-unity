@@ -185,4 +185,12 @@ public class AppMetr
 	{
 		AppmetrPlatformPlugin.Flush();
 	}
+
+	/// <summary>
+	/// Return full instance identifier.
+	/// </summary>
+	public static string GetInstanceIdentifier()
+	{
+		return AppmetrPlatformPlugin.GetInstanceIdentifier();
+	}
 }
