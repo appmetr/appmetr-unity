@@ -97,6 +97,16 @@ public class AppmetrPluginIOS
 		return json.ToString ();
 	}
 
+	private static string ToJson(IDictionary<string, object>[] properties) 
+	{
+			var json = new StringBuilder ();
+
+			var writer = new JsonWriter (json);
+			writer.Write(properties);
+
+			return json.ToString ();
+	}
+
 	public static void SetupWithToken(string token)
 	{
 		_setupWithToken(token);
@@ -152,14 +162,14 @@ public class AppmetrPluginIOS
 		_attachProperties(ToJson(properties));
 	}
 	
-	public static void TrackOptions(IDictionary<string, object> options, string commandId)
+		public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
 	{
-		_trackOptions(ToJson(options), commandId);
+		_trackOptions(commandId, ToJson(options));
 	}
 	
-	public static void TrackOptionsError(IDictionary<string, object> options, string commandId, string code, string message)
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message)
 	{
-		_trackOptionsWithErrorCode(ToJson(options), commandId, code, message);
+		_trackOptionsWithErrorCode(commandId, ToJson(options), code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)

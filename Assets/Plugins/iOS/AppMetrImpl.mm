@@ -204,13 +204,13 @@ extern "C" {
 	
 	void _trackOptions(const char* commandId, const char* options)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(options)];
+		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
 		[AppMetr trackOptions:dict forCommand:charToNSString(commandId)];
 	}
 	
 	void _trackOptionsWithErrorCode(const char* commandId, const char* options, const char* code, const char* message)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(options)];
+		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
 		[AppMetr trackOptions:dict forCommand:charToNSString(commandId) errorCode:charToNSString(code) errorMessage:charToNSString(message)];
 	}
 	

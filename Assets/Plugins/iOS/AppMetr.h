@@ -3,6 +3,8 @@
  * All rights reserved.
  */
 
+#import <StoreKit/StoreKit.h>
+
 /**
  * Main library class
  */
@@ -92,12 +94,12 @@
 /**
 * Registering options processing
 */
-+ (void)trackOptions:(NSDictionary *)options forCommand:(NSString *)commandId;
++ (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId;
 
 /**
 * Registering options processing error
 */
-+ (void)trackOptions:(NSDictionary *)options forCommand:(NSString *)commandId errorCode:(NSString *)code errorMessage:(NSString *)message;
++ (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId errorCode:(NSString *)code errorMessage:(NSString *)message;
 
 /**
 * Registering start of experiment
@@ -113,6 +115,15 @@
 * Identify user
 */
 + (void)identify:(NSString *)userId;
+
+/**
+* Verify payment
+*
+* @param transaction - SKPaymentTransaction object
+* @param privateKey - set in deploy setting on appmetr server
+* @return YES - if payment is valid, and NO otherwise
+*/
++ (BOOL)verifyPayment:(SKPaymentTransaction *)transaction privateKey:(NSString *)privateKey;
 
 /**
  * Pull remote commands
@@ -140,5 +151,8 @@
 
 /** Return NSDictionary object which was converted from JSON string. Used for external calls */
 + (NSDictionary *)stringToDictionary:(NSString *)json;
+
+/** Return NSArray object which was converted from JSON string. Used for external calls */
++ (NSArray *)stringToArray:(NSString *)json;
 
 @end

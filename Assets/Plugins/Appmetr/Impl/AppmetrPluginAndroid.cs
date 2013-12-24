@@ -57,6 +57,16 @@ public class AppmetrPluginAndroid
 
 		return json.ToString ();
 	}
+
+	private static string ToJson(IDictionary<string, object>[] properties) 
+	{
+			var json = new StringBuilder ();
+
+			var writer = new JsonWriter (json);
+			writer.Write(properties);
+
+			return json.ToString ();
+	}
 	
 	public static void SetupWithToken(string token)
 	{
@@ -125,12 +135,12 @@ public class AppmetrPluginAndroid
 		AppMetrHelper.CallStatic("attachProperties", ToJson(properties));
 	}
 
-	public static void TrackOptions(string commandId, IDictionary<string, object> options)
+	public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
 	{
 		AppMetrHelper.CallStatic("trackOptions", commandId, ToJson(options));
 	}
 
-	public static void TrackOptionsError(string commandId, IDictionary<string, object> options, string code, string message)
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message)
 	{
 		AppMetrHelper.CallStatic("trackOptionsError", commandId, ToJson(options), code, message);
 	}
