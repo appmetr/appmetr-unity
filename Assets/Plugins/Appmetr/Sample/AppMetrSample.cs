@@ -400,7 +400,7 @@ public class AppMetrSample : MonoBehaviour
 			}
 		}
 
-		showAlert (AppMetr.GetInstanceIdentifier ());
+		AppMetr.Flush();
 	}
 	
 	private bool checkDictionary(IDictionary<string, object> dict)
