@@ -166,6 +166,38 @@ public class AppMetr
 	{
 		AppmetrPlatformPlugin.TrackExperimentEnd(experiment);
 	}
+
+	/// <summary>
+	/// Verify payment for iOS platform
+	/// </summary>
+	/// <param name='productId'>
+	/// Product ID.
+	/// <param name='transactionId'>
+	/// Transaction ID.
+	/// <param name='receipt'>
+	/// Base64 encoded receipt.
+	/// <param name='privateKey'>
+	/// AppMetr private key.
+	/// </param>
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) 
+	{
+		return AppmetrPlatformPlugin.VerifyIOSPayment(productId, transactionId, receipt, privateKey);
+	}
+
+	/// <summary>
+	/// Verify payment for Android platform
+	/// </summary>
+	/// <param name='purchaseInfo'>
+	/// Purchase original JSON.
+	/// <param name='signature'>
+	/// Purchase signature.
+	/// <param name='privateKey'>
+	/// AppMetr private key.
+	/// </param>
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey)
+	{
+		return AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey);
+	}
 	
 	/// <summary>
 	/// Identify user.

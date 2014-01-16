@@ -73,6 +73,9 @@ public class AppmetrPluginIOS
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentEnd(string experiment);
+
+	[DllImport("__Internal")]
+	private static extern bool _verifyPayment(string productId, string transactionId, string receipt, string privateKey);
 	
 	[DllImport("__Internal")]
 	private static extern void _identify(string userId);
@@ -180,6 +183,16 @@ public class AppmetrPluginIOS
 	public static void TrackExperimentEnd(string experiment)
 	{
 		_trackExperimentEnd(experiment);
+	}
+
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) 
+	{ 
+		return _verifyPayment(productId, transactionId, receipt, privateKey); 
+	}
+
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
+	{ 
+		return false; 
 	}
 
 	public static void Identify(string userId)

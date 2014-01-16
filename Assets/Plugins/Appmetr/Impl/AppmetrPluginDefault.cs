@@ -35,6 +35,10 @@ public class AppmetrPluginDefault
 
 	public static void TrackExperimentEnd(string experiment) {}
 
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) { return false; }
+
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) { return false; }
+
 	public static void Identify(string userId) {}
 
 	public static void Flush() {}

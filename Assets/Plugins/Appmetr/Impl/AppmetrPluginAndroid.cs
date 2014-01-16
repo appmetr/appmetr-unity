@@ -182,6 +182,17 @@ public class AppmetrPluginAndroid
 		AppMetrHelper.CallStatic("trackExperimentEnd", experiment);
 	}
 
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) 
+	{ 
+		return false; 
+	}
+
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
+	{ 
+		waitForInitialize();
+		return AppMetr.CallStatic<bool>("verifyPayment", purchaseInfo, signature, privateKey); 
+	}
+
 	public static void Identify(string userId)
 	{
 		waitForInitialize();

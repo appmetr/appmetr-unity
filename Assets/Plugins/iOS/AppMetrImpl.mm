@@ -223,6 +223,13 @@ extern "C" {
 	{
 		[AppMetr trackExperimentEnd:charToNSString(experiment)];
 	}
+
+	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) {
+		return [AppMetr verifyPaymentWithProductId:charToNSString(productId) 
+											transactionId:charToNSString(transactionId) 
+												  receipt:charToNSString(receipt) 
+											   privateKey:charToNSString(privateKey)];
+	}
 	
 	void _identify(const char* userId)
 	{
