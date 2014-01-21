@@ -124,7 +124,7 @@ public class AppMetr
 	}
 	
 	/// <summary>
-	/// Methods for attaching only built-in user properties.
+	/// Method for attaching only built-in user properties.
 	/// </summary>
 	public static void AttachProperties()
 	{
@@ -132,7 +132,7 @@ public class AppMetr
 	}
 
 	/// <summary>
-	/// Methods for attaching user properties.
+	/// Method for attaching user properties.
 	/// </summary>
 	/// <param name='properties'>
 	/// Properties.
@@ -140,6 +140,39 @@ public class AppMetr
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.AttachProperties(properties);
+	}
+
+	/// <summary>
+	/// Track options for command.
+	/// </summary>
+	/// <param name='commandId'>
+	/// Command ID.
+	/// </param>
+	/// <param name='options'>
+	/// Options dictionary.
+	/// </param>
+	public static void TrackOptions(string commandId, IDictionary<string, object> options) {
+		AppmetrPlatformPlugin.TrackOptions(commandId, options);
+	}
+
+	/// <summary>
+	/// Track options error for command.
+	/// </summary>
+	/// <param name='commandId'>
+	/// Command ID.
+	/// </param>
+	/// <param name='options'>
+	/// Options dictionary.
+	/// </param>
+	/// <param name='code'>
+	/// Error code.
+	/// </param>
+	/// <param name='message'>
+	/// Error message.
+	/// </param>
+	public static void TrackOptionsError(string commandId, IDictionary<string, object> options, string code, string message) 
+	{
+		AppmetrPlatformPlugin.TrackOptionsError(commandId, options, code, message);
 	}
 	
 	/// <summary>
