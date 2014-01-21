@@ -151,7 +151,7 @@ public class AppMetr
 	/// <param name='options'>
 	/// Options dictionary.
 	/// </param>
-	public static void TrackOptions(string commandId, IDictionary<string, object> options) {
+	public static void TrackOptions(string commandId, IDictionary<string, object>[] options) {
 		AppmetrPlatformPlugin.TrackOptions(commandId, options);
 	}
 
@@ -170,7 +170,7 @@ public class AppMetr
 	/// <param name='message'>
 	/// Error message.
 	/// </param>
-	public static void TrackOptionsError(string commandId, IDictionary<string, object> options, string code, string message) 
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message) 
 	{
 		AppmetrPlatformPlugin.TrackOptionsError(commandId, options, code, message);
 	}

@@ -27,9 +27,9 @@ public class AppmetrPluginDefault
 
 	public static void AttachProperties(IDictionary<string, object> properties) {}
 
-	public static void TrackOptions(string commandId, IDictionary<string, object> options) {}
+	public static void TrackOptions(string commandId, IDictionary<string, object>[] options) {}
 
-	public static void TrackOptionsError(string commandId, IDictionary<string, object> options, string code, string message) {}
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message) {}
 
 	public static void TrackExperimentStart(string experiment, string groupId) {}
 
