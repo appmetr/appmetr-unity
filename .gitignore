@@ -12,3 +12,6 @@
 *.suo
 *.exe
 *.apk
+Assets/Editor/mod_pbxproj.pyc
+Assets/Editor/mod_pbxproj.pyc.meta
+ProjectSettings/Physics2DSettings.asset

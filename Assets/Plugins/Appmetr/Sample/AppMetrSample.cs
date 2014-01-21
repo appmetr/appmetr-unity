@@ -61,15 +61,7 @@ public class AppMetrSample : MonoBehaviour
 	
 	void Start()
 	{
-		AppMetr.Setup(token);
-
-		Dictionary<string, object> properties = new Dictionary<string, object>();
-		properties.Add ("int", 1);
-		properties.Add ("float", 1.99);
-		properties.Add ("date", "19.10.2013 12:35");
-		AppMetr.TrackSession (properties);
-
-		AppMetr.Flush();
+		AppMetr.Setup (token);
 	}
 
 	void Awake()
@@ -407,6 +399,8 @@ public class AppMetrSample : MonoBehaviour
 				showAlert("Please fill in all fields");
 			}
 		}
+
+		AppMetr.Flush();
 	}
 	
 	private bool checkDictionary(IDictionary<string, object> dict)

@@ -63,22 +63,28 @@ public class AppmetrPluginIOS
 	private static extern void _attachProperties(string properties);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptions(string options, string commandId);
+	private static extern void _trackOptions(string commandId, string options);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackOptionsWithErrorCode(string options, string commandId, string code, string message);
+	private static extern void _trackOptionsWithErrorCode(string commandId, string options, string code, string message);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentStart(string experiment, string groupId);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackExperimentEnd(string experiment);
+
+	[DllImport("__Internal")]
+	private static extern bool _verifyPayment(string productId, string transactionId, string receipt, string privateKey);
 	
 	[DllImport("__Internal")]
 	private static extern void _identify(string userId);
 	
 	[DllImport("__Internal")]
 	private static extern void _flush();
+	
+	[DllImport("__Internal")]
+	private static extern string _instanceIdentifier();
 	
 	#endregion
 
@@ -92,6 +98,16 @@ public class AppmetrPluginIOS
 		writer.Write(properties);
 
 		return json.ToString ();
+	}
+
+	private static string ToJson(IDictionary<string, object>[] properties) 
+	{
+			var json = new StringBuilder ();
+
+			var writer = new JsonWriter (json);
+			writer.Write(properties);
+
+			return json.ToString ();
 	}
 
 	public static void SetupWithToken(string token)
@@ -149,14 +165,14 @@ public class AppmetrPluginIOS
 		_attachProperties(ToJson(properties));
 	}
 	
-	public static void TrackOptions(IDictionary<string, object> options, string commandId)
+		public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
 	{
-		_trackOptions(ToJson(options), commandId);
+		_trackOptions(commandId, ToJson(options));
 	}
 	
-	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message)
 	{
-		_trackOptionsWithErrorCode(ToJson(options), commandId, code, message);
+		_trackOptionsWithErrorCode(commandId, ToJson(options), code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)
@@ -169,6 +185,16 @@ public class AppmetrPluginIOS
 		_trackExperimentEnd(experiment);
 	}
 
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) 
+	{ 
+		return _verifyPayment(productId, transactionId, receipt, privateKey); 
+	}
+
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
+	{ 
+		return false; 
+	}
+
 	public static void Identify(string userId)
 	{
 		_identify(userId);
@@ -177,6 +203,11 @@ public class AppmetrPluginIOS
 	public static void Flush()
 	{
 		_flush();
+	}
+
+	public static string GetInstanceIdentifier()
+	{
+		return _instanceIdentifier();
 	}
 			
 	private static bool validatePaymentNumberValue(string key)

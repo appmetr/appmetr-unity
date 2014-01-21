@@ -76,12 +76,25 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 @end
 
 
-NSString* createNSString(const char* string)
+NSString* charToNSString(const char* string)
 {
 	if (string)
 		return [NSString stringWithUTF8String: string];
 	else
 		return [NSString stringWithUTF8String: ""];
+}
+
+char* nsStringToChar(NSString* string)
+{
+	const char* charStr = [string UTF8String];
+
+    if (charStr == NULL)
+        return NULL;
+    
+    char* res = (char*)malloc(strlen(charStr) + 1);
+    strcpy(res, charStr);
+    
+    return res;
 }
 
 NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
@@ -99,37 +112,37 @@ extern "C" {
 
 	void _setKeyValueString(const char* key, const char* value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyString:createNSString(key) Value:createNSString(value)];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyString:charToNSString(key) Value:charToNSString(value)];
 	}
 
 	void _setKeyValueFloat(const char* key, float value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithFloat: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:charToNSString(key) Value:[NSNumber numberWithFloat: value]];
 	}
 
 	void _setKeyValueInt(const char* key, int value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:createNSString(key) Value:[NSNumber numberWithInteger: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:charToNSString(key) Value:[NSNumber numberWithInteger: value]];
 	}
 	
 	void _setKeyValueStringOptional(const char* key, const char* value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyStringOptional:createNSString(key) Value:createNSString(value)];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyStringOptional:charToNSString(key) Value:charToNSString(value)];
 	}
 
 	void _setKeyValueFloatOptional(const char* key, float value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:createNSString(key) Value:[NSNumber numberWithFloat: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:charToNSString(key) Value:[NSNumber numberWithFloat: value]];
 	}
 
 	void _setKeyValueIntOptional(const char* key, int value)
 	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:createNSString(key) Value:[NSNumber numberWithInteger: value]];
+		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:charToNSString(key) Value:[NSNumber numberWithInteger: value]];
 	}
 
 	void _setupWithToken(const char* token)
 	{
-		[AppMetr setupWithToken:createNSString(token) delegate:[[AppMetrImpl sharedAppMetrImpl] appMetrListener]];
+		[AppMetr setupWithToken:charToNSString(token) delegate:[[AppMetrImpl sharedAppMetrImpl] appMetrListener]];
 	}
 	
 	void _trackSession()
@@ -139,7 +152,7 @@ extern "C" {
 	
 	void _trackSessionWithProperties(const char* properties)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(properties)];
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr trackSessionWithProperties:dict];
 	}
 	
@@ -150,31 +163,31 @@ extern "C" {
 	
 	void _trackLevelWithProperties(int level, const char* properties)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(properties)];
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr trackLevel:level properties:dict];
 	}
 	
 	void _trackEvent(const char* eventName)
 	{
-		[AppMetr trackEvent:createNSString(eventName)];
+		[AppMetr trackEvent:charToNSString(eventName)];
 	}
 	
 	void _trackEventWithProperties(const char* eventName, const char* properties)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(properties)];
-		[AppMetr trackEvent:createNSString(eventName) properties:dict];
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
+		[AppMetr trackEvent:charToNSString(eventName) properties:dict];
 	}
 	
 	void _trackPayment(const char* payment)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(payment)];
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(payment)];
 		[AppMetr trackPayment:paymentWithPaymentProcessor(dict)];
 	}
 	
 	void _trackPaymentWithProperties(const char* payment, const char* properties)
 	{
-		NSDictionary* dictPayment = [AppMetr stringToDictionary:createNSString(payment)];
-		NSDictionary* dictProperties = [AppMetr stringToDictionary:createNSString(properties)];
+		NSDictionary* dictPayment = [AppMetr stringToDictionary:charToNSString(payment)];
+		NSDictionary* dictProperties = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr trackPayment:paymentWithPaymentProcessor(dictPayment) properties:dictProperties];
 	}
 	
@@ -185,39 +198,51 @@ extern "C" {
 	
 	void _attachProperties(const char* properties)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(properties)];
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr attachProperties:dict];
 	}
 	
-	void _trackOptions(const char* options, const char* commandId)
+	void _trackOptions(const char* commandId, const char* options)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(options)];
-		[AppMetr trackOptions:dict forCommand:createNSString(commandId)];
+		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
+		[AppMetr trackOptions:dict forCommand:charToNSString(commandId)];
 	}
 	
-	void _trackOptionsWithErrorCode(const char* options, const char* commandId, const char* code, const char* message)
+	void _trackOptionsWithErrorCode(const char* commandId, const char* options, const char* code, const char* message)
 	{
-		NSDictionary* dict = [AppMetr stringToDictionary:createNSString(options)];
-		[AppMetr trackOptions:dict forCommand:createNSString(commandId) errorCode:createNSString(code) errorMessage:createNSString(message)];
+		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
+		[AppMetr trackOptions:dict forCommand:charToNSString(commandId) errorCode:charToNSString(code) errorMessage:charToNSString(message)];
 	}
 	
 	void _trackExperimentStart(const char* experiment, const char* groupId)
 	{
-		[AppMetr trackExperimentStart:createNSString(experiment) group:createNSString(groupId)];
+		[AppMetr trackExperimentStart:charToNSString(experiment) group:charToNSString(groupId)];
 	}
 	
 	void _trackExperimentEnd(const char* experiment)
 	{
-		[AppMetr trackExperimentEnd:createNSString(experiment)];
+		[AppMetr trackExperimentEnd:charToNSString(experiment)];
+	}
+
+	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) {
+		return [AppMetr verifyPaymentWithProductId:charToNSString(productId) 
+											transactionId:charToNSString(transactionId) 
+												  receipt:charToNSString(receipt) 
+											   privateKey:charToNSString(privateKey)];
 	}
 	
 	void _identify(const char* userId)
 	{
-		[AppMetr identify:createNSString(userId)];
+		[AppMetr identify:charToNSString(userId)];
 	}
 	
 	void _flush()
 	{
 		[AppMetr flush];
+	}
+	
+	char* _instanceIdentifier()
+	{
+		return nsStringToChar([AppMetr instanceIdentifier]);
 	}
 }

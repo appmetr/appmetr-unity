@@ -3,17 +3,12 @@
  * All rights reserved.
  */
 
-#import "TrackingManager.h"
+#import <StoreKit/StoreKit.h>
 
 /**
  * Main library class
  */
-@interface AppMetr : TrackingManager
-
-/**
- * Returns the singleton library instance
- */
-+ (AppMetr *)sharedInstance;
+@interface AppMetr
 
 /**
  * Setting up the application token.
@@ -34,12 +29,6 @@
  * Setting up the maximum size of cache file
  */
 + (void)setupSizeLimitOfCacheFile:(NSUInteger)limit;
-
-/**
- * Setting up the user identifier.
- * If value not set, the unique identifier of device will be used by default.
- */
-+ (void)setupWithUserID:(NSString *)userID;
 
 /**
  * Updating information about the user
@@ -105,12 +94,12 @@
 /**
 * Registering options processing
 */
-+ (void)trackOptions:(NSDictionary *)options forCommand:(NSString *)commandId;
++ (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId;
 
 /**
 * Registering options processing error
 */
-+ (void)trackOptions:(NSDictionary *)options forCommand:(NSString *)commandId errorCode:(NSString *)code errorMessage:(NSString *)message;
++ (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId errorCode:(NSString *)code errorMessage:(NSString *)message;
 
 /**
 * Registering start of experiment
@@ -128,6 +117,26 @@
 + (void)identify:(NSString *)userId;
 
 /**
+* Verify payment
+*
+* @param transaction - SKPaymentTransaction object
+* @param privateKey - set in deploy setting on appmetr server
+* @return YES - if payment is valid, and NO otherwise
+*/
++ (BOOL)verifyPayment:(SKPaymentTransaction *)transaction privateKey:(NSString *)privateKey;
+
+/**
+* Verify payment
+*
+* @param productId - Product identifier
+* @param transactionId - Transaction identifier
+* @param receipt - Base64 encoded transaction receipt
+* @param privateKey - set in deploy setting on appmetr server
+* @return YES - if payment is valid, and NO otherwise
+*/
++ (BOOL)verifyPaymentWithProductId:(NSString *)productId transactionId:(NSString *)transactionId receipt:(NSString *)base64EncodedReceipt privateKey:(NSString *)privateKey;
+
+/**
  * Pull remote commands
  */
 + (void)pullCommands;
@@ -136,11 +145,6 @@
 * Force flush events on server
 */
 + (void)flush;
-
-/**
- * Retrieves the user unique identifier used by this library
- */
-+ (NSString *)userIdentifier;
 
 /**
  * Sets the thread for executing remote commands
@@ -158,5 +162,8 @@
 
 /** Return NSDictionary object which was converted from JSON string. Used for external calls */
 + (NSDictionary *)stringToDictionary:(NSString *)json;
+
+/** Return NSArray object which was converted from JSON string. Used for external calls */
++ (NSArray *)stringToArray:(NSString *)json;
 
 @end

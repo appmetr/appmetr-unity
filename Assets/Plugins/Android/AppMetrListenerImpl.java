@@ -1,8 +1,6 @@
-package com.appmetr.android.impl;
+package com.appmetr.unity;
 
 import org.json.JSONObject;
-import android.util.Log;
-import com.appmetr.android.AppMetr;
 import com.appmetr.android.AppMetrListener;
 import com.unity3d.player.UnityPlayer;
 

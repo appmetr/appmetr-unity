@@ -1,6 +1,7 @@
 ﻿#if UNITY_ANDROID
 using UnityEngine;
 using System.Text;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -8,62 +9,36 @@ using JsonFx.Json;
 
 public class AppmetrPluginAndroid
 {
+	private static bool initialized = false;
+
 	private static AndroidJavaObject currentActivity = null;
 	
-	private static AndroidJavaClass clsConnect = null;
-	private static AndroidJavaClass clsConnectHelper = null;
-	private static AndroidJavaClass clsConnectImpl = null;
+	private static AndroidJavaClass clsAppMetr = null;
+	private static AndroidJavaClass clsAppMetrHelper = null;
 	
-	private static AndroidJavaClass Connect
+	private static AndroidJavaClass AppMetr
 	{
 		get
 		{
 			getActivity();
-			if (clsConnect == null)
+			if (clsAppMetr == null)
 			{
-				clsConnect = new AndroidJavaClass("com.appmetr.android.AppMetr");
+				clsAppMetr = new AndroidJavaClass("com.appmetr.android.AppMetr");
 			}
-			return clsConnect;
-		}
-	}
-
-	private static AndroidJavaObject connectInstance;
-	private static AndroidJavaObject ConnectInstance
-	{
-		get
-		{
-			getActivity();
-			if (connectInstance == null)
-			{
-				connectInstance = Connect.CallStatic<AndroidJavaObject>("getInstance");
-			}
-			return connectInstance;
+			return clsAppMetr;
 		}
 	}
 	
-	private static AndroidJavaClass ConnectHelper
+	private static AndroidJavaClass AppMetrHelper
 	{
 		get
 		{
 			getActivity();
-			if (clsConnectHelper == null)
+			if (clsAppMetrHelper == null)
 			{
-				clsConnectHelper = new AndroidJavaClass("com.appmetr.android.integration.AppMetrHelper");
+				clsAppMetrHelper = new AndroidJavaClass("com.appmetr.android.integration.AppMetrHelper");
 			}
-			return clsConnectHelper;
-		}
-	}
-
-	private static AndroidJavaClass ConnectImpl
-	{
-		get
-		{
-			getActivity();
-			if (clsConnectImpl == null)
-			{
-				clsConnectImpl = new AndroidJavaClass("com.appmetr.android.impl.AppMetrImpl");
-			}
-			return clsConnectImpl;
+			return clsAppMetrHelper;
 		}
 	}
 	
@@ -85,6 +60,16 @@ public class AppmetrPluginAndroid
 
 		return json.ToString ();
 	}
+
+	private static string ToJson(IDictionary<string, object>[] properties) 
+	{
+			var json = new StringBuilder ();
+
+			var writer = new JsonWriter (json);
+			writer.Write(properties);
+
+			return json.ToString ();
+	}
 	
 	public static void SetupWithToken(string token)
 	{
@@ -98,88 +83,132 @@ public class AppmetrPluginAndroid
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
         {
-            ConnectImpl.CallStatic("setup", token, context);
+        	AndroidJavaObject listener = new AndroidJavaObject("com.appmetr.unity.AppMetrListenerImpl");
+            AppMetr.CallStatic("setup", token, context, listener);
+            initialized = true;
         }));
+	}
+
+	//Bad code, smells like shit, but what can we do? 
+	private static void waitForInitialize() 
+	{
+		while (!initialized) 
+		{
+			Thread.Sleep(10);
+		}
 	}
 
 	public static void TrackSession()
 	{
-		ConnectImpl.CallStatic("trackSession");
+		waitForInitialize();	
+		AppMetrHelper.CallStatic("trackSession");
 	}
 
 	public static void TrackSession(IDictionary<string, object> properties)
 	{
-		ConnectImpl.CallStatic("trackSessionWithProperties", ToJson(properties));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackSession", ToJson(properties));
 	}
 
 	public static void TrackLevel(int level)
 	{
-		ConnectImpl.CallStatic("trackLevel", level);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackLevel", level);
 	}
 
 	public static void TrackLevel(int level, IDictionary<string, object> properties)
 	{
-		ConnectImpl.CallStatic("trackLevelWithProperties", level, ToJson(properties));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackLevel", level, ToJson(properties));
 	}
 
 	public static void TrackEvent(string eventName)
 	{
-		ConnectImpl.CallStatic("trackEvent", eventName);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackEvent", eventName);
 	}
 
 	public static void TrackEvent(string eventName, IDictionary<string, object> properties)
 	{
-		ConnectImpl.CallStatic("trackEventWithProperties", eventName, ToJson(properties));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackEvent", eventName, ToJson(properties));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
-		ConnectImpl.CallStatic("trackPayment", ToJson(payment));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackPayment", ToJson(payment));
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
-		ConnectImpl.CallStatic("trackPaymentWithProperties", ToJson(payment), ToJson(properties));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackPayment", ToJson(payment), ToJson(properties));
 	}
 	
 	public static void AttachProperties()
 	{
-		ConnectImpl.CallStatic("attachPropertiesNull");
+		waitForInitialize();
+		AppMetrHelper.CallStatic("attachProperties");
 	}
 	
 	public static void AttachProperties(IDictionary<string, object> properties)
 	{
-		ConnectImpl.CallStatic("attachProperties", ToJson(properties));
+		waitForInitialize();
+		AppMetrHelper.CallStatic("attachProperties", ToJson(properties));
 	}
 
-	public static void TrackOptions(IDictionary<string, object> options, string commandId)
+	public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
 	{
-		ConnectImpl.CallStatic("trackOptions", ToJson(options), commandId);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackOptions", commandId, ToJson(options));
 	}
 
-	public static void TrackOptions(IDictionary<string, object> options, string commandId, string code, string message)
+	public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message)
 	{
-		ConnectImpl.CallStatic("trackOptions", ToJson(options), commandId, code, message);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackOptionsError", commandId, ToJson(options), code, message);
 	}
 
 	public static void TrackExperimentStart(string experiment, string groupId)
 	{
-		ConnectImpl.CallStatic("trackExperimentStart", experiment, groupId);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackExperimentStart", experiment, groupId);
 	}
 
 	public static void TrackExperimentEnd(string experiment)
 	{
-		ConnectImpl.CallStatic("trackExperimentEnd", experiment);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackExperimentEnd", experiment);
+	}
+
+	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) 
+	{ 
+		return false; 
+	}
+
+	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
+	{ 
+		waitForInitialize();
+		return AppMetr.CallStatic<bool>("verifyPayment", purchaseInfo, signature, privateKey); 
 	}
 
 	public static void Identify(string userId)
 	{
-		ConnectImpl.CallStatic("identify", userId);
+		waitForInitialize();
+		AppMetrHelper.CallStatic("identify", userId);
 	}
 
 	public static void Flush()
 	{
-		ConnectImpl.CallStatic("flush");
+		waitForInitialize();
+		AppMetr.CallStatic("flush");
+	}
+
+	public static string GetInstanceIdentifier()
+	{
+		waitForInitialize();
+		return AppMetr.CallStatic<string>("getInstanceIdentifier");
 	}
 }
 #endif
