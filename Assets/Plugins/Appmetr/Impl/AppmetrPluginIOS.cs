@@ -115,6 +115,10 @@ public class AppmetrPluginIOS
 		_setupWithToken(token);
 	}
 
+	public static void OnPause() {}
+
+	public static void OnResume() {}
+
 	public static void TrackSession()
 	{
 		_trackSession();

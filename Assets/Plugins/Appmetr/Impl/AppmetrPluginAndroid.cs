@@ -89,6 +89,16 @@ public class AppmetrPluginAndroid
         }));
 	}
 
+	public static void OnPause()
+	{
+		AppMetr.CallStatic("onPause");
+	}
+
+	public static void OnResume()
+	{
+		AppMetr.CallStatic("onResume");
+	}
+
 	//Bad code, smells like shit, but what can we do? 
 	private static void waitForInitialize() 
 	{

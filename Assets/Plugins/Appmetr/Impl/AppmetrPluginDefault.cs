@@ -7,6 +7,10 @@ public class AppmetrPluginDefault
 {
 	public static void SetupWithToken(string token) {}
 
+	public static void OnPause() {}
+
+	public static void OnResume() {}
+
 	public static void TrackSession() {}
 
 	public static void TrackSession(IDictionary<string, object> properties) {}

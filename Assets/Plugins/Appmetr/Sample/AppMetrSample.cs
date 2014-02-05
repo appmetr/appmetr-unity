@@ -74,6 +74,11 @@ public class AppMetrSample : MonoBehaviour
 		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
 	}
 
+	void OnApplicationPause(bool pause) 
+	{
+		AppMetr.OnPause(pause);
+	}
+
 	public void HandleAppMetrOnCommand(string command)
 	{
 		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + command);

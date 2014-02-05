@@ -27,7 +27,24 @@ public class AppMetr
 	{
 		AppmetrPlatformPlugin.SetupWithToken(token);
 	}
-	
+
+	/// <summary>
+	/// Set application status.
+	/// </summary>
+	/// <param name="pause">
+	/// Application status. True - if application paused and false otherwise
+	/// </param>
+	public static void OnPause(bool pause)
+	{
+		if (pause) 
+		{
+			AppmetrPlatformPlugin.OnPause();
+		} 
+		else 
+		{
+			AppmetrPlatformPlugin.OnResume();
+		}
+	}	
 	/// <summary>
 	/// Method for tracking game event as "track session" without parameters.
 	/// </summary>
