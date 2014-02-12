@@ -95,6 +95,7 @@ public class AppMetrSample : MonoBehaviour
 
 		if ("setOptions".Equals(type)) 
         {
+        	bool trackError = false;
 			Dictionary<string, object>[] options = properties.ContainsKey("options") ? (Dictionary<string, object>[]) properties["options"] : new Dictionary<string,object>[]{};
 			
 			List<Dictionary<string, object>> resultOptions = new List<Dictionary<string,object>>();
@@ -107,6 +108,10 @@ public class AppMetrSample : MonoBehaviour
                 string key = enumerator.Current;   //Cause 1 array element has only 1 option
                 object value = option[key];
 
+                if (key.Equals("track_error")) {
+                	trackError = true;
+                }
+
                 Dictionary<string, object> resultOption = new Dictionary<string, object>()
                 {
                 	{ "option", key },
@@ -118,7 +123,12 @@ public class AppMetrSample : MonoBehaviour
                 resultOptions.Add(resultOption);
             }
 
-            AppMetr.TrackOptions(commandId, resultOptions.ToArray());
+            if (trackError) {
+            	AppMetr.TrackOptionsError(commandId, resultOptions.ToArray(), "testError", "Track test error for setOptions");
+            } else {
+            	AppMetr.TrackOptions(commandId, resultOptions.ToArray());	
+            }
+            
         }
 	}
 	
