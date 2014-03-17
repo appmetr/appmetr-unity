@@ -248,6 +248,17 @@ public class AppMetr
 	{
 		return AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey);
 	}
+
+	/// <summary>
+	/// Method for tracking user state.
+	/// </summary>
+	/// <param name='state'>
+	/// state.
+	/// </param>
+	public static void TrackState(IDictionary<string, object> state)
+	{
+		AppmetrPlatformPlugin.TrackState(state);
+	}
 	
 	/// <summary>
 	/// Identify user.

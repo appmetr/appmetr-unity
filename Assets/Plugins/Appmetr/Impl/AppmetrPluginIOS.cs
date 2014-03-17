@@ -78,6 +78,9 @@ public class AppmetrPluginIOS
 	private static extern bool _verifyPayment(string productId, string transactionId, string receipt, string privateKey);
 	
 	[DllImport("__Internal")]
+	private static extern void _trackState(string state);
+	
+	[DllImport("__Internal")]
 	private static extern void _identify(string userId);
 	
 	[DllImport("__Internal")]
@@ -197,6 +200,11 @@ public class AppmetrPluginIOS
 	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
 	{ 
 		return false; 
+	}
+
+	public static void TrackState(IDictionary<string, object> state) 
+	{
+		_trackState(ToJson(state));
 	}
 
 	public static void Identify(string userId)

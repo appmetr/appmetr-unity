@@ -224,11 +224,18 @@ extern "C" {
 		[AppMetr trackExperimentEnd:charToNSString(experiment)];
 	}
 
-	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) {
+	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) 
+	{
 		return [AppMetr verifyPaymentWithProductId:charToNSString(productId) 
 											transactionId:charToNSString(transactionId) 
 												  receipt:charToNSString(receipt) 
 											   privateKey:charToNSString(privateKey)];
+	}
+
+	void _trackState(const char* state)
+	{
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(state)];
+		[AppMetr trackState:dict];
 	}
 	
 	void _identify(const char* userId)

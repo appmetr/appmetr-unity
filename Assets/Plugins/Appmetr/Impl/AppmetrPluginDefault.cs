@@ -43,6 +43,8 @@ public class AppmetrPluginDefault
 
 	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) { return false; }
 
+	public static void TrackState(IDictionary<string, object> state) {}
+
 	public static void Identify(string userId) {}
 
 	public static void Flush() {}

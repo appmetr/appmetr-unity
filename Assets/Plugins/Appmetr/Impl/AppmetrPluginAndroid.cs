@@ -203,6 +203,12 @@ public class AppmetrPluginAndroid
 		return AppMetr.CallStatic<bool>("verifyPayment", purchaseInfo, signature, privateKey); 
 	}
 
+	public static void TrackState(IDictionary<string, object> state) 
+	{
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackState", ToJson(state));
+	}
+
 	public static void Identify(string userId)
 	{
 		waitForInitialize();
