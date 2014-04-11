@@ -12,24 +12,6 @@ public class AppmetrPluginIOS
 	#region	Interface to native implementation
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValueString(string key, string value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueFloat(string key, float value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueInt(string key, int value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueStringOptional(string key, string value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueFloatOptional(string key, float value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueIntOptional(string key, int value);
-	
-	[DllImport("__Internal")]
 	private static extern void _setupWithToken(string token);
 	
 	[DllImport("__Internal")]
