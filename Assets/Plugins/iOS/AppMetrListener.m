@@ -23,7 +23,7 @@
 -(void)executeCommand:(NSDictionary *)command
 {
 	NSError *serializeError = nil;
-	NSData *data = [[CJSONSerializer serializer] serializeDictionary:command
+	NSData *data = [[AMCJSONSerializer serializer] serializeDictionary:command
 															   error:&serializeError];
 	if (serializeError)
 	{
