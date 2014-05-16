@@ -155,6 +155,12 @@ public class AppmetrPluginAndroid
 		waitForInitialize();
 		AppMetrHelper.CallStatic("trackPayment", ToJson(payment), ToJson(properties));
 	}
+
+	public static void TrackAdsEvent(string eventName)
+	{
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackAdsEvent", eventName);
+	}
 	
 	public static void AttachProperties()
 	{

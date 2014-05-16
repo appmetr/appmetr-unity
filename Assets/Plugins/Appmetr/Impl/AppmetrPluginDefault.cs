@@ -26,6 +26,8 @@ public class AppmetrPluginDefault
 	public static void TrackPayment(IDictionary<string, object> payment) {}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties) {}
+
+	public static void TrackAdsEvent(string eventName) {}
 	
 	public static void AttachProperties() {}
 

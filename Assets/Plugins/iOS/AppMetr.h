@@ -112,11 +112,6 @@
 + (void)trackExperimentEnd:(NSString *)experiment;
 
 /**
-* Registering user state
-*/
-+ (void)trackState:(NSDictionary *)state;
-
-/**
 * Identify user
 */
 + (void)identify:(NSString *)userId;

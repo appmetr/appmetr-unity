@@ -139,6 +139,17 @@ public class AppMetr
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment, properties);
 	}
+
+	/// <summary>
+	/// Method for tracking advertising events.
+	/// </summary>
+	/// <param name="event">
+	///	Name of the event to track.
+	/// </param>
+	public static void TrackAdsEvent(string eventName)
+	{
+		AppmetrPlatformPlugin.TrackAdsEvent(eventName);
+	}
 	
 	/// <summary>
 	/// Method for attaching only built-in user properties.

@@ -105,6 +105,11 @@ extern "C" {
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(payment)];
 		[AppMetr trackPayment:paymentWithPaymentProcessor(dict)];
 	}
+
+	void _trackAdsEvent(const char* event)
+	{
+		[AppMetr trackAdsEvent:charToNSString(event)];
+	}
 	
 	void _trackPaymentWithProperties(const char* payment, const char* properties)
 	{

@@ -36,6 +36,9 @@ public class AppmetrPluginIOS
 	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
+	private static extern void _trackAdsEvent(string event);
+
+	[DllImport("__Internal")]
 	private static extern void _trackPaymentWithProperties(string payment, string properties);
 	
 	[DllImport("__Internal")]
@@ -137,6 +140,11 @@ public class AppmetrPluginIOS
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
 		_trackPayment(ToJson(payment));
+	}
+
+	public static void TrackAdsEvent(string eventName)
+	{
+		_trackAdsEvent(eventName);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
