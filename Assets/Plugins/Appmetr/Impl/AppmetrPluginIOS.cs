@@ -36,7 +36,7 @@ public class AppmetrPluginIOS
 	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
-	private static extern void _trackAdsEvent(string event);
+	private static extern void _trackAdsEvent(string eventName);
 
 	[DllImport("__Internal")]
 	private static extern void _trackPaymentWithProperties(string payment, string properties);
