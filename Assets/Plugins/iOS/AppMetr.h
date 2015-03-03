@@ -8,7 +8,7 @@
 /**
  * Main library class
  */
-@interface AppMetr
+@interface AppMetr : NSObject
 
 /**
  * Setting up the application token.
@@ -82,9 +82,9 @@
 + (void)trackPayment:(NSDictionary *)payment properties:(NSDictionary *)properties;
 
 /**
- * Registering state of the game
- */
-+ (void)trackGameState:(NSString *)state properties:(NSDictionary *)properties;
+* Registering advertising event track
+*/
++ (void)trackAdsEvent:(NSString *)eventName;
 
 /**
  * Registering the URL of game installation
@@ -110,6 +110,11 @@
 * Registering end of experiment
 */
 + (void)trackExperimentEnd:(NSString *)experiment;
+
+/**
+* Registering user state
+*/
++ (void)trackState:(NSDictionary *)state;
 
 /**
 * Identify user
