@@ -12,24 +12,6 @@ public class AppmetrPluginIOS
 	#region	Interface to native implementation
 
 	[DllImport("__Internal")]
-	private static extern void _setKeyValueString(string key, string value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueFloat(string key, float value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueInt(string key, int value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueStringOptional(string key, string value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueFloatOptional(string key, float value);
-
-	[DllImport("__Internal")]
-	private static extern void _setKeyValueIntOptional(string key, int value);
-	
-	[DllImport("__Internal")]
 	private static extern void _setupWithToken(string token);
 	
 	[DllImport("__Internal")]
@@ -54,6 +36,9 @@ public class AppmetrPluginIOS
 	private static extern void _trackPayment(string payment);
 	
 	[DllImport("__Internal")]
+	private static extern void _trackAdsEvent(string eventName);
+
+	[DllImport("__Internal")]
 	private static extern void _trackPaymentWithProperties(string payment, string properties);
 	
 	[DllImport("__Internal")]
@@ -76,6 +61,9 @@ public class AppmetrPluginIOS
 
 	[DllImport("__Internal")]
 	private static extern bool _verifyPayment(string productId, string transactionId, string receipt, string privateKey);
+	
+	[DllImport("__Internal")]
+	private static extern void _trackState(string state);
 	
 	[DllImport("__Internal")]
 	private static extern void _identify(string userId);
@@ -115,6 +103,10 @@ public class AppmetrPluginIOS
 		_setupWithToken(token);
 	}
 
+	public static void OnPause() {}
+
+	public static void OnResume() {}
+
 	public static void TrackSession()
 	{
 		_trackSession();
@@ -148,6 +140,11 @@ public class AppmetrPluginIOS
 	public static void TrackPayment(IDictionary<string, object> payment)
 	{
 		_trackPayment(ToJson(payment));
+	}
+
+	public static void TrackAdsEvent(string eventName)
+	{
+		_trackAdsEvent(eventName);
 	}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
@@ -193,6 +190,11 @@ public class AppmetrPluginIOS
 	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
 	{ 
 		return false; 
+	}
+
+	public static void TrackState(IDictionary<string, object> state) 
+	{
+		_trackState(ToJson(state));
 	}
 
 	public static void Identify(string userId)

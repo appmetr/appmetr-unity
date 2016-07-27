@@ -83,10 +83,19 @@ public class AppmetrPluginAndroid
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
         {
-        	AndroidJavaObject listener = new AndroidJavaObject("com.appmetr.unity.AppMetrListenerImpl");
-            AppMetr.CallStatic("setup", token, context, listener);
+            AppMetr.CallStatic("setup", token, context);
             initialized = true;
         }));
+	}
+
+	public static void OnPause()
+	{
+		AppMetr.CallStatic("onPause");
+	}
+
+	public static void OnResume()
+	{
+		AppMetr.CallStatic("onResume");
 	}
 
 	//Bad code, smells like shit, but what can we do? 
@@ -145,6 +154,12 @@ public class AppmetrPluginAndroid
 		waitForInitialize();
 		AppMetrHelper.CallStatic("trackPayment", ToJson(payment), ToJson(properties));
 	}
+
+	public static void TrackAdsEvent(string eventName)
+	{
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackAdsEvent", eventName);
+	}
 	
 	public static void AttachProperties()
 	{
@@ -191,6 +206,12 @@ public class AppmetrPluginAndroid
 	{ 
 		waitForInitialize();
 		return AppMetr.CallStatic<bool>("verifyPayment", purchaseInfo, signature, privateKey); 
+	}
+
+	public static void TrackState(IDictionary<string, object> state) 
+	{
+		waitForInitialize();
+		AppMetrHelper.CallStatic("trackState", ToJson(state));
 	}
 
 	public static void Identify(string userId)

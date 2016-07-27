@@ -27,7 +27,24 @@ public class AppMetr
 	{
 		AppmetrPlatformPlugin.SetupWithToken(token);
 	}
-	
+
+	/// <summary>
+	/// Set application status.
+	/// </summary>
+	/// <param name="pause">
+	/// Application status. True - if application paused and false otherwise
+	/// </param>
+	public static void OnPause(bool pause)
+	{
+		if (pause) 
+		{
+			AppmetrPlatformPlugin.OnPause();
+		} 
+		else 
+		{
+			AppmetrPlatformPlugin.OnResume();
+		}
+	}	
 	/// <summary>
 	/// Method for tracking game event as "track session" without parameters.
 	/// </summary>
@@ -121,6 +138,17 @@ public class AppMetr
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 	{
 		AppmetrPlatformPlugin.TrackPayment(payment, properties);
+	}
+
+	/// <summary>
+	/// Method for tracking advertising events.
+	/// </summary>
+	/// <param name="event">
+	///	Name of the event to track.
+	/// </param>
+	public static void TrackAdsEvent(string eventName)
+	{
+		AppmetrPlatformPlugin.TrackAdsEvent(eventName);
 	}
 	
 	/// <summary>
@@ -230,6 +258,17 @@ public class AppMetr
 	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey)
 	{
 		return AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey);
+	}
+
+	/// <summary>
+	/// Method for tracking user state.
+	/// </summary>
+	/// <param name='state'>
+	/// state.
+	/// </param>
+	public static void TrackState(IDictionary<string, object> state)
+	{
+		AppmetrPlatformPlugin.TrackState(state);
 	}
 	
 	/// <summary>

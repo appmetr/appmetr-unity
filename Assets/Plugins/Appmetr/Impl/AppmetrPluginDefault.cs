@@ -7,6 +7,10 @@ public class AppmetrPluginDefault
 {
 	public static void SetupWithToken(string token) {}
 
+	public static void OnPause() {}
+
+	public static void OnResume() {}
+
 	public static void TrackSession() {}
 
 	public static void TrackSession(IDictionary<string, object> properties) {}
@@ -22,6 +26,8 @@ public class AppmetrPluginDefault
 	public static void TrackPayment(IDictionary<string, object> payment) {}
 
 	public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties) {}
+
+	public static void TrackAdsEvent(string eventName) {}
 	
 	public static void AttachProperties() {}
 
@@ -38,6 +44,8 @@ public class AppmetrPluginDefault
 	public static bool VerifyIOSPayment(string productId, string transactionId, string receipt, string privateKey) { return false; }
 
 	public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) { return false; }
+
+	public static void TrackState(IDictionary<string, object> state) {}
 
 	public static void Identify(string userId) {}
 

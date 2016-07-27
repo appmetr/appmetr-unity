@@ -1,24 +1,12 @@
 #import "AppMetrImpl.h"
 
-static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
+static AppMetrListener * appMetrListener_ = nil;
 
 @implementation AppMetrImpl
 
-@synthesize keyValueDict = keyValueDict_;
-@synthesize keyValueDictOptional = keyValueDictOptional_;
-@synthesize appMetrListener = appMetrListener_;
-
-+ (void)initialize
++ (AppMetrListener*)appMetrListener
 {
-	if (self == [AppMetrImpl class])
-	{
-		_sharedInstance = [[self alloc] init];
-	}
-}
-
-+ (AppMetrImpl*)sharedAppMetrImpl
-{
-	return _sharedInstance;
+	return appMetrListener_;
 }
 
 - (id)init
@@ -35,42 +23,6 @@ static AppMetrImpl *_sharedInstance = nil; // To make AppMetrImpl Singleton
 {
 	[appMetrListener_ release];
 	[super dealloc];
-}
-
-- (void)setKeyString:(NSString*)key Value:(NSString*)value
-{
-	if (!keyValueDict_)
-		keyValueDict_ = [[NSMutableDictionary alloc] init];
-	[keyValueDict_ setObject:value forKey:key];
-}
-
-- (void)setKeyNumber:(NSString*)key Value:(NSNumber*)value
-{
-	if (!keyValueDict_)
-		keyValueDict_ = [[NSMutableDictionary alloc] init];
-	[keyValueDict_ setObject:value forKey:key];
-}
-
-- (void)setKeyStringOptional:(NSString*)key Value:(NSString*)value
-{
-	if (!keyValueDictOptional_)
-		keyValueDictOptional_ = [[NSMutableDictionary alloc] init];
-	[keyValueDictOptional_ setObject:value forKey:key];
-}
-
-- (void)setKeyNumberOptional:(NSString*)key Value:(NSNumber*)value
-{
-	if (!keyValueDictOptional_)
-		keyValueDictOptional_ = [[NSMutableDictionary alloc] init];
-	[keyValueDictOptional_ setObject:value forKey:key];
-}
-
-- (void)resetDict
-{
-	if (keyValueDict_)
-		[keyValueDict_ removeAllObjects];
-	if (keyValueDictOptional_)
-		[keyValueDictOptional_ removeAllObjects];
 }
 
 @end
@@ -110,39 +62,9 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 	
 extern "C" {
 
-	void _setKeyValueString(const char* key, const char* value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyString:charToNSString(key) Value:charToNSString(value)];
-	}
-
-	void _setKeyValueFloat(const char* key, float value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:charToNSString(key) Value:[NSNumber numberWithFloat: value]];
-	}
-
-	void _setKeyValueInt(const char* key, int value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumber:charToNSString(key) Value:[NSNumber numberWithInteger: value]];
-	}
-	
-	void _setKeyValueStringOptional(const char* key, const char* value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyStringOptional:charToNSString(key) Value:charToNSString(value)];
-	}
-
-	void _setKeyValueFloatOptional(const char* key, float value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:charToNSString(key) Value:[NSNumber numberWithFloat: value]];
-	}
-
-	void _setKeyValueIntOptional(const char* key, int value)
-	{
-		[[AppMetrImpl sharedAppMetrImpl] setKeyNumberOptional:charToNSString(key) Value:[NSNumber numberWithInteger: value]];
-	}
-
 	void _setupWithToken(const char* token)
 	{
-		[AppMetr setupWithToken:charToNSString(token) delegate:[[AppMetrImpl sharedAppMetrImpl] appMetrListener]];
+		[AppMetr setupWithToken:charToNSString(token)];
 	}
 	
 	void _trackSession()
@@ -182,6 +104,11 @@ extern "C" {
 	{
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(payment)];
 		[AppMetr trackPayment:paymentWithPaymentProcessor(dict)];
+	}
+
+	void _trackAdsEvent(const char* event)
+	{
+		[AppMetr trackAdsEvent:charToNSString(event)];
 	}
 	
 	void _trackPaymentWithProperties(const char* payment, const char* properties)
@@ -224,11 +151,18 @@ extern "C" {
 		[AppMetr trackExperimentEnd:charToNSString(experiment)];
 	}
 
-	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) {
+	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) 
+	{
 		return [AppMetr verifyPaymentWithProductId:charToNSString(productId) 
 											transactionId:charToNSString(transactionId) 
 												  receipt:charToNSString(receipt) 
 											   privateKey:charToNSString(privateKey)];
+	}
+
+	void _trackState(const char* state)
+	{
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(state)];
+		[AppMetr trackState:dict];
 	}
 	
 	void _identify(const char* userId)

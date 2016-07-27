@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System;
+using JsonFx.Json;
 
 public class AppMetrSample : MonoBehaviour
 {
@@ -74,11 +75,61 @@ public class AppMetrSample : MonoBehaviour
 		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
 	}
 
-	public void HandleAppMetrOnCommand(string command)
+	void OnApplicationPause(bool pause) 
 	{
-		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + command);
+		AppMetr.OnPause(pause);
+	}
+
+	public void HandleAppMetrOnCommand(string commandJSON)
+	{
+		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + commandJSON);
 		isShowAlert = true;
-		alertMessage = "Server command: " + command;
+		alertMessage = "Server command: " + commandJSON;
+		
+		var reader = new JsonReader(commandJSON);
+		Dictionary<string, object> command = reader.Deserialize<Dictionary<string, object>>();
+
+		string type = command["type"].ToString();
+        string commandId = command["commandId"].ToString();
+        Dictionary<string, object> properties = (Dictionary<string, object>) command["properties"];
+
+		if ("setOptions".Equals(type)) 
+        {
+        	bool trackError = false;
+			Dictionary<string, object>[] options = properties.ContainsKey("options") ? (Dictionary<string, object>[]) properties["options"] : new Dictionary<string,object>[]{};
+			
+			List<Dictionary<string, object>> resultOptions = new List<Dictionary<string,object>>();
+            for (int optionIndex = 0; optionIndex < options.Length; optionIndex++) 
+            {
+                Dictionary<string, object> option = options[optionIndex];
+
+				var enumerator = option.Keys.GetEnumerator();
+				enumerator.MoveNext();
+                string key = enumerator.Current;   //Cause 1 array element has only 1 option
+                object value = option[key];
+
+                if (key.Equals("track_error")) {
+                	trackError = true;
+                }
+
+                Dictionary<string, object> resultOption = new Dictionary<string, object>()
+                {
+                	{ "option", key },
+                	{ "oldValue", value },
+                	{ "requestedValue", value },
+                	{ "currentValue", value }
+                };
+
+                resultOptions.Add(resultOption);
+            }
+
+            if (trackError) {
+            	AppMetr.TrackOptionsError(commandId, resultOptions.ToArray(), "testError", "Track test error for setOptions");
+            } else {
+            	AppMetr.TrackOptions(commandId, resultOptions.ToArray());	
+            }
+            
+        }
 	}
 	
 	#region GUI for sample app
