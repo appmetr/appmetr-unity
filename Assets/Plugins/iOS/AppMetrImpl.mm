@@ -64,7 +64,7 @@ extern "C" {
 
 	void _setupWithToken(const char* token)
 	{
-		[AppMetr setupWithToken:charToNSString(token) delegate:[AppMetrImpl appMetrListener]];
+		[AppMetr setupWithToken:charToNSString(token)];
 	}
 	
 	void _trackSession()

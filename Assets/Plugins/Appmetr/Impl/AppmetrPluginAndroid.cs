@@ -83,8 +83,7 @@ public class AppmetrPluginAndroid
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
         {
-        	AndroidJavaObject listener = new AndroidJavaObject("com.appmetr.unity.AppMetrListenerImpl");
-            AppMetr.CallStatic("setup", token, context, listener);
+            AppMetr.CallStatic("setup", token, context);
             initialized = true;
         }));
 	}
