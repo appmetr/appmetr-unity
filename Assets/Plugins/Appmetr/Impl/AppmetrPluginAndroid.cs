@@ -81,9 +81,10 @@ public class AppmetrPluginAndroid
 		getActivity();
 		
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+		//AndroidJavaProxy listener = new AppMetrCommandListener ();
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
         {
-            AppMetr.CallStatic("setup", token, context);
+			AppMetr.CallStatic("setup", token, context /*, listener*/);
             initialized = true;
         }));
 	}

@@ -4,11 +4,11 @@ AppMetr Unity Plugin
 
 1. Импортируете плагин *AppmetrUnityPlugin.unitypackage* в проект (двойным кликом по файлу или через меню *Assets/Import Package/Custom Package…*).
 
-2. Для прослушивания комманд с сервера добавляете на сцену объект с именем AppMetrCommandListener, на объект добавляете скрипт AppMetrCommandListener. Подписываетесь на события AppMetrCommandListener.OnCommand.
+2. Добавьте на сцену скрипт Assets/Plugins/AppMetr/AppMetrBehaviour.cs и не выгружайте его при перезагрузке сцены (можно для этого установить флаг Undeletable в его свойствах). Пропишите свойство Token
 
-3. Перед вызовом команд плагина, необходимо в любом месте кода вызвать  AppMetr.Setup(token).
+3. Вызывайте статические методы AppMetr для регистрации игровых событий (см. AppMetr API)
 
-Пример кода
+4. Опционально. Подписываетесь на события AppMetrCommandListener.OnCommand, чтобы выполнять удаленные серверные вызовы. Пример кода:
 
 using UnityEngine;
 using System.Collections;
@@ -21,23 +21,18 @@ public class AppMetrManager : MonoBehaviour {
 	
 	void OnDisable() {
 		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
-	}
-
-	void Start() {
-		AppMetr.Setup("00000000-0000-0000-0000-000000000000");
-	}
 	
 	public void HandleAppMetrCommand(string command) {
 		Debug.Log("AppMetrManager: HandleAppMetrCommand\n" + command);
 	}
 }
 
-
-
-
-
-
 AppMetr API
+
+Класс AppMetrBehaviour
+
+Служит для прослушивания основных событий системы, предоставляемых MonoBehaviour, и передачи их в AppMetr. Должен присутствовать на сцене и не выгружаться в течение всей игровой сессии
+
 Класс AppMetr
 
 Это основной класс, предоставляющий доступ к функциям библиотеки.
@@ -106,7 +101,7 @@ public void HandleOnCommand(string command) {
 	Debug.Log("HandleOnCommand:\n" + command);
 }
 
-Пример использования плагина можно посмотреть в *Plugins/Appmetr/Sample/AppMetrSample.cs*.
+Пример использования плагина можно посмотреть в *Assets/Plugins/Appmetr/Sample/TestScene.unity*.
 
 ВАЖНО:
 Библиотека не поддерживает Stripping Level = use micro mscorlib.

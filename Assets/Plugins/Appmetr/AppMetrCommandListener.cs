@@ -4,23 +4,21 @@ using System;
 /// <summary>
 /// Class provides access to the event command is received from the server.
 /// </summary>
-[ExecuteInEditMode()]
-public class AppMetrCommandListener : MonoBehaviour
+public class AppMetrCommandListener : AndroidJavaProxy
 {
 	// Fired when get a remote command from the server
 	public static event Action<string> OnCommand;
-	
-	void Awake()
-	{
-		transform.gameObject.name = "AppMetrCommandListener";
+
+	// Realize android interface
+	public AppMetrCommandListener() : base("com.appmetr.android.AppMetrListener") {
 	}
 	
-	void OnExecuteCommand(string command)
+	void executeCommand(AndroidJavaObject command)
 	{
 		var handler = OnCommand;
-		if (handler != null)
+		if (handler != null && command != null)
 		{
-			handler(command);
+			handler(command.Call<string>("toString"));
 		}
 	}
 }
