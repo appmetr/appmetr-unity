@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 /// <summary>
 /// The MonoBehaviour class.
 /// Listen application lifecircle events
 /// </summary>
 public class AppMetrBehaviour : MonoBehaviour {
+
+	/// <summary>
+	/// Fired when get a remote command from the server
+	/// </summary>
+	public static event Action<string> OnCommand;
 
 	/// <summary>
 	/// Application identifier in AppMetr service
@@ -17,20 +22,27 @@ public class AppMetrBehaviour : MonoBehaviour {
 	/// Is this game object don't be destroyed by scene reload
 	/// and has single instance
 	/// </summary>
-	public bool  Undeletable = false;
+	public bool  SingleUnloadableInstance = false;
+
+	/// <summary>
+	/// Register AppMetrCommandListener or not on setup
+	/// </summary>
+	[SerializeField]
+	private bool UseRemoteCommands = false;
 
 	void Awake() {
-		if(Undeletable) {
-			DontDestroyOnLoad(transform.gameObject);
+		if(SingleUnloadableInstance) {
 			if (FindObjectsOfType(GetType()).Length > 1) {
 				Destroy(gameObject);
+			} else {
+				DontDestroyOnLoad(transform.gameObject);
 			}
 		}
 	}
 
 	void Start()
 	{
-		AppMetr.Setup(token);
+		AppMetr.Setup(token, UseRemoteCommands ? gameObject.name : null);
 	}
 
 	void OnApplicationPause(bool pauseStatus) {
@@ -39,5 +51,14 @@ public class AppMetrBehaviour : MonoBehaviour {
 
 	void OnApplicationQuit() {
 		AppMetr.OnPause(true);
+	}
+
+	void OnAppMetrCommand(string command)
+	{
+		var handler = OnCommand;
+		if (handler != null)
+		{
+			handler(command);
+		}
 	}
 }

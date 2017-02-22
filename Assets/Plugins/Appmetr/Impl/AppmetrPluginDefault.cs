@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AppmetrPluginDefault
 {
-	public static void SetupWithToken(string token) {}
+	public static void SetupWithToken(string token, string commandListenerName) {}
 
 	public static void OnPause() {}
 

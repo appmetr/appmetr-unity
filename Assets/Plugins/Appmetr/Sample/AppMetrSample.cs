@@ -59,12 +59,12 @@ public class AppMetrSample : MonoBehaviour
 
 	void Awake()
 	{
-		AppMetrCommandListener.OnCommand += HandleAppMetrOnCommand; 
+		AppMetrBehaviour.OnCommand += HandleAppMetrOnCommand; 
 	}
 	
 	void OnDisable()
 	{
-		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
+		AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
 	}
 
 	public void HandleAppMetrOnCommand(string commandJSON)

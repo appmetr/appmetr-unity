@@ -1,32 +1,5 @@
-#import "AppMetrImpl.h"
-
-static AppMetrListener * appMetrListener_ = nil;
-
-@implementation AppMetrImpl
-
-+ (AppMetrListener*)appMetrListener
-{
-	return appMetrListener_;
-}
-
-- (id)init
-{
-	self = [super init];
-	
-	[appMetrListener_ release];
-	appMetrListener_ = [[AppMetrListener alloc] init];
-	
-	return self;
-}
-
-- (void)dealloc
-{
-	[appMetrListener_ release];
-	[super dealloc];
-}
-
-@end
-
+#import "AppMetr.h"
+#import "AppMetrListener.h"
 
 NSString* charToNSString(const char* string)
 {
@@ -62,9 +35,16 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 	
 extern "C" {
 
-	void _setupWithToken(const char* token)
+	void _setupWithToken(const char* token,const char* commandListenerName)
 	{
-		[AppMetr setupWithToken:charToNSString(token)];
+        NSString* commandListener = charToNSString(commandListenerName);
+        if(commandListener.length > 0) {
+            static AppMetrListener* appMetrListener = [[AppMetrListener alloc] init];
+            appMetrListener.unityMessageRecipient = commandListener;
+            [AppMetr setupWithToken:charToNSString(token) delegate:appMetrListener];
+        } else {
+            [AppMetr setupWithToken:charToNSString(token)];
+        }
 	}
 	
 	void _trackSession()

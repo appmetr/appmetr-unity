@@ -1,20 +1,13 @@
 #import "AppMetrListener.h"
 #import "AppMetr.h"
-#import "AppMetrImpl.h"
-#import "CJSONSerializer.h"
 
 @implementation AppMetrListener
-{
-}
 
--(id)init
-{
-	self = [super init];
-	return self;
-}
+@synthesize unityMessageRecipient;
 
 -(void)dealloc
 {
+    unityMessageRecipient = nil;
 	[super dealloc];
 }
 
@@ -22,9 +15,10 @@
 
 -(void)executeCommand:(NSDictionary *)command
 {
+    if(unityMessageRecipient == nil || unityMessageRecipient.length == 0)
+        return;
 	NSError *serializeError = nil;
-	NSData *data = [[AMCJSONSerializer serializer] serializeDictionary:command
-															   error:&serializeError];
+	NSData *data = [NSJSONSerialization dataWithJSONObject:command options:0 error:&serializeError];
 	if (serializeError)
 	{
 		NSLog(@"JSON srializer error: %@", serializeError.description);
@@ -36,7 +30,7 @@
 		NSString *serializedData = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 		if (serializedData)
 		{
-			UnitySendMessage("AppMetrCommandListener", "OnExecuteCommand", [serializedData UTF8String]);
+			UnitySendMessage([unityMessageRecipient cStringUsingEncoding:NSUTF8StringEncoding], "OnAppMetrCommand", [serializedData UTF8String]);
 		}
 	}
 }
