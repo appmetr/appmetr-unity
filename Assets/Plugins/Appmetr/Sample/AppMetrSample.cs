@@ -6,10 +6,7 @@ using System;
 using JsonFx.Json;
 
 public class AppMetrSample : MonoBehaviour
-{
-	[SerializeField]
-	private string token = "demo_token";
-	
+{	
 	private string fieldTrackLevel = "";
 	private string fieldTrackEvent = "";
 	
@@ -59,25 +56,15 @@ public class AppMetrSample : MonoBehaviour
 	
 	private bool isShowAlert = false;
 	private string alertMessage = "";
-	
-	void Start()
-	{
-		AppMetr.Setup (token);
-	}
 
 	void Awake()
 	{
-		AppMetrCommandListener.OnCommand += HandleAppMetrOnCommand; 
+		AppMetrBehaviour.OnCommand += HandleAppMetrOnCommand; 
 	}
 	
 	void OnDisable()
 	{
-		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
-	}
-
-	void OnApplicationPause(bool pause) 
-	{
-		AppMetr.OnPause(pause);
+		AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
 	}
 
 	public void HandleAppMetrOnCommand(string commandJSON)

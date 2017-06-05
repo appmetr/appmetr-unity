@@ -9,6 +9,28 @@ using JsonFx.Json;
 
 public class AppmetrPluginAndroid
 {
+	private class AppMetrCommandListener : AndroidJavaProxy
+	{
+		// GameObject name for UnitySendMessage
+		public string CommandListenerName;
+
+		// Android interface implementation
+		public AppMetrCommandListener(string CommandListenerName) : base("com.appmetr.android.AppMetrListener") {
+			this.CommandListenerName = CommandListenerName;
+		}
+
+		void executeCommand(AndroidJavaObject command)
+		{
+			if (!string.IsNullOrEmpty(CommandListenerName))
+			{
+				GameObject listenerObject = GameObject.Find(CommandListenerName);
+				if (listenerObject != null) {
+					listenerObject.SendMessage("OnAppMetrCommand", command.Call<string> ("toString"));
+				}
+			}
+		}
+	}
+
 	private static bool initialized = false;
 
 	private static AndroidJavaObject currentActivity = null;
@@ -71,7 +93,7 @@ public class AppmetrPluginAndroid
 			return json.ToString ();
 	}
 	
-	public static void SetupWithToken(string token)
+	public static void SetupWithToken(string token, string commandListenerName)
 	{
 		if (Application.platform == RuntimePlatform.Android)
 		{
@@ -81,10 +103,11 @@ public class AppmetrPluginAndroid
 		getActivity();
 		
 		AndroidJavaObject context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
+		AndroidJavaProxy listener = string.IsNullOrEmpty(commandListenerName) ? null : new AppMetrCommandListener(commandListenerName);
 		currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
-        {
-            AppMetr.CallStatic("setup", token, context);
-            initialized = true;
+		{
+			AppMetr.CallStatic("setup", token, context, listener);
+			initialized = true;
         }));
 	}
 

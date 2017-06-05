@@ -12,7 +12,7 @@ public class AppmetrPluginIOS
 	#region	Interface to native implementation
 
 	[DllImport("__Internal")]
-	private static extern void _setupWithToken(string token);
+	private static extern void _setupWithToken(string token, string commandListenerName);
 	
 	[DllImport("__Internal")]
 	private static extern void _trackSession();
@@ -98,9 +98,9 @@ public class AppmetrPluginIOS
 			return json.ToString ();
 	}
 
-	public static void SetupWithToken(string token)
+	public static void SetupWithToken(string token, string commandListenerName)
 	{
-		_setupWithToken(token);
+		_setupWithToken(token, commandListenerName);
 	}
 
 	public static void OnPause() {}

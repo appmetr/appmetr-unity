@@ -25,7 +25,22 @@ public class AppMetr
 	/// </param>
 	public static void Setup(string token)
 	{
-		AppmetrPlatformPlugin.SetupWithToken(token);
+		AppmetrPlatformPlugin.SetupWithToken(token, null);
+	}
+
+	/// <summary>
+	/// Setting up plugin.
+	/// </summary>
+	/// <param name="token">
+	/// Parameter which is needed for data upload.
+	/// </param>
+	/// <param name="commandListener">
+	/// Name of game object, which contains AppMetrBehavior. May be null,
+	/// if remote commands not use
+	/// </param>
+	public static void Setup(string token, string commandListener)
+	{
+		AppmetrPlatformPlugin.SetupWithToken(token, commandListener);
 	}
 
 	/// <summary>
