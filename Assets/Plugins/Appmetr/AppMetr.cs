@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using AppmetrPlatformPlugin = AppmetrPluginAndroid;
 #elif UNITY_IOS && !UNITY_EDITOR
 using AppmetrPlatformPlugin = AppmetrPluginIOS;
+#elif UNITY_STANDALONE && !UNITY_EDITOR
+using AppmetrPlatformPlugin = AppmetrPluginStandalone;
 #else
 using AppmetrPlatformPlugin = AppmetrPluginDefault;
 #endif
