@@ -26,7 +26,8 @@ public class AppmetrPluginStandalone
     public static void SetupWithToken(string token, string commandListenerName)
     {
         LogUtils.CustomLog = new AppmetrPluginLogger();
-        _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, Path.Combine(Application.persistentDataPath, "Appmetr"));
+        var presister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder));
+        _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, SubPlatformDefault, presister);
         _appMetr.Start();
         AttachProperties();
     }
@@ -229,6 +230,8 @@ public class AppmetrPluginStandalone
     
     private static AppMetrWin _appMetr;
     private const string ServerDefaultAddress = "https://appmetr.com/api";
+    private const string SubPlatformDefault = "Facebook";
+    private const string AppmetrCacheFolder = "Appmetr";
     private const string AttachPropertiesLanguage = "$language";
     private const string AttachPropertiesVersion = "$version";
     private const string PlayerPrefsMobUuidKey = "AppmetrUuid";
