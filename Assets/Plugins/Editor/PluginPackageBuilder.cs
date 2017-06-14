@@ -31,7 +31,14 @@ namespace Plugins.Editor
                 throw new Exception(errorBuilder.ToString());
             }
 
-            BuildPackage(AssetPaths, packagePath);
+            BuildPackage(new []{
+                "Assets/ThirdParty/Appmetr/Android",
+                "Assets/ThirdParty/Appmetr/AppMetr*",
+                "Assets/ThirdParty/Appmetr/Impl",
+                "Assets/ThirdParty/Appmetr/iOS",
+                "Assets/ThirdParty/Appmetr/Json",
+                "Assets/ThirdParty/Appmetr/x86/Appmetr*"
+            }, packagePath);
         }
 
         /// <summary>
@@ -42,7 +49,9 @@ namespace Plugins.Editor
         {
             string packagePath =
                 EditorUtility.SaveFilePanel("Save Appmetr package", Application.dataPath, "Appmetr", "unitypackage");
-            BuildPackage(AssetPaths, packagePath);
+            BuildPackage(new []{
+                "Assets/ThirdParty/Appmetr"
+            }, packagePath);
         }
 
         /// <summary>
@@ -128,13 +137,5 @@ namespace Plugins.Editor
             }
             return value;
         }
-
-        private static readonly string[] AssetPaths =
-        {
-            "Assets/Plugins/Appmetr",
-            "Assets/Plugins/iOS",
-            "Assets/Plugins/x86/Appmetr*",
-            "Assets/Plugins/Android/appmetr-*"
-        };
     }
 }
