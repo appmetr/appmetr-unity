@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Appmetr.Json;
 using AppmetrCS;
 using AppmetrCS.Actions;
 using UnityEngine;
@@ -26,8 +27,8 @@ public class AppmetrPluginStandalone
     public static void SetupWithToken(string token, string commandListenerName)
     {
         LogUtils.CustomLog = new AppmetrPluginLogger();
-        var presister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder));
-        _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, SubPlatformDefault, presister);
+        var presister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
+        _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, SubPlatformDefault, presister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
         _appMetr.Start();
         AttachProperties();
     }
