@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using JsonFx.Json;
+using Appmetr.Json;
 
 public class AppMetrSample : MonoBehaviour
 {	
@@ -71,8 +71,7 @@ public class AppMetrSample : MonoBehaviour
 		isShowAlert = true;
 		alertMessage = "Server command: " + commandJSON;
 		
-		var reader = new JsonReader(commandJSON);
-		Dictionary<string, object> command = reader.Deserialize<Dictionary<string, object>>();
+		Dictionary<string, object> command = Parser.Parse(commandJSON) as Dictionary<string, object>;
 
 		string type = command["type"].ToString();
         string commandId = command["commandId"].ToString();

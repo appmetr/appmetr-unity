@@ -1,3 +1,4 @@
+#if UNITY_STANDALONE
 using System;
 using AppmetrCS;
 using Debugger = UnityEngine.Debug;
@@ -234,3 +235,4 @@ public class AppmetrPluginLogger : ILog
 
     private const string Tag = "[Appmetr] ";
 }
+#endif

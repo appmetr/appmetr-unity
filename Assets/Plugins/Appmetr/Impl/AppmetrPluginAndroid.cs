@@ -1,11 +1,8 @@
 ﻿#if UNITY_ANDROID
 using UnityEngine;
-using System.Text;
 using System.Threading;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using JsonFx.Json;
+using Appmetr.Json;
 
 public class AppmetrPluginAndroid
 {
@@ -73,24 +70,15 @@ public class AppmetrPluginAndroid
 		}
 	}
 
-	private static string ToJson(IDictionary<string, object> properties) 
+	private static string ToJson(IDictionary<string, object> properties)
 	{
-		var json = new StringBuilder ();
-
-		var writer = new JsonWriter (json);
-		writer.Write(properties);
-
-		return json.ToString ();
+		return Serializer.Serialize(properties);
 	}
 
 	private static string ToJson(IDictionary<string, object>[] properties) 
 	{
-			var json = new StringBuilder ();
-
-			var writer = new JsonWriter (json);
-			writer.Write(properties);
-
-			return json.ToString ();
+		var propertiesList = new List<object>(properties);
+		return Serializer.Serialize(propertiesList);
 	}
 	
 	public static void SetupWithToken(string token, string commandListenerName)
