@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 using AppmetrPlatformPlugin = Appmetr.Unity.Impl.AppmetrPluginAndroid;
 #elif UNITY_IOS && !UNITY_EDITOR
-using AppmetrPlatformPlugin = Appmetr.Unity.Impl.AppmetrPluginIOS;
+using AppmetrPlatformPlugin = Appmetr.Unity.Impl.AppmetrPluginIos;
 #elif UNITY_STANDALONE && !UNITY_EDITOR
 using AppmetrPlatformPlugin = Appmetr.Unity.Impl.AppmetrPluginStandalone;
 #else
@@ -279,9 +280,12 @@ namespace Appmetr.Unity
 		/// <param name='privateKey'>
 		/// AppMetr private key.
 		/// </param>
-		public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey)
+		/// <param name="callback">
+		/// Callback for returning result
+		/// </param>
+		public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
 		{
-			return AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey);
+			AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey, callback);
 		}
 
 		/// <summary>
