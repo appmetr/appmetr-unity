@@ -1,4 +1,5 @@
 ﻿#if UNITY_IOS
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Appmetr.Unity.Json;
@@ -176,9 +177,12 @@ namespace Appmetr.Unity.Impl
 			return _verifyPayment(productId, transactionId, receipt, privateKey); 
 		}
 
-		public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) 
-		{ 
-			return false; 
+		public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
+		{
+			if (callback != null)
+			{
+				callback(false);
+			}
 		}
 
 		public static void TrackState(IDictionary<string, object> state) 
