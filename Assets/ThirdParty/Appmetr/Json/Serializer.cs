@@ -31,7 +31,7 @@ using System;
 using System.Collections;
 using System.Text;
 
-namespace Appmetr.Json
+namespace Appmetr.Unity.Json
 {
     public class Serializer
     {

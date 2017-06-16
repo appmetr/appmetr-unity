@@ -4,7 +4,7 @@ using AppmetrCS.Serializations;
 using Newtonsoft.Json;
 using Object = System.Object;
 
-namespace Appmetr.Json
+namespace Appmetr.Unity.Json
 {
     public class NewtonsoftSerializerTyped : IJsonSerializer
     {

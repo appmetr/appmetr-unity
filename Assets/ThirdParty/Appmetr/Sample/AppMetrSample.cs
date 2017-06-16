@@ -1,461 +1,472 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
-using Appmetr.Json;
+using Appmetr.Unity.Json;
 
-public class AppMetrSample : MonoBehaviour
-{	
-	private string fieldTrackLevel = "";
-	private string fieldTrackEvent = "";
-	
-	private string labelProperties = "Properties";
-	private string labelLevel = "Level";
-	private string labelEvent = "Event";
-	private string labelPayment = "Payment";
-	
-	private int selectedTrack = 0;
-	private string[] trackLabels = {"Track Session", "Track Level", "Track Event", "Track Payment"};
-	
-	private int ID_SESSION = 0;
-	private int ID_LEVEL = 1;
-	private int ID_EVENT = 2;
-	private int ID_PAYMENT = 3;
-	
-	private float leftFieldCenter;
-	private float rightFieldCenter;
+namespace Appmetr.Unity.Sample
+{
+	public class AppMetrSample : MonoBehaviour
+	{	
+		private string _fieldTrackLevel = "";
+		private string _fieldTrackEvent = "";
 
-	private float fieldWidth;
-	private float fieldHeight = 25;
+		private const string LabelProperties = "Properties";
+		private const string LabelLevel = "Level";
+		private const string LabelEvent = "Event";
+		private const string LabelPayment = "Payment";
 
-	private float propFieldWidth;
-	private float propFieldIndent = 15;
-	
-	private float labelWidth = 60;
-	
-	private float propButtonWidth = 50;
-	private float propButtonHeight = 40;
-	private float propButtonOffset = 30;
-	
-	private int maxPropFields = 0;
-	
-	Dictionary<string, object> sessionProperties = new Dictionary<string, object>();
-	Dictionary<string, object> levelProperties = new Dictionary<string, object>();
-	Dictionary<string, object> eventProperties = new Dictionary<string, object>();
-	Dictionary<string, object> paymentProperties = new Dictionary<string, object>();
-	Dictionary<string, object> paymentList = new Dictionary<string, object>();
+		private int _selectedTrack;
+		private readonly string[] _trackLabels = {"Track Session", "Track Level", "Track Event", "Track Payment"};
 
-	Dictionary<string, object> tempList = new Dictionary<string, object>();
-	
-	private string sessionLastKey = "";
-	private string levelLastKey = "";
-	private string eventLastKey = "";
-	private string paymentLastKey = "";
-	private string paymentPropLastKey = "";
-	
-	private bool isShowAlert = false;
-	private string alertMessage = "";
+		private const int IdSession = 0;
+		private const int IdLevel = 1;
+		private const int IdEvent = 2;
+		private const int IdPayment = 3;
 
-	void Awake()
-	{
-		AppMetrBehaviour.OnCommand += HandleAppMetrOnCommand; 
-	}
-	
-	void OnDisable()
-	{
-		AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
-	}
+		private float _leftFieldCenter;
+		private float _rightFieldCenter;
 
-	public void HandleAppMetrOnCommand(string commandJSON)
-	{
-		Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + commandJSON);
-		isShowAlert = true;
-		alertMessage = "Server command: " + commandJSON;
+		private float _fieldWidth;
+		private float fieldHeight = 25;
+
+		private float _propFieldWidth;
+		private float propFieldIndent = 15;
+	
+		private float labelWidth = 60;
+	
+		private float propButtonWidth = 50;
+		private float propButtonHeight = 40;
+		private float propButtonOffset = 30;
+	
+		private int _maxPropFields;
+
+		private readonly Dictionary<string, object> _sessionProperties = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _levelProperties = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _eventProperties = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _paymentProperties = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _paymentList = new Dictionary<string, object>();
+		private readonly Dictionary<string, object> _tempList = new Dictionary<string, object>();
+	
+		private string _sessionLastKey = "";
+		private string _levelLastKey = "";
+		private string _eventLastKey = "";
+		private string _paymentLastKey = "";
+		private string _paymentPropLastKey = "";
+	
+		private bool _isShowAlert;
+		private string _alertMessage = "";
+
+		void Awake()
+		{
+			AppMetrBehaviour.OnCommand += HandleAppMetrOnCommand; 
+		}
+	
+		void OnDisable()
+		{
+			AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
+		}
+
+		public void HandleAppMetrOnCommand(string commandJson)
+		{
+			Debug.Log("AppMetrSample: HandleAppMetrOnCommand\n" + commandJson);
+			_isShowAlert = true;
+			_alertMessage = "Server command: " + commandJson;
 		
-		Dictionary<string, object> command = Parser.Parse(commandJSON) as Dictionary<string, object>;
+			Dictionary<string, object> command = Parser.Parse(commandJson) as Dictionary<string, object>;
+			if (command == null)
+			{
+				return;
+			}
 
-		string type = command["type"].ToString();
-        string commandId = command["commandId"].ToString();
-        Dictionary<string, object> properties = (Dictionary<string, object>) command["properties"];
+			string type = command["type"].ToString();
+			string commandId = command["commandId"].ToString();
+			Dictionary<string, object> properties = (Dictionary<string, object>) command["properties"];
 
-		if ("setOptions".Equals(type)) 
-        {
-        	bool trackError = false;
-			Dictionary<string, object>[] options = properties.ContainsKey("options") ? (Dictionary<string, object>[]) properties["options"] : new Dictionary<string,object>[]{};
+			if ("setOptions".Equals(type)) 
+			{
+				bool trackError = false;
+				Dictionary<string, object>[] options = properties.ContainsKey("options") ? (Dictionary<string, object>[]) properties["options"] : new Dictionary<string,object>[]{};
 			
-			List<Dictionary<string, object>> resultOptions = new List<Dictionary<string,object>>();
-            for (int optionIndex = 0; optionIndex < options.Length; optionIndex++) 
-            {
-                Dictionary<string, object> option = options[optionIndex];
+				var resultOptions = new List<IDictionary<string,object>>();
+				for (int optionIndex = 0; optionIndex < options.Length; optionIndex++) 
+				{
+					Dictionary<string, object> option = options[optionIndex];
 
-				var enumerator = option.Keys.GetEnumerator();
-				enumerator.MoveNext();
-                string key = enumerator.Current;   //Cause 1 array element has only 1 option
-                object value = option[key];
+					var enumerator = option.Keys.GetEnumerator();
+					enumerator.MoveNext();
+					string key = enumerator.Current;   //Cause 1 array element has only 1 option
+					if (key == null)
+					{
+						continue;
+					}
+					object value = option[key];
 
-                if (key.Equals("track_error")) {
-                	trackError = true;
-                }
+					if (key.Equals("track_error")) {
+						trackError = true;
+					}
 
-                Dictionary<string, object> resultOption = new Dictionary<string, object>()
-                {
-                	{ "option", key },
-                	{ "oldValue", value },
-                	{ "requestedValue", value },
-                	{ "currentValue", value }
-                };
+					Dictionary<string, object> resultOption = new Dictionary<string, object>()
+					{
+						{ "option", key },
+						{ "oldValue", value },
+						{ "requestedValue", value },
+						{ "currentValue", value }
+					};
 
-                resultOptions.Add(resultOption);
-            }
+					resultOptions.Add(resultOption);
+					enumerator.Dispose();
+				}
 
-            if (trackError) {
-            	AppMetr.TrackOptionsError(commandId, resultOptions.ToArray(), "testError", "Track test error for setOptions");
-            } else {
-            	AppMetr.TrackOptions(commandId, resultOptions.ToArray());	
-            }
+				if (trackError) {
+					AppMetr.TrackOptionsError(commandId, resultOptions.ToArray(), "testError", "Track test error for setOptions");
+				} else {
+					AppMetr.TrackOptions(commandId, resultOptions.ToArray());	
+				}
             
-        }
-	}
+			}
+		}
 	
-	#region GUI for sample app
+		#region GUI for sample app
 	
-	void OnGUI()
-	{
-		float centerX = Screen.width / 2;
-		leftFieldCenter = Screen.width * 0.25f;
-		rightFieldCenter = Screen.width * 0.75f;
-		
-		fieldWidth = Screen.width * 0.35f;
-		propFieldWidth = Screen.width * 0.2f;
-		
-		maxPropFields = (int)((Screen.height * 0.55f) / (fieldHeight + propFieldIndent));
-		
-		float spacer = 40;
-		selectedTrack = GUI.SelectionGrid (new Rect(centerX - 300, spacer, 600, 40), selectedTrack, trackLabels, 4);
-		
-		spacer += 50;
-		
-		if (selectedTrack == ID_SESSION)
+		void OnGUI()
 		{
-			doSessionGUI(spacer);
-		}
-		else if (selectedTrack == ID_LEVEL)
-		{
-			doLevelGUI(spacer);
-		}
-		else if (selectedTrack == ID_EVENT)
-		{
-			doEventGUI(spacer);
-		}
-		else if (selectedTrack == ID_PAYMENT)
-		{
-			doPaymentGUI(spacer);
-		}
+			float centerX = (float)Screen.width / 2;
+			_leftFieldCenter = Screen.width * 0.25f;
+			_rightFieldCenter = Screen.width * 0.75f;
 		
-		if (GUI.Button(new Rect(centerX - 100, Screen.height - 60, 200, 40), "Run"))
-		{
-			doTrack();
-		}
+			_fieldWidth = Screen.width * 0.35f;
+			_propFieldWidth = Screen.width * 0.2f;
+		
+			_maxPropFields = (int)((Screen.height * 0.55f) / (fieldHeight + propFieldIndent));
+		
+			float spacer = 40;
+			_selectedTrack = GUI.SelectionGrid (new Rect(centerX - 300, spacer, 600, 40), _selectedTrack, _trackLabels, 4);
+		
+			spacer += 50;
+		
+			if (_selectedTrack == IdSession)
+			{
+				DoSessionGui(spacer);
+			}
+			else if (_selectedTrack == IdLevel)
+			{
+				DoLevelGui(spacer);
+			}
+			else if (_selectedTrack == IdEvent)
+			{
+				DoEventGui(spacer);
+			}
+			else if (_selectedTrack == IdPayment)
+			{
+				DoPaymentGui(spacer);
+			}
+		
+			if (GUI.Button(new Rect(centerX - 100, Screen.height - 60, 200, 40), "Run"))
+			{
+				DoTrack();
+			}
 
-		if (isShowAlert)
-		{
-			float width = Screen.width * 0.9f;
-			GUI.Label(new Rect (Screen.width / 2 - width / 2, Screen.height - 130, width, 72), alertMessage);
-		}
-	}
-	
-	private void doSessionGUI(float spacer)
-	{
-		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
-		
-		spacer += 30;
-		
-		if (sessionProperties.Count < maxPropFields && GUI.Button(new Rect(leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-		{
-			if (!sessionProperties.ContainsKey(""))
+			if (_isShowAlert)
 			{
-				sessionProperties.Add("", "");
-				sessionLastKey = "";
+				float width = Screen.width * 0.9f;
+				GUI.Label(new Rect ((float)Screen.width / 2 - width / 2, Screen.height - 130, width, 72), _alertMessage);
 			}
-		}
-		if (sessionProperties.Count > 0 && GUI.Button(new Rect(leftFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-		{
-			sessionProperties.Remove(sessionLastKey);
-		}
-		
-		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-		tempList.Clear();
-		foreach (KeyValuePair<string, object> pair in sessionProperties)
-		{
-			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
-			if ((key == "" && !checkDictionary(sessionProperties)) || sessionProperties.ContainsKey(key))
-			{
-				key = pair.Key;
-			}
-			tempList.Add(key, value);
-			fieldSpacer += fieldHeight + propFieldIndent;
-		}
-		sessionProperties.Clear();
-		foreach (KeyValuePair<string, object> pair in tempList)
-		{
-			sessionProperties.Add(pair.Key, pair.Value);
-			sessionLastKey = pair.Key;
-		}
-	}
-	
-	private void doLevelGUI(float spacer)
-	{
-		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelLevel);
-		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
-		
-		spacer += 30;
-		
-		fieldTrackLevel = GUI.TextField(new Rect(leftFieldCenter - fieldWidth / 2, spacer, fieldWidth, fieldHeight), fieldTrackLevel);
-		
-		if (levelProperties.Count < maxPropFields && GUI.Button(new Rect(rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-		{
-			if (!levelProperties.ContainsKey(""))
-			{
-				levelProperties.Add("", "");
-				levelLastKey = "";
-			}
-		}
-		if (levelProperties.Count > 0 && GUI.Button(new Rect(rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-		{
-			levelProperties.Remove(levelLastKey);
-		}
-		
-		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-		tempList.Clear();
-		foreach (KeyValuePair<string, object> pair in levelProperties)
-		{
-			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
-			if ((key == "" && !checkDictionary(levelProperties)) || levelProperties.ContainsKey(key))
-			{
-				key = pair.Key;
-			}
-			tempList.Add(key, value);
-			fieldSpacer += fieldHeight + propFieldIndent;
-		}
-		levelProperties.Clear();
-		foreach (KeyValuePair<string, object> pair in tempList)
-		{
-			levelProperties.Add(pair.Key, pair.Value);
-			levelLastKey = pair.Key;
-		}
-	}	
-	
-	private void doEventGUI(float spacer)
-	{
-		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelEvent);
-		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
-		
-		spacer += 30;
-		
-		fieldTrackEvent = GUI.TextField(new Rect(leftFieldCenter - fieldWidth / 2, spacer, fieldWidth, fieldHeight), fieldTrackEvent);
-		
-		if (eventProperties.Count < maxPropFields && GUI.Button(new Rect(rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-		{
-			if (!eventProperties.ContainsKey(""))
-			{
-				eventProperties.Add("", "");
-				eventLastKey = "";
-			}
-		}
-		if (eventProperties.Count > 0 && GUI.Button(new Rect(rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-		{
-			eventProperties.Remove(eventLastKey);
-		}
-		
-		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-		tempList.Clear();
-		foreach (KeyValuePair<string, object> pair in eventProperties)
-		{
-			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
-			if ((key == "" && !checkDictionary(eventProperties)) || eventProperties.ContainsKey(key))
-			{
-				key = pair.Key;
-			}
-			tempList.Add(key, value);
-			fieldSpacer += fieldHeight + propFieldIndent;
-		}
-		eventProperties.Clear();
-		foreach (KeyValuePair<string, object> pair in tempList)
-		{
-			eventProperties.Add(pair.Key, pair.Value);
-			eventLastKey = pair.Key;
-		}
-	}	
-	
-	private void doPaymentGUI(float spacer)
-	{
-		GUI.Label(new Rect (leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelPayment);
-		GUI.Label(new Rect (rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), labelProperties);
-		
-		spacer += 30;
-		if (paymentList.Count < maxPropFields && GUI.Button(new Rect(leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-		{
-			if (!paymentList.ContainsKey(""))
-			{
-				paymentList.Add("", "");
-				paymentLastKey = "";
-			}
-		}
-		if (paymentList.Count > 0 && GUI.Button(new Rect(leftFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-		{
-			paymentList.Remove(paymentLastKey);
 		}
 	
-		float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-		tempList.Clear();
-		foreach (KeyValuePair<string, object> pair in paymentList)
+		private void DoSessionGui(float spacer)
 		{
-			string key = GUI.TextField(new Rect(leftFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(leftFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
-			if ((key == "" && !checkDictionary(paymentList)) || paymentList.ContainsKey(key))
-			{
-				key = pair.Key;
-			}
-			tempList.Add(key, value);
-			fieldSpacer += fieldHeight + propFieldIndent;
-		}
-		paymentList.Clear();
-		foreach (KeyValuePair<string, object> pair in tempList)
-		{
-			paymentList.Add(pair.Key, pair.Value);
-			paymentLastKey = pair.Key;
-		}
-	
-		if (paymentProperties.Count < maxPropFields && GUI.Button(new Rect(rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-		{
-			if (!paymentProperties.ContainsKey(""))
-			{
-				paymentProperties.Add("", "");
-				paymentPropLastKey = "";
-			}
-		}
-		if (paymentProperties.Count > 0 && GUI.Button(new Rect(rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-		{
-			paymentProperties.Remove(paymentPropLastKey);
-		}
-
-		fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-		tempList.Clear();
-		foreach (KeyValuePair<string, object> pair in paymentProperties)
-		{
-			string key = GUI.TextField(new Rect(rightFieldCenter - propFieldWidth - 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Key);
-			string value = GUI.TextField(new Rect(rightFieldCenter + 5, fieldSpacer, propFieldWidth, fieldHeight), pair.Value.ToString());
-			if ((key == "" && !checkDictionary(paymentProperties)) || paymentProperties.ContainsKey(key))
-			{
-				key = pair.Key;
-			}
-			tempList.Add(key, value);
-			fieldSpacer += fieldHeight + propFieldIndent;
-		}
-		paymentProperties.Clear();
-		foreach (KeyValuePair<string, object> pair in tempList)
-		{
-			paymentProperties.Add(pair.Key, pair.Value);
-			paymentPropLastKey = pair.Key;
-		}
-	}	
-	
-	private void doTrack()
-	{
-		isShowAlert = false;
+			GUI.Label(new Rect (_leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelProperties);
 		
-		if (selectedTrack == ID_SESSION)
-		{
-			if (checkDictionary(sessionProperties))
+			spacer += 30;
+		
+			if (_sessionProperties.Count < _maxPropFields && GUI.Button(new Rect(_leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
 			{
-				AppMetr.TrackSession(sessionProperties);
-			}
-			else
-			{
-				AppMetr.TrackSession();
-			}
-		}
-		else if (selectedTrack == ID_LEVEL)
-		{
-			if (fieldTrackLevel == "")
-			{
-				// error
-				showAlert("Please fill in all fields");
-			}
-			else
-			{
-				if (checkDictionary(levelProperties))
+				if (!_sessionProperties.ContainsKey(""))
 				{
-					AppMetr.TrackLevel(Convert.ToInt32(fieldTrackLevel), levelProperties);
+					_sessionProperties.Add("", "");
+					_sessionLastKey = "";
+				}
+			}
+			if (_sessionProperties.Count > 0 && GUI.Button(new Rect(_leftFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
+			{
+				_sessionProperties.Remove(_sessionLastKey);
+			}
+		
+			float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
+			_tempList.Clear();
+			foreach (KeyValuePair<string, object> pair in _sessionProperties)
+			{
+				string key = GUI.TextField(new Rect(_leftFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
+				string value = GUI.TextField(new Rect(_leftFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
+				if ((key == "" && !checkDictionary(_sessionProperties)) || _sessionProperties.ContainsKey(key))
+				{
+					key = pair.Key;
+				}
+				_tempList.Add(key, value);
+				fieldSpacer += fieldHeight + propFieldIndent;
+			}
+			_sessionProperties.Clear();
+			foreach (KeyValuePair<string, object> pair in _tempList)
+			{
+				_sessionProperties.Add(pair.Key, pair.Value);
+				_sessionLastKey = pair.Key;
+			}
+		}
+	
+		private void DoLevelGui(float spacer)
+		{
+			GUI.Label(new Rect (_leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelLevel);
+			GUI.Label(new Rect (_rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelProperties);
+		
+			spacer += 30;
+		
+			_fieldTrackLevel = GUI.TextField(new Rect(_leftFieldCenter - _fieldWidth / 2, spacer, _fieldWidth, fieldHeight), _fieldTrackLevel);
+		
+			if (_levelProperties.Count < _maxPropFields && GUI.Button(new Rect(_rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
+			{
+				if (!_levelProperties.ContainsKey(""))
+				{
+					_levelProperties.Add("", "");
+					_levelLastKey = "";
+				}
+			}
+			if (_levelProperties.Count > 0 && GUI.Button(new Rect(_rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
+			{
+				_levelProperties.Remove(_levelLastKey);
+			}
+		
+			float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
+			_tempList.Clear();
+			foreach (KeyValuePair<string, object> pair in _levelProperties)
+			{
+				string key = GUI.TextField(new Rect(_rightFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
+				string value = GUI.TextField(new Rect(_rightFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
+				if ((key == "" && !checkDictionary(_levelProperties)) || _levelProperties.ContainsKey(key))
+				{
+					key = pair.Key;
+				}
+				_tempList.Add(key, value);
+				fieldSpacer += fieldHeight + propFieldIndent;
+			}
+			_levelProperties.Clear();
+			foreach (KeyValuePair<string, object> pair in _tempList)
+			{
+				_levelProperties.Add(pair.Key, pair.Value);
+				_levelLastKey = pair.Key;
+			}
+		}	
+	
+		private void DoEventGui(float spacer)
+		{
+			GUI.Label(new Rect (_leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelEvent);
+			GUI.Label(new Rect (_rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelProperties);
+		
+			spacer += 30;
+		
+			_fieldTrackEvent = GUI.TextField(new Rect(_leftFieldCenter - _fieldWidth / 2, spacer, _fieldWidth, fieldHeight), _fieldTrackEvent);
+		
+			if (_eventProperties.Count < _maxPropFields && GUI.Button(new Rect(_rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
+			{
+				if (!_eventProperties.ContainsKey(""))
+				{
+					_eventProperties.Add("", "");
+					_eventLastKey = "";
+				}
+			}
+			if (_eventProperties.Count > 0 && GUI.Button(new Rect(_rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
+			{
+				_eventProperties.Remove(_eventLastKey);
+			}
+		
+			float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
+			_tempList.Clear();
+			foreach (KeyValuePair<string, object> pair in _eventProperties)
+			{
+				string key = GUI.TextField(new Rect(_rightFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
+				string value = GUI.TextField(new Rect(_rightFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
+				if ((key == "" && !checkDictionary(_eventProperties)) || _eventProperties.ContainsKey(key))
+				{
+					key = pair.Key;
+				}
+				_tempList.Add(key, value);
+				fieldSpacer += fieldHeight + propFieldIndent;
+			}
+			_eventProperties.Clear();
+			foreach (KeyValuePair<string, object> pair in _tempList)
+			{
+				_eventProperties.Add(pair.Key, pair.Value);
+				_eventLastKey = pair.Key;
+			}
+		}	
+	
+		private void DoPaymentGui(float spacer)
+		{
+			GUI.Label(new Rect (_leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelPayment);
+			GUI.Label(new Rect (_rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelProperties);
+		
+			spacer += 30;
+			if (_paymentList.Count < _maxPropFields && GUI.Button(new Rect(_leftFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
+			{
+				if (!_paymentList.ContainsKey(""))
+				{
+					_paymentList.Add("", "");
+					_paymentLastKey = "";
+				}
+			}
+			if (_paymentList.Count > 0 && GUI.Button(new Rect(_leftFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
+			{
+				_paymentList.Remove(_paymentLastKey);
+			}
+	
+			float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
+			_tempList.Clear();
+			foreach (KeyValuePair<string, object> pair in _paymentList)
+			{
+				string key = GUI.TextField(new Rect(_leftFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
+				string value = GUI.TextField(new Rect(_leftFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
+				if ((key == "" && !checkDictionary(_paymentList)) || _paymentList.ContainsKey(key))
+				{
+					key = pair.Key;
+				}
+				_tempList.Add(key, value);
+				fieldSpacer += fieldHeight + propFieldIndent;
+			}
+			_paymentList.Clear();
+			foreach (KeyValuePair<string, object> pair in _tempList)
+			{
+				_paymentList.Add(pair.Key, pair.Value);
+				_paymentLastKey = pair.Key;
+			}
+	
+			if (_paymentProperties.Count < _maxPropFields && GUI.Button(new Rect(_rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
+			{
+				if (!_paymentProperties.ContainsKey(""))
+				{
+					_paymentProperties.Add("", "");
+					_paymentPropLastKey = "";
+				}
+			}
+			if (_paymentProperties.Count > 0 && GUI.Button(new Rect(_rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
+			{
+				_paymentProperties.Remove(_paymentPropLastKey);
+			}
+
+			fieldSpacer = spacer + propButtonHeight + propFieldIndent;
+			_tempList.Clear();
+			foreach (KeyValuePair<string, object> pair in _paymentProperties)
+			{
+				string key = GUI.TextField(new Rect(_rightFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
+				string value = GUI.TextField(new Rect(_rightFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
+				if ((key == "" && !checkDictionary(_paymentProperties)) || _paymentProperties.ContainsKey(key))
+				{
+					key = pair.Key;
+				}
+				_tempList.Add(key, value);
+				fieldSpacer += fieldHeight + propFieldIndent;
+			}
+			_paymentProperties.Clear();
+			foreach (KeyValuePair<string, object> pair in _tempList)
+			{
+				_paymentProperties.Add(pair.Key, pair.Value);
+				_paymentPropLastKey = pair.Key;
+			}
+		}	
+	
+		private void DoTrack()
+		{
+			_isShowAlert = false;
+		
+			if (_selectedTrack == IdSession)
+			{
+				if (checkDictionary(_sessionProperties))
+				{
+					AppMetr.TrackSession(_sessionProperties);
 				}
 				else
 				{
-					AppMetr.TrackLevel(Convert.ToInt32(fieldTrackLevel));
+					AppMetr.TrackSession();
 				}
 			}
-		}
-		else if (selectedTrack == ID_EVENT)
-		{
-			if (fieldTrackEvent == "")
+			else if (_selectedTrack == IdLevel)
 			{
-				// error
-				showAlert("Please fill in all fields");
-			}
-			else
-			{
-				if (checkDictionary(eventProperties))
+				if (_fieldTrackLevel == "")
 				{
-					AppMetr.TrackEvent(fieldTrackEvent, eventProperties);
+					// error
+					ShowAlert("Please fill in all fields");
 				}
 				else
 				{
-					AppMetr.TrackEvent(fieldTrackEvent);
+					if (checkDictionary(_levelProperties))
+					{
+						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel), _levelProperties);
+					}
+					else
+					{
+						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel));
+					}
 				}
 			}
-		}
-		else if (selectedTrack == ID_PAYMENT)
-		{
-			if (checkDictionary(paymentList))
+			else if (_selectedTrack == IdEvent)
 			{
-				if (checkDictionary(paymentProperties))
+				if (_fieldTrackEvent == "")
 				{
-					AppMetr.TrackPayment(paymentList, paymentProperties);
+					// error
+					ShowAlert("Please fill in all fields");
 				}
 				else
 				{
-					AppMetr.TrackPayment(paymentList);
+					if (checkDictionary(_eventProperties))
+					{
+						AppMetr.TrackEvent(_fieldTrackEvent, _eventProperties);
+					}
+					else
+					{
+						AppMetr.TrackEvent(_fieldTrackEvent);
+					}
 				}
 			}
-			else
+			else if (_selectedTrack == IdPayment)
 			{
-				// error
-				showAlert("Please fill in all fields");
+				if (checkDictionary(_paymentList))
+				{
+					if (checkDictionary(_paymentProperties))
+					{
+						AppMetr.TrackPayment(_paymentList, _paymentProperties);
+					}
+					else
+					{
+						AppMetr.TrackPayment(_paymentList);
+					}
+				}
+				else
+				{
+					// error
+					ShowAlert("Please fill in all fields");
+				}
 			}
-		}
 
-		AppMetr.Flush();
-	}
+			AppMetr.Flush();
+		}
 	
-	private bool checkDictionary(IDictionary<string, object> dict)
-	{
-		if (dict.Count == 0)
-			return false;
-			
-		foreach (KeyValuePair<string, object> pair in dict)
+		private bool checkDictionary(IDictionary<string, object> dict)
 		{
-			if (pair.Key == "")
+			if (dict.Count == 0)
 				return false;
+			
+			foreach (KeyValuePair<string, object> pair in dict)
+			{
+				if (pair.Key == "")
+					return false;
+			}
+			return true;
 		}
-		return true;
-	}
 	
-	private void showAlert(string message)
-	{
-		alertMessage = message;
-		isShowAlert = true;
-	}
+		private void ShowAlert(string message)
+		{
+			_alertMessage = message;
+			_isShowAlert = true;
+		}
 	
-	#endregion
+		#endregion
+	}
 }

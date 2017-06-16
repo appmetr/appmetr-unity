@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Appmetr.Json
+namespace Appmetr.Unity.Json
 {
     public class Parser : IDisposable
     {
