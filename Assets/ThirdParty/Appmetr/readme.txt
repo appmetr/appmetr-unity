@@ -2,9 +2,9 @@ AppMetr Unity Plugin
 
 Интеграция плагина
 
-1. Импортируете плагин *AppmetrUnityPlugin.unitypackage* в проект (двойным кликом по файлу или через меню *Assets/Import Package/Custom Package…*).
+1. Импортируете плагин *AppmetrUnityPlugin-version.unitypackage* в проект (двойным кликом по файлу или через меню *Assets/Import Package/Custom Package…*).
 
-2. Добавьте на сцену скрипт Assets/Plugins/AppMetr/AppMetrBehaviour.cs и не выгружайте его при перезагрузке сцены (можно для этого установить флаг Undeletable в его свойствах). Пропишите свойство Token
+2. Добавьте на сцену скрипт Assets/ThirdParty/AppMetr/AppMetrBehaviour.cs и не выгружайте его при перезагрузке сцены (можно для этого установить флаг Single Unloadable Instance в его свойствах). Пропишите свойство Token
 
 3. Вызывайте статические методы AppMetr для регистрации игровых событий (см. AppMetr API)
 
@@ -12,18 +12,19 @@ AppMetr Unity Plugin
 
 using UnityEngine;
 using System.Collections;
+using Appmetr.Unity;
 
 public class AppMetrManager : MonoBehaviour {
 
 	void Awake() {
-		AppMetrCommandListener.OnCommand += HandleAppMetrCommand; 
+		AppMetrBehaviour.OnCommand += HandleAppMetrCommand; 
 	}
 	
 	void OnDisable() {
-		AppMetrCommandListener.OnCommand -= HandleAppMetrOnCommand;
+		AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
 	
-	public void HandleAppMetrCommand(string command) {
-		Debug.Log("AppMetrManager: HandleAppMetrCommand\n" + command);
+	public void HandleAppMetrCommand(string commandJson) {
+		Debug.Log("AppMetrManager: HandleAppMetrCommand\n" + commandJson);
 	}
 }
 
@@ -89,19 +90,8 @@ userId - идентификатор пользователя
 - Flush
 Форсированная отправка событий на сервер
 
-
-Класс AppMetrCommandListener
-
-Этот класс предоставляет доступ к событию получения команды от сервера.
-
-Пример использования:
-
-AppMetrCommandListener.OnCommand += HandleOnCommand; 
-public void HandleOnCommand(string command) {
-	Debug.Log("HandleOnCommand:\n" + command);
-}
-
-Пример использования плагина можно посмотреть в *Assets/Plugins/Appmetr/Sample/TestScene.unity*.
+Пример использования плагина можно посмотреть в *Assets/ThirdParty/Appmetr/Sample/TestScene.unity*.
 
 ВАЖНО:
 Библиотека не поддерживает Stripping Level = use micro mscorlib.
+Все функции кроме *AppMetr.Setup* потокобезопасны.
