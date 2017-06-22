@@ -8,7 +8,6 @@
 -(void)dealloc
 {
     unityMessageRecipient = nil;
-	[super dealloc];
 }
 
 #pragma mark - AppMetrDelegate
@@ -27,7 +26,7 @@
 	}
 	else
 	{
-		NSString *serializedData = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+		NSString *serializedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		if (serializedData)
 		{
 			UnitySendMessage([unityMessageRecipient cStringUsingEncoding:NSUTF8StringEncoding], "OnAppMetrCommand", [serializedData UTF8String]);

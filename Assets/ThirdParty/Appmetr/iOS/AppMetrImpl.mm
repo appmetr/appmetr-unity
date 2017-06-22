@@ -26,7 +26,7 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 {
 	if (![dict objectForKey:@"processor"])
 	{
-		dict = [[dict mutableCopy] autorelease];
+		dict = [dict mutableCopy];
 		[dict setValue:@"appstore" forKey:@"processor"];
 	}
 	return dict;
