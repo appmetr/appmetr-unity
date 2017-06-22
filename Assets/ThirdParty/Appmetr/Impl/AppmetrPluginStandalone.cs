@@ -150,7 +150,13 @@ namespace Appmetr.Unity.Impl
 
         public static bool VerifyIosPayment(string productId, string transactionId, string receipt, string privateKey) { return false; }
 
-        public static bool VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey) { return false; }
+        public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
+		{
+			if (callback != null)
+			{
+				callback(false);
+			}
+		}
 
         public static void TrackState(IDictionary<string, object> state)
         {
