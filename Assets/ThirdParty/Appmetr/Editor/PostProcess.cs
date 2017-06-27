@@ -22,6 +22,21 @@ namespace Appmetr.Unity.Editor
             var targetGuid = proj.TargetGuidByName("Unity-iPhone");
             proj.AddFileToBuild(targetGuid, proj.AddFile("usr/lib/libz.tbd", "Frameworks/libz.tbd", PBXSourceTree.Sdk));
             proj.WriteToFile(projPath);
+            
+            
+            // add appmetrUrl and trackInstallByApp to Info.plist
+            var infoPlist = new PlistDocument();
+            var plistPath = Path.Combine(pathToBuiltProject, "Info.plist");
+            infoPlist.ReadFromFile(plistPath);
+            if (infoPlist.root["appmetrUrl"] == null)
+            {
+                infoPlist.root.SetString("appmetrUrl", "https://appmetr.com/api");
+            }
+            if (infoPlist.root["trackInstallByApp"] == null)
+            {
+                infoPlist.root.SetBoolean("trackInstallByApp", false);
+            }
+            infoPlist.WriteToFile(plistPath);
         }
     }
 }
