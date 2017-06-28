@@ -34,6 +34,7 @@ namespace Plugins.Editor
             BuildPackage(new []{
                 "Assets/ThirdParty/Appmetr/Android",
                 "Assets/ThirdParty/Appmetr/AppMetr*",
+                "Assets/ThirdParty/Appmetr/Editor",
                 "Assets/ThirdParty/Appmetr/Impl",
                 "Assets/ThirdParty/Appmetr/iOS",
                 "Assets/ThirdParty/Appmetr/Json",
