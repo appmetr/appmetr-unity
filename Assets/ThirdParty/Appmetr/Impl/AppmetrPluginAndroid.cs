@@ -40,6 +40,8 @@ namespace Appmetr.Unity.Impl
         private static readonly object AppMetrMutex = new object();
         private static readonly Queue<Action> AppMetrActionQueue = new Queue<Action>();
         private static bool _appMetrThreadInitialized;
+        private static bool _jniAttached;
+        private static bool _jniPaused;
         private static string _instanceIdentifier = "";
 
         private static string ToJson(IDictionary<string, object> properties)
@@ -93,17 +95,23 @@ namespace Appmetr.Unity.Impl
 
             var jniThread = new Thread(() =>
             {
-                AndroidJNI.AttachCurrentThread();
                 while (Thread.CurrentThread.IsAlive)
                 {
                     lock (AppMetrMutex)
                     {
                         try
                         {
-                            while (AppMetrActionQueue.Count <= 0)
+                            while (AppMetrActionQueue.Count <= 0 || _jniPaused)
                             {
                                 Monitor.Wait(AppMetrMutex);
                             }
+
+                            if (!_jniAttached)
+                            {
+                                AndroidJNI.AttachCurrentThread();
+                                _jniAttached = true;
+                            }
+
                             while (AppMetrActionQueue.Count > 0)
                             {
                                 var action = AppMetrActionQueue.Dequeue();
@@ -117,6 +125,12 @@ namespace Appmetr.Unity.Impl
                         {
                             Debug.LogException(e);
                         }
+                        
+                        if (_jniPaused)
+                        {
+                            AndroidJNI.DetachCurrentThread();
+                            _jniAttached = false;
+                        }
                     }
                 }
                 AndroidJNI.DetachCurrentThread();
@@ -127,11 +141,15 @@ namespace Appmetr.Unity.Impl
 
         public static void OnPause()
         {
-            DispatchJni(() => { _clsAppMetr.CallStatic("onPause"); });
+            DispatchJni(() => { 
+                _jniPaused = true;
+                _clsAppMetr.CallStatic("onPause");
+            });
         }
 
         public static void OnResume()
         {
+            _jniPaused = false;
             DispatchJni(() => { _clsAppMetr.CallStatic("onResume"); });
         }
 
