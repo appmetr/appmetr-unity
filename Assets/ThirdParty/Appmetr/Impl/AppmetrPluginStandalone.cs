@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Appmetr.Unity.Json;
 using AppmetrCS;
 using AppmetrCS.Actions;
@@ -171,7 +172,16 @@ namespace Appmetr.Unity.Impl
 
         public static void Flush()
         {
-            _appMetr.Flush();
+            new Thread(() =>
+            {
+                _appMetr.Flush();
+                _appMetr.Upload();
+            }).Start();
+        }
+
+        public static void FlushLocal()
+        {
+            new Thread(() => { _appMetr.Flush(); }).Start();
         }
 
         public static string GetInstanceIdentifier()

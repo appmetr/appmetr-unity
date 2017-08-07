@@ -317,6 +317,14 @@ namespace Appmetr.Unity
 		{
 			AppmetrPlatformPlugin.Flush();
 		}
+		
+		/// <summary>
+		/// Force flush events to disk. Flushing execute in new thread.
+		/// </summary>
+		public static void FlushLocal()
+		{
+			AppmetrPlatformPlugin.FlushLocal();
+		}
 
 		/// <summary>
 		/// Return full instance identifier.

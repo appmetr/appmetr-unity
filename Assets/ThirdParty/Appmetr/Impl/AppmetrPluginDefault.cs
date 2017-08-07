@@ -57,6 +57,8 @@ namespace Appmetr.Unity.Impl
 		public static void Identify(string userId) {}
 
 		public static void Flush() {}
+		
+		public static void FlushLocal() {}
 
 		public static string GetInstanceIdentifier() { return ""; }
 	}
