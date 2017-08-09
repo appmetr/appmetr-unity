@@ -69,6 +69,9 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern void _flush();
+
+		[DllImport("__Internal")]
+		private static extern void _flushLocal();
 	
 		[DllImport("__Internal")]
 		private static extern string _instanceIdentifier();
@@ -198,6 +201,11 @@ namespace Appmetr.Unity.Impl
 		public static void Flush()
 		{
 			_flush();
+		}
+
+		public static void FlushLocal()
+		{
+			_flushLocal();
 		}
 
 		public static string GetInstanceIdentifier()

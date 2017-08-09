@@ -154,6 +154,11 @@ extern "C" {
 	{
 		[AppMetr flush];
 	}
+    
+    void _flushLocal()
+    {
+        [AppMetr flushLocal];
+    }
 	
 	char* _instanceIdentifier()
 	{

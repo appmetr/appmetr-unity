@@ -273,6 +273,11 @@ namespace Appmetr.Unity.Impl
         {
             DispatchJni(() => { _clsAppMetr.CallStatic("flush"); });
         }
+        
+        public static void FlushLocal()
+        {
+            DispatchJni(() => { _clsAppMetr.CallStatic("flushLocal"); });
+        }
 
         public static string GetInstanceIdentifier()
         {
