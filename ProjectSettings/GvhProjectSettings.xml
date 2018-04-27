@@ -1,5 +1,6 @@
 <projectSettings>
-  <projectSetting name="GooglePlayServices.AndroidPackageInstallationEnabled" value="True" />
+  <projectSetting name="Google.IOSResolver.UpgradeToWorkspaceWarningDisabled" value="True" />
+  <projectSetting name="GooglePlayServices.AndroidPackageInstallationEnabled" value="False" />
   <projectSetting name="GooglePlayServices.AutoResolutionDisabledWarning" value="False" />
   <projectSetting name="GooglePlayServices.AutoResolverEnabled" value="False" />
   <projectSetting name="GooglePlayServices.ExplodeAars" value="False" />

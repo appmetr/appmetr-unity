@@ -27,11 +27,16 @@ namespace Appmetr.Unity.Impl
                 return guid;
             }
         }
-        public static void SetupWithToken(string token, string commandListenerName)
+        public static void SetupWithToken(string token, string platform, string commandListenerName)
         {
+            if (string.IsNullOrEmpty(platform))
+            {
+                platform = SubPlatformDefault;
+            }
+
             LogUtils.CustomLog = new AppmetrPluginLogger();
-            var presister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
-            _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, SubPlatformDefault, presister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
+            var persister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
+            _appMetr = new AppMetrWin(_serverAddress, token, MobUuid, platform, DeviceType, persister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
             _appMetr.Start();
             AttachProperties();
             SessionInit();
@@ -326,10 +331,19 @@ namespace Appmetr.Unity.Impl
 
             _sessionStartTick = tk;
         }
-
+        
+        /// <summary>
+        /// Overrides server address
+        /// </summary>
+        /// <param name="addr">new address of "/api" node</param>
+        /// <remarks>This should be called BEFORE <see cref="Setup"/></remarks>
+        public static void SetServerUri(string addr)
+        {
+            _serverAddress = addr;
+        }
 
         private static AppMetrWin _appMetr;
-        private const string ServerDefaultAddress = "http://appmetr.com/api";
+        private static string _serverAddress = "http://appmetr.com/api";
         private const string SubPlatformDefault = "Facebook";
         private const string AppmetrCacheFolder = "Appmetr";
         private const string AttachPropertiesLanguage = "$language";
@@ -344,7 +358,23 @@ namespace Appmetr.Unity.Impl
         private static bool _isFirstTrackSessionSent;
 
         private const long SessionSplitTimout = 600000L;
-
+        
+#if UNITY_STANDALONE_OSX
+        private const string DeviceType = "osx";
+#elif UNITY_STANDALONE_WIN
+        private const string DeviceType = "win";
+#elif UNITY_STANDALONE_LINUX
+        private const string DeviceType = "lin";
+#elif UNITY_PS4
+        private const string DeviceType = "ps4";
+#elif UNITY_XBOXONE
+        private const string DeviceType = "xb1";
+#elif UNITY_WSA || UNITY_WSA_10_0
+        private const string DeviceType = "uwp";
+#else
+        #error "This platform is undefined"
+#endif
+    
     }
 }
 

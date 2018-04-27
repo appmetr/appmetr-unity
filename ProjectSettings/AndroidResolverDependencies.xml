@@ -4,15 +4,14 @@
     <package>com.google.android.gms:play-services-ads:+</package>
   </packages>
   <files>
-    <file>Assets/Plugins/Android/installreferrer-1.0.aar</file>
-    <file>Assets/Plugins/Android/play-services-ads-11.6.2.aar</file>
-    <file>Assets/Plugins/Android/play-services-ads-license-11.6.2</file>
-    <file>Assets/Plugins/Android/play-services-ads-lite-11.6.2.aar</file>
-    <file>Assets/Plugins/Android/play-services-ads-lite-license-11.6.2</file>
-    <file>Assets/Plugins/Android/play-services-basement-11.6.2.aar</file>
-    <file>Assets/Plugins/Android/play-services-basement-license-11.6.2</file>
-    <file>Assets/Plugins/Android/play-services-gass-11.6.2.aar</file>
-    <file>Assets/Plugins/Android/play-services-gass-license-11.6.2</file>
+    <file>Assets/Plugins/Android/play-services-ads-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-ads-lite-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-base-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-basement-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-clearcut-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-gass-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-safetynet-11.0.4.aar</file>
+    <file>Assets/Plugins/Android/play-services-tasks-11.0.4.aar</file>
     <file>Assets/Plugins/Android/support-annotations-25.2.0.jar</file>
     <file>Assets/Plugins/Android/support-compat-25.2.0.aar</file>
     <file>Assets/Plugins/Android/support-core-ui-25.2.0.aar</file>
