@@ -6,7 +6,7 @@ namespace Appmetr.Unity.Impl
 {
 	public class AppmetrPluginDefault
 	{
-		public static void SetupWithToken(string token, string commandListenerName) {}
+		public static void SetupWithToken(string token, string platform, string commandListenerName) {}
 
 		public static void OnPause() {}
 

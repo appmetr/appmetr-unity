@@ -17,7 +17,7 @@ namespace Appmetr.Unity
 	/// The main class.
 	/// Provides access to the functions of the library.
 	/// </summary>
-	public class AppMetr
+	public static class AppMetr
 	{
 		/// <summary>
 		/// Setting up plugin.
@@ -27,7 +27,7 @@ namespace Appmetr.Unity
 		/// </param>
 		public static void Setup(string token)
 		{
-			AppmetrPlatformPlugin.SetupWithToken(token, null);
+			AppmetrPlatformPlugin.SetupWithToken(token, null, null);
 		}
 
 		/// <summary>
@@ -42,8 +42,22 @@ namespace Appmetr.Unity
 		/// </param>
 		public static void Setup(string token, string commandListener)
 		{
-			AppmetrPlatformPlugin.SetupWithToken(token, commandListener);
+			AppmetrPlatformPlugin.SetupWithToken(token, null, commandListener);
 		}
+		
+		/// <summary>
+		/// Sets mandatory plugin parameters
+		/// </summary>
+		/// <param name="token">Deploy token as assigned on backend</param>
+		/// <param name="platform">Platform or store name. Changes behaviour of 
+		/// certain events, especially payment tracking.</param>
+		/// <param name="commandListener">Name of the GameObject, which contains 
+		/// AppMetrBehavior. May be null if remote commands are not used.</param>
+		public static void Setup(string token, string platform, string commandListener)
+		{
+			AppmetrPlatformPlugin.SetupWithToken(token, platform, commandListener);
+		}
+
 
 		/// <summary>
 		/// Set application status.

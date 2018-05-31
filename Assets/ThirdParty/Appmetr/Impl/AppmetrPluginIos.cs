@@ -91,7 +91,7 @@ namespace Appmetr.Unity.Impl
 			return Serializer.Serialize(propertiesList);
 		}
 
-		public static void SetupWithToken(string token, string commandListenerName)
+		public static void SetupWithToken(string token, string platform, string commandListenerName)
 		{
 			_setupWithToken(token, commandListenerName);
 		}

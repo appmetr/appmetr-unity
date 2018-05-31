@@ -27,30 +27,38 @@ namespace Appmetr.Unity.Impl
                 return guid;
             }
         }
-        public static void SetupWithToken(string token, string commandListenerName)
+        public static void SetupWithToken(string token, string platform, string commandListenerName)
         {
+            if (string.IsNullOrEmpty(platform))
+            {
+                platform = SubPlatformDefault;
+            }
+
             LogUtils.CustomLog = new AppmetrPluginLogger();
-            var presister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
-            _appMetr = new AppMetrWin(ServerDefaultAddress, token, MobUuid, SubPlatformDefault, presister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
+            var persister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
+            _appMetr = new AppMetrWin(_serverAddress, token, MobUuid, platform, DeviceType, persister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
             _appMetr.Start();
             AttachProperties();
+            SessionInit();
         }
 
         public static void OnPause()
         {
-            if(_appMetr != null)
+            SessionOnPause();
+            if (_appMetr != null)
                 _appMetr.Stop();
         }
 
         public static void OnResume()
         {
-            if(_appMetr != null)
+            SessionOnResume();
+            if (_appMetr != null)
                 _appMetr.Start();
         }
 
         public static void TrackSession()
         {
-            _appMetr.Track(new TrackSession());
+            TrackSession(null);
         }
 
         public static void TrackSession(IDictionary<string, object> properties)
@@ -59,7 +67,26 @@ namespace Appmetr.Unity.Impl
             {
                 properties = new Dictionary<string, object>();
             }
+
+            int duration = (int)(_sessionDuration / 1000L);
+
+            if (!_isFirstTrackSessionSent)
+                duration = -1;
+            else if (duration <= 0)
+                return;
+
+            properties.Add("$duration", duration);
+
+            _sessionDuration = 0;
+            SessionSaveProps();
+
             _appMetr.Track(new TrackSession { Properties = properties });
+
+            if (!_isFirstTrackSessionSent)
+            {
+                Flush();
+                _isFirstTrackSessionSent = true;
+            }
         }
 
         public static void TrackLevel(int level)
@@ -152,12 +179,12 @@ namespace Appmetr.Unity.Impl
         public static bool VerifyIosPayment(string productId, string transactionId, string receipt, string privateKey) { return false; }
 
         public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
-		{
-			if (callback != null)
-			{
-				callback(false);
-			}
-		}
+        {
+            if (callback != null)
+            {
+                callback(false);
+            }
+        }
 
         public static void TrackState(IDictionary<string, object> state)
         {
@@ -246,14 +273,108 @@ namespace Appmetr.Unity.Impl
             }
             return res.ToLower();
         }
-    
+
+
+        //---------------------------------
+        // Session duration calculation
+        private static void SessionInit()
+        {
+            _sessionStartTick = Environment.TickCount;
+
+            _isFirstTrackSessionSent = PlayerPrefs.HasKey(PlayerPrefsSessionDuration);
+            _sessionDuration = PlayerPrefs.GetInt(PlayerPrefsSessionDuration, 0);
+            _sessionDurationCurrent = PlayerPrefs.GetInt(PlayerPrefsSessionCurrent, 0);
+
+            SessionStart();
+        }
+
+        private static void SessionSaveProps()
+        {
+            PlayerPrefs.SetInt(PlayerPrefsSessionDuration, (int)_sessionDuration);
+            PlayerPrefs.SetInt(PlayerPrefsSessionCurrent, (int)_sessionDurationCurrent);
+
+            PlayerPrefs.Save();
+        }
+
+        private static void SessionStart()
+        {
+            // ntrf: should not be possible if game makes TrackSession calls on start
+            if (_sessionDuration > 0)
+            {
+                TrackSession();
+            }
+
+            // remember current session as previous
+            _sessionDuration = _sessionDurationCurrent;
+            _sessionDurationCurrent = 0;
+            SessionSaveProps();
+        }
+
+        private static void SessionOnPause()
+        {
+            // Accumulate session
+            var tk = Environment.TickCount;
+            _sessionDurationCurrent = _sessionDurationCurrent + (tk - _sessionStartTick);
+            SessionSaveProps();
+
+            // Remember when we started session gap
+            _sessionStartTick = tk;
+        }
+
+        private static void SessionOnResume()
+        {
+            var tk = Environment.TickCount;
+            if ((tk - _sessionStartTick) >= SessionSplitTimout)
+            {
+                SessionStart();
+            }
+
+            _sessionStartTick = tk;
+        }
+        
+        /// <summary>
+        /// Overrides server address
+        /// </summary>
+        /// <param name="addr">new address of "/api" node</param>
+        /// <remarks>This should be called BEFORE <see cref="Setup"/></remarks>
+        public static void SetServerUri(string addr)
+        {
+            _serverAddress = addr;
+        }
+
         private static AppMetrWin _appMetr;
-        private const string ServerDefaultAddress = "https://appmetr.com/api";
+        private static string _serverAddress = "http://appmetr.com/api";
         private const string SubPlatformDefault = "Facebook";
         private const string AppmetrCacheFolder = "Appmetr";
         private const string AttachPropertiesLanguage = "$language";
         private const string AttachPropertiesVersion = "$version";
         private const string PlayerPrefsMobUuidKey = "AppmetrUuid";
+        private const string PlayerPrefsSessionDuration = "AppmetrSessionDuration";
+        private const string PlayerPrefsSessionCurrent = "AppmetrSessionCurrent";
+
+        private static int _sessionStartTick;
+        private static long _sessionDuration;
+        private static long _sessionDurationCurrent;
+        private static bool _isFirstTrackSessionSent;
+
+        private const long SessionSplitTimout = 600000L;
+        
+#if UNITY_STANDALONE_OSX
+        private const string DeviceType = "osx";
+#elif UNITY_STANDALONE_WIN
+        private const string DeviceType = "win";
+#elif UNITY_STANDALONE_LINUX
+        private const string DeviceType = "lin";
+#elif UNITY_PS4
+        private const string DeviceType = "ps4";
+#elif UNITY_XBOXONE
+        private const string DeviceType = "xb1";
+#elif UNITY_WSA || UNITY_WSA_10_0
+        private const string DeviceType = "uwp";
+#else
+        #error "This platform is undefined"
+#endif
+    
     }
 }
 
