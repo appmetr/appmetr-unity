@@ -11,7 +11,7 @@ namespace Appmetr.Unity.Impl
 		#region	Interface to native implementation
 
 		[DllImport("__Internal")]
-		private static extern void _setupWithToken(string token, string commandListenerName);
+		private static extern void _setupWithToken(string token);
 	
 		[DllImport("__Internal")]
 		private static extern void _trackSession();
@@ -45,12 +45,6 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern void _attachProperties(string properties);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackOptions(string commandId, string options);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackOptionsWithErrorCode(string commandId, string options, string code, string message);
 	
 		[DllImport("__Internal")]
 		private static extern void _trackExperimentStart(string experiment, string groupId);
@@ -91,9 +85,9 @@ namespace Appmetr.Unity.Impl
 			return Serializer.Serialize(propertiesList);
 		}
 
-		public static void SetupWithToken(string token, string platform, string commandListenerName)
+		public static void SetupWithToken(string token, string platform)
 		{
-			_setupWithToken(token, commandListenerName);
+			_setupWithToken(token);
 		}
 
 		public static void OnPause() {}
@@ -153,16 +147,6 @@ namespace Appmetr.Unity.Impl
 		public static void AttachProperties(IDictionary<string, object> properties)
 		{
 			_attachProperties(ToJson(properties));
-		}
-	
-		public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
-		{
-			_trackOptions(commandId, ToJson(options));
-		}
-	
-		public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message)
-		{
-			_trackOptionsWithErrorCode(commandId, ToJson(options), code, message);
 		}
 
 		public static void TrackExperimentStart(string experiment, string groupId)

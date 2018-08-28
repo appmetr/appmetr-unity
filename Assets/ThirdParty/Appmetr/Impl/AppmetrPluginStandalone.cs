@@ -27,7 +27,7 @@ namespace Appmetr.Unity.Impl
                 return guid;
             }
         }
-        public static void SetupWithToken(string token, string platform, string commandListenerName)
+        public static void SetupWithToken(string token, string platform)
         {
             if (string.IsNullOrEmpty(platform))
             {
@@ -167,10 +167,6 @@ namespace Appmetr.Unity.Impl
             }
             _appMetr.Track(new AttachProperties() { Properties = properties });
         }
-
-        public static void TrackOptions(string commandId, IDictionary<string, object>[] options) {}
-
-        public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code, string message) {}
 
         public static void TrackExperimentStart(string experiment, string groupId) {}
 

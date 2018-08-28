@@ -27,22 +27,7 @@ namespace Appmetr.Unity
 		/// </param>
 		public static void Setup(string token)
 		{
-			AppmetrPlatformPlugin.SetupWithToken(token, null, null);
-		}
-
-		/// <summary>
-		/// Setting up plugin.
-		/// </summary>
-		/// <param name="token">
-		/// Parameter which is needed for data upload.
-		/// </param>
-		/// <param name="commandListener">
-		/// Name of game object, which contains AppMetrBehavior. May be null,
-		/// if remote commands not use
-		/// </param>
-		public static void Setup(string token, string commandListener)
-		{
-			AppmetrPlatformPlugin.SetupWithToken(token, null, commandListener);
+			AppmetrPlatformPlugin.SetupWithToken(token, null);
 		}
 		
 		/// <summary>
@@ -51,11 +36,9 @@ namespace Appmetr.Unity
 		/// <param name="token">Deploy token as assigned on backend</param>
 		/// <param name="platform">Platform or store name. Changes behaviour of 
 		/// certain events, especially payment tracking.</param>
-		/// <param name="commandListener">Name of the GameObject, which contains 
-		/// AppMetrBehavior. May be null if remote commands are not used.</param>
-		public static void Setup(string token, string platform, string commandListener)
+		public static void Setup(string token, string platform)
 		{
-			AppmetrPlatformPlugin.SetupWithToken(token, platform, commandListener);
+			AppmetrPlatformPlugin.SetupWithToken(token, platform);
 		}
 
 
@@ -200,41 +183,6 @@ namespace Appmetr.Unity
 		public static void AttachProperties(IDictionary<string, object> properties)
 		{
 			AppmetrPlatformPlugin.AttachProperties(properties);
-		}
-
-		/// <summary>
-		/// Track options for command.
-		/// </summary>
-		/// <param name='commandId'>
-		/// Command ID.
-		/// </param>
-		/// <param name='options'>
-		/// Options dictionary.
-		/// </param>
-		public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
-		{
-			AppmetrPlatformPlugin.TrackOptions(commandId, options);
-		}
-
-		/// <summary>
-		/// Track options error for command.
-		/// </summary>
-		/// <param name='commandId'>
-		/// Command ID.
-		/// </param>
-		/// <param name='options'>
-		/// Options dictionary.
-		/// </param>
-		/// <param name='code'>
-		/// Error code.
-		/// </param>
-		/// <param name='message'>
-		/// Error message.
-		/// </param>
-		public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code,
-			string message)
-		{
-			AppmetrPlatformPlugin.TrackOptionsError(commandId, options, code, message);
 		}
 
 		/// <summary>

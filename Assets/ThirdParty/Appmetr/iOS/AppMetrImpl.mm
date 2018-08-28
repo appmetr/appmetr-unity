@@ -1,5 +1,4 @@
 #import "AppMetr.h"
-#import "AppMetrListener.h"
 
 NSString* charToNSString(const char* string)
 {
@@ -35,16 +34,9 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 	
 extern "C" {
 
-	void _setupWithToken(const char* token,const char* commandListenerName)
+	void _setupWithToken(const char* token)
 	{
-        NSString* commandListener = charToNSString(commandListenerName);
-        if(commandListener.length > 0) {
-            static AppMetrListener* appMetrListener = [[AppMetrListener alloc] init];
-            appMetrListener.unityMessageRecipient = commandListener;
-            [AppMetr setupWithToken:charToNSString(token) delegate:appMetrListener];
-        } else {
-            [AppMetr setupWithToken:charToNSString(token)];
-        }
+        [AppMetr setupWithToken:charToNSString(token)];
 	}
 	
 	void _trackSession()
@@ -107,18 +99,6 @@ extern "C" {
 	{
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr attachProperties:dict];
-	}
-	
-	void _trackOptions(const char* commandId, const char* options)
-	{
-		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
-		[AppMetr trackOptions:dict forCommand:charToNSString(commandId)];
-	}
-	
-	void _trackOptionsWithErrorCode(const char* commandId, const char* options, const char* code, const char* message)
-	{
-		NSArray* dict = [AppMetr stringToArray:charToNSString(options)];
-		[AppMetr trackOptions:dict forCommand:charToNSString(commandId) errorCode:charToNSString(code) errorMessage:charToNSString(message)];
 	}
 	
 	void _trackExperimentStart(const char* experiment, const char* groupId)

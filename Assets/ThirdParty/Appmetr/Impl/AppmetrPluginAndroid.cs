@@ -9,32 +9,6 @@ namespace Appmetr.Unity.Impl
 {
     public class AppmetrPluginAndroid
     {
-        private class AppMetrCommandListener : AndroidJavaProxy
-        {
-            // GameObject name for UnitySendMessage
-            private readonly string _commandListenerName;
-
-            // Android interface implementation
-            public AppMetrCommandListener(string commandListenerName) : base("com.appmetr.android.AppMetrListener")
-            {
-                _commandListenerName = commandListenerName;
-            }
-
-            // ReSharper disable once UnusedMember.Local
-            // ReSharper disable once InconsistentNaming
-            public void executeCommand(AndroidJavaObject command)
-            {
-                if (!string.IsNullOrEmpty(_commandListenerName))
-                {
-                    var listenerObject = GameObject.Find(_commandListenerName);
-                    if (listenerObject != null)
-                    {
-                        listenerObject.SendMessage("OnAppMetrCommand", command.Call<string>("toString"));
-                    }
-                }
-            }
-        }
-
         private static AndroidJavaClass _clsAppMetr;
         private static AndroidJavaClass _clsAppMetrHelper;
         private static readonly object AppMetrMutex = new object();
@@ -55,7 +29,7 @@ namespace Appmetr.Unity.Impl
             return Serializer.Serialize(propertiesList);
         }
 
-        public static void SetupWithToken(string token, string platform, string commandListenerName)
+        public static void SetupWithToken(string token, string platform)
         {
             AndroidJNI.AttachCurrentThread();
             var activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -69,16 +43,13 @@ namespace Appmetr.Unity.Impl
                 _clsAppMetrHelper = new AndroidJavaClass("com.appmetr.android.integration.AppMetrHelper");
             }
             var context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
-            AndroidJavaProxy listener = string.IsNullOrEmpty(commandListenerName)
-                ? null
-                : new AppMetrCommandListener(commandListenerName);
             lock (AppMetrMutex)
             {
                 currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
                 {
                     lock (AppMetrMutex)
                     {
-                        _clsAppMetr.CallStatic("setup", token, context, listener);
+                        _clsAppMetr.CallStatic("setup", token, context);
                         _instanceIdentifier = _clsAppMetr.CallStatic<string>("getInstanceIdentifier");
                         context.Dispose();
                         Monitor.Pulse(AppMetrMutex);
@@ -213,22 +184,6 @@ namespace Appmetr.Unity.Impl
         {
             var propertiesJson = ToJson(properties);
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachProperties", propertiesJson); });
-        }
-
-        public static void TrackOptions(string commandId, IDictionary<string, object>[] options)
-        {
-            var optionsJson = ToJson(options);
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackOptions", commandId, optionsJson); });
-        }
-
-        public static void TrackOptionsError(string commandId, IDictionary<string, object>[] options, string code,
-            string message)
-        {
-            var optionsJson = ToJson(options);
-            DispatchJni(() =>
-            {
-                _clsAppMetrHelper.CallStatic("trackOptionsError", commandId, optionsJson, code, message);
-            });
         }
 
         public static void TrackExperimentStart(string experiment, string groupId)

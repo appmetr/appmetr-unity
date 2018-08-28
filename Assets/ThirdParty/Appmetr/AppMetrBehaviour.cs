@@ -10,11 +10,6 @@ namespace Appmetr.Unity
 	public class AppMetrBehaviour : MonoBehaviour {
 
 		/// <summary>
-		/// Fired when get a remote command from the server
-		/// </summary>
-		public static event Action<string> OnCommand;
-
-		/// <summary>
 		/// Application identifier in AppMetr service
 		/// </summary>
 		[SerializeField]
@@ -25,12 +20,6 @@ namespace Appmetr.Unity
 		/// and has single instance
 		/// </summary>
 		public bool  SingleUnloadableInstance;
-
-		/// <summary>
-		/// Register AppMetrCommandListener or not on setup
-		/// </summary>
-		[SerializeField]
-		private bool _useRemoteCommands;
 
 		void Awake() {
 			if(SingleUnloadableInstance) {
@@ -44,7 +33,7 @@ namespace Appmetr.Unity
 
 		void Start()
 		{
-			AppMetr.Setup(_token, _useRemoteCommands ? gameObject.name : null);
+			AppMetr.Setup(_token);
 		}
 
 		void OnApplicationPause(bool pauseStatus) {
@@ -53,15 +42,6 @@ namespace Appmetr.Unity
 
 		void OnApplicationQuit() {
 			AppMetr.OnPause(true);
-		}
-
-		public void OnAppMetrCommand(string command)
-		{
-			var handler = OnCommand;
-			if (handler != null)
-			{
-				handler(command);
-			}
 		}
 	}
 }
