@@ -6,6 +6,11 @@
 #import <StoreKit/StoreKit.h>
 
 /**
+ * Public constants
+ */
+extern NSString *const kAppmetrPropertyTimestamp;
+
+/**
  * Main library class
  */
 @interface AppMetr : NSObject
@@ -72,8 +77,8 @@
 + (void)trackPayment:(NSDictionary *)payment properties:(NSDictionary *)properties;
 
 /**
- * Registering advertising event track
- */
+* Registering advertising event track
+*/
 + (void)trackAdsEvent:(NSString *)eventName;
 
 /**
@@ -82,58 +87,58 @@
 + (void)trackInstallURL:(NSURL *)url;
 
 /**
- * Registering options processing
- */
+* Registering options processing
+*/
 + (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId;
 
 /**
- * Registering options processing error
- */
+* Registering options processing error
+*/
 + (void)trackOptions:(NSArray *)options forCommand:(NSString *)commandId errorCode:(NSString *)code errorMessage:(NSString *)message;
 
 /**
- * Registering start of experiment
- */
+* Registering start of experiment
+*/
 + (void)trackExperimentStart:(NSString *)experiment group:(NSString *)group;
 
 /**
- * Registering end of experiment
- */
+* Registering end of experiment
+*/
 + (void)trackExperimentEnd:(NSString *)experiment;
 
 /**
- * Registering user state
- */
+* Registering user state
+*/
 + (void)trackState:(NSDictionary *)state;
 
 /**
- * Identify user
- */
+* Identify user
+*/
 + (void)identify:(NSString *)userId;
 
 /**
- * Verify payment
- *
- * @param transaction - SKPaymentTransaction object
- * @param privateKey - set in deploy setting on appmetr server
- * @return YES - if payment is valid, and NO otherwise
- */
+* Verify payment
+*
+* @param transaction - SKPaymentTransaction object
+* @param privateKey - set in deploy setting on appmetr server
+* @return YES - if payment is valid, and NO otherwise
+*/
 + (BOOL)verifyPayment:(SKPaymentTransaction *)transaction privateKey:(NSString *)privateKey;
 
 /**
- * Verify payment
- *
- * @param productId - Product identifier
- * @param transactionId - Transaction identifier
- * @param receipt - Base64 encoded transaction receipt
- * @param privateKey - set in deploy setting on appmetr server
- * @return YES - if payment is valid, and NO otherwise
- */
+* Verify payment
+*
+* @param productId - Product identifier
+* @param transactionId - Transaction identifier
+* @param receipt - Base64 encoded transaction receipt
+* @param privateKey - set in deploy setting on appmetr server
+* @return YES - if payment is valid, and NO otherwise
+*/
 + (BOOL)verifyPaymentWithProductId:(NSString *)productId transactionId:(NSString *)transactionId receipt:(NSString *)base64EncodedReceipt privateKey:(NSString *)privateKey;
 
 /**
- * Force flush events on server
- */
+* Force flush events on server
+*/
 + (void)flush;
 
 /**

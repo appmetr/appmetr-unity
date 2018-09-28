@@ -295,5 +295,7 @@ namespace Appmetr.Unity
 		{
 			return AppmetrPlatformPlugin.GetInstanceIdentifier();
 		}
+
+		public const string AppmetrPropertyTimestamp = "timestamp";
 	}
 }
