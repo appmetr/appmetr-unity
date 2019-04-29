@@ -57,6 +57,8 @@ namespace Appmetr.Unity.Impl
 		public static void FlushLocal() {}
 
 		public static string GetInstanceIdentifier() { return ""; }
+		
+		public static string GetDeviceKey() { return null; }
 	}
 }
 #endif

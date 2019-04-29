@@ -144,4 +144,9 @@ extern "C" {
 	{
 		return nsStringToChar([AppMetr instanceIdentifier]);
 	}
+
+	char* _deviceKey()
+	{
+		return nsStringToChar([AppMetr deviceKey]);
+	}
 }
