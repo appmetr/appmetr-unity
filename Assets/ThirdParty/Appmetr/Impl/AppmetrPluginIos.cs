@@ -69,6 +69,9 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern string _instanceIdentifier();
+
+		[DllImport("__Internal")]
+		private static extern string _deviceKey();
 	
 		#endregion
 
@@ -196,6 +199,11 @@ namespace Appmetr.Unity.Impl
 		{
 			return _instanceIdentifier();
 		}
+
+		public static string GetDeviceKey()
+        {
+            return _deviceKey();
+        }
 	
 		#endregion
 	}

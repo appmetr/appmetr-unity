@@ -211,6 +211,11 @@ namespace Appmetr.Unity.Impl
         {
             return MobUuid;
         }
+        
+        public static string GetDeviceKey() 
+        {
+            return _appMetr.GetDeviceKey();
+        }
     
         /// <summary>
         /// Helps to convert Unity's Application.systemLanguage to a 

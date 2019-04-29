@@ -295,6 +295,14 @@ namespace Appmetr.Unity
 		{
 			return AppmetrPlatformPlugin.GetInstanceIdentifier();
 		}
+		
+		/// <summary>
+		/// Return a set of device ids, encoded in a query string
+		/// </summary>
+		public static string GetDeviceKey()
+		{
+			return AppmetrPlatformPlugin.GetDeviceKey();
+		}
 
 		public const string AppmetrPropertyTimestamp = "timestamp";
 	}

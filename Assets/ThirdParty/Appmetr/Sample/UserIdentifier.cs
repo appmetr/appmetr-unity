@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Appmetr.Unity.Sample
 {
@@ -7,10 +8,15 @@ namespace Appmetr.Unity.Sample
 	/// </summary>
 	public class UserIdentifier : MonoBehaviour {
 
-		void Start()
+		IEnumerator Start()
 		{
+#if !UNITY_EDITOR
+			yield return new WaitUntil(() => AppMetr.GetDeviceKey() != null);
+#endif
 			string userId = AppMetr.GetInstanceIdentifier();
-			GetComponent<GUIText>().text += userId;
+			string deviceKey = AppMetr.GetDeviceKey() ?? "null";
+			GetComponent<GUIText>().text += string.Format("UID: {0}\nDevice key: {1}", userId, deviceKey);
+			yield break;
 		}
 
 		void Update() {
