@@ -58,7 +58,7 @@ namespace Appmetr.Unity.Impl
 
 		public static string GetInstanceIdentifier() { return ""; }
 		
-		public static string GetDeviceKey() { return null; }
+		public static string GetDeviceKey() { return ""; }
 	}
 }
 #endif
