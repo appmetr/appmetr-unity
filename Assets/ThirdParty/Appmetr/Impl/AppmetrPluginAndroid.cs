@@ -12,7 +12,7 @@ namespace Appmetr.Unity.Impl
         private static AndroidJavaClass _clsAppMetr;
         private static AndroidJavaClass _clsAppMetrHelper;
         private static readonly object AppMetrMutex = new object();
-        private static readonly Queue<Action> AppMetrActionQueue = new Queue<Action>();
+        private static readonly ConcurrentQueue<Action> AppMetrActionQueue = new ConcurrentQueue<Action>();
         private static bool _appMetrThreadInitialized;
         private static bool _jniAttached;
         private static bool _jniPaused;
@@ -71,41 +71,45 @@ namespace Appmetr.Unity.Impl
                 {
                     lock (AppMetrMutex)
                     {
-                        try
+                        while (AppMetrActionQueue.Count <= 0 || _jniPaused)
                         {
-                            while (AppMetrActionQueue.Count <= 0 || _jniPaused)
-                            {
-                                Monitor.Wait(AppMetrMutex);
-                            }
-
-                            if (!_jniAttached)
-                            {
-                                AndroidJNI.AttachCurrentThread();
-                                _jniAttached = true;
-                            }
-
-                            while (AppMetrActionQueue.Count > 0)
-                            {
-                                var action = AppMetrActionQueue.Dequeue();
-                                if (action != null)
-                                {
-                                    action();
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogException(e);
-                        }
-                        
-                        if (_jniPaused)
-                        {
-                            AndroidJNI.DetachCurrentThread();
-                            _jniAttached = false;
+                            Monitor.Wait(AppMetrMutex);
                         }
                     }
+                    try
+                    {
+                        if (!_jniAttached)
+                        {
+                            AndroidJNI.AttachCurrentThread();
+                            _jniAttached = true;
+                        }
+
+                        Action action;
+                        while (AppMetrActionQueue.TryDequeue(out action))
+                        {
+                            if (action != null)
+                            {
+                                action();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
+                        
+                    if (_jniPaused && _jniAttached)
+                    {
+                        AndroidJNI.DetachCurrentThread();
+                        _jniAttached = false;
+                    }
                 }
-                AndroidJNI.DetachCurrentThread();
+
+                if (_jniAttached)
+                {
+                    AndroidJNI.DetachCurrentThread();
+                    _jniAttached = false;
+                }
             }) {Name = "Appmetr Jni"};
             jniThread.Start();
             DispatchJni(() => { _deviceKey = _clsAppMetrHelper.CallStatic<string>("getDeviceKey"); });
@@ -249,10 +253,11 @@ namespace Appmetr.Unity.Impl
         private static void DispatchJni(Action action)
         {
             if (action == null) return;
-            lock (AppMetrMutex)
+            AppMetrActionQueue.Enqueue(action);
+            if (Monitor.TryEnter(AppMetrMutex))
             {
-                AppMetrActionQueue.Enqueue(action);
-                Monitor.Pulse(AppMetrMutex);
+                Monitor.PulseAll(AppMetrMutex);
+                Monitor.Exit(AppMetrMutex);
             }
         }
     }

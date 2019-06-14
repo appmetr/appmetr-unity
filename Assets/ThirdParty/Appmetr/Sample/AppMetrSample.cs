@@ -7,8 +7,8 @@ namespace Appmetr.Unity.Sample
 {
 	public class AppMetrSample : MonoBehaviour
 	{	
-		private string _fieldTrackLevel = "";
-		private string _fieldTrackEvent = "";
+		private string _fieldTrackLevel = "3";
+		private string _fieldTrackEvent = "testEvent";
 
 		private const string LabelProperties = "Properties";
 		private const string LabelLevel = "Level";
