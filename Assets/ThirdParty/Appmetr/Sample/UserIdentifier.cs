@@ -7,16 +7,15 @@ namespace Appmetr.Unity.Sample
 	/// Outputs user identifier for debug info
 	/// </summary>
 	public class UserIdentifier : MonoBehaviour {
-
 		IEnumerator Start()
 		{
-#if !UNITY_EDITOR
-			yield return new WaitUntil(() => AppMetr.GetDeviceKey() != null);
-#endif
 			string userId = AppMetr.GetInstanceIdentifier();
 			string deviceKey = AppMetr.GetDeviceKey() ?? "null";
 			GetComponent<GUIText>().text += string.Format("UID: {0}\nDevice key: {1}", userId, deviceKey);
-			yield break;
+			Debug.Log("Device key 1: " + deviceKey);
+			yield return new WaitForSeconds(4);
+			deviceKey = AppMetr.GetDeviceKey() ?? "null";
+			Debug.Log("Device key 2: " + deviceKey);
 		}
 
 		void Update() {

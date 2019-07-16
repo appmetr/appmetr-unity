@@ -17,7 +17,6 @@ namespace Appmetr.Unity.Impl
         private static bool _jniAttached;
         private static bool _jniPaused;
         private static string _instanceIdentifier = "";
-        private static string _deviceKey;
 
         private static string ToJson(IDictionary<string, object> properties)
         {
@@ -112,7 +111,6 @@ namespace Appmetr.Unity.Impl
                 }
             }) {Name = "Appmetr Jni"};
             jniThread.Start();
-            DispatchJni(() => { _deviceKey = _clsAppMetrHelper.CallStatic<string>("getDeviceKey"); });
             _appMetrThreadInitialized = true;
         }
 
@@ -247,7 +245,8 @@ namespace Appmetr.Unity.Impl
 
         public static string GetDeviceKey()
         {
-            return _deviceKey;
+            if (_clsAppMetrHelper == null) return null;
+            return _clsAppMetrHelper.CallStatic<string>("getDeviceKey"); 
         }
 
         private static void DispatchJni(Action action)
