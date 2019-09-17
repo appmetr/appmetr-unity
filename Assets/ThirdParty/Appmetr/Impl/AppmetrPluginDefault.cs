@@ -52,6 +52,11 @@ namespace Appmetr.Unity.Impl
 
 		public static void Identify(string userId) {}
 
+		public static void AttachEntityAttributes(string entityName, string entityValue,
+			IDictionary<string, object> properties)
+		{
+		}
+
 		public static void Flush() {}
 		
 		public static void FlushLocal() {}

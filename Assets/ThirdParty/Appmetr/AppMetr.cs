@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using UnityEngine;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using AppmetrPlatformPlugin = Appmetr.Unity.Impl.AppmetrPluginAndroid;
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -270,6 +270,33 @@ namespace Appmetr.Unity
 		public static void Identify(string userId)
 		{
 			AppmetrPlatformPlugin.Identify(userId);
+		}
+		
+		/// <summary>
+		/// Method for attaching properties to separate entity instead of user
+		/// </summary>
+		/// <param name='entityName'>
+		/// Name of entity to attach.
+		/// </param>
+		/// <param name='entityValue'>
+		/// Identity value of entity.
+		/// </param>
+		/// <param name='properties'>
+		/// Attributes to attach.
+		/// </param>
+		public static void AttachEntityAttributes(string entityName, string entityValue, IDictionary<string, object> properties)
+		{
+			if (string.IsNullOrEmpty(entityName) || string.IsNullOrEmpty(entityValue))
+			{
+				Debug.LogError("AttachEntityAttributes has empty entity name or value. Aborted");
+				return;
+			}
+			if (properties == null || properties.Count == 0)
+			{
+				Debug.LogError("AttachEntityAttributes has empty properties dictionary. Aborted");
+				return;
+			}
+			AppmetrPlatformPlugin.AttachEntityAttributes(entityName, entityValue, properties);
 		}
 
 		/// <summary>

@@ -72,6 +72,9 @@ namespace Appmetr.Unity.Impl
 
 		[DllImport("__Internal")]
 		private static extern string _deviceKey();
+
+		[DllImport("__Internal")]
+		private static extern void _attachEntityAttributes(string entityName, string entityValue, string properties);
 	
 		#endregion
 
@@ -183,6 +186,12 @@ namespace Appmetr.Unity.Impl
 		public static void Identify(string userId)
 		{
 			_identify(userId);
+		}
+
+		public static void AttachEntityAttributes(string entityName, string entityValue,
+			IDictionary<string, object> properties)
+		{
+			_attachEntityAttributes(entityName, entityValue, ToJson(properties));
 		}
 
 		public static void Flush()

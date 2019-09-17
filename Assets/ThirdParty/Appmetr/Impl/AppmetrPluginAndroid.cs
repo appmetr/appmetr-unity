@@ -228,6 +228,12 @@ namespace Appmetr.Unity.Impl
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("identify", userId); });
         }
 
+        public static void AttachEntityAttributes(string entityName, string entityValue, IDictionary<string, object> properties)
+        {
+            var propertiesJson = ToJson(properties);
+            DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachEntityAttributes", entityName, entityValue, propertiesJson); });
+        }
+
         public static void Flush()
         {
             DispatchJni(() => { _clsAppMetr.CallStatic("flush"); });

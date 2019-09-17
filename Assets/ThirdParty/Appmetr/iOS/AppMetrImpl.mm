@@ -149,4 +149,10 @@ extern "C" {
 	{
 		return nsStringToChar([AppMetr deviceKey]);
 	}
+
+    void _attachEntityAttributes(const char* entityName, const char* entityValue, const char* properties)
+    {
+        NSDictionary* props = [AppMetr stringToDictionary:charToNSString(properties)];
+        [AppMetr attachEntityAttributesForName:charToNSString(entityName) value:charToNSString(entityValue) withProperies:props];
+    }
 }

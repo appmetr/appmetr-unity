@@ -216,6 +216,12 @@ namespace Appmetr.Unity.Impl
         {
             return _appMetr.GetDeviceKey();
         }
+
+        public static void AttachEntityAttributes(string entityName, string entityValue,
+            IDictionary<string, object> properties)
+        {
+            _appMetr.Track(new AttachEntityAttributes(entityName, entityValue) { Properties = properties });
+        }
     
         /// <summary>
         /// Helps to convert Unity's Application.systemLanguage to a 
