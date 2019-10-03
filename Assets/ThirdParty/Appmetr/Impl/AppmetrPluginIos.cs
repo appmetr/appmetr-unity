@@ -33,9 +33,6 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern void _trackPayment(string payment);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackAdsEvent(string eventName);
 
 		[DllImport("__Internal")]
 		private static extern void _trackPaymentWithProperties(string payment, string properties);
@@ -51,9 +48,6 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern void _trackExperimentEnd(string experiment);
-
-		[DllImport("__Internal")]
-		private static extern bool _verifyPayment(string productId, string transactionId, string receipt, string privateKey);
 	
 		[DllImport("__Internal")]
 		private static extern void _trackState(string state);
@@ -135,11 +129,6 @@ namespace Appmetr.Unity.Impl
 			_trackPayment(ToJson(payment));
 		}
 
-		public static void TrackAdsEvent(string eventName)
-		{
-			_trackAdsEvent(eventName);
-		}
-
 		public static void TrackPayment(IDictionary<string, object> payment, IDictionary<string, object> properties)
 		{
 			_trackPaymentWithProperties(ToJson(payment), ToJson(properties));
@@ -163,19 +152,6 @@ namespace Appmetr.Unity.Impl
 		public static void TrackExperimentEnd(string experiment)
 		{
 			_trackExperimentEnd(experiment);
-		}
-
-		public static bool VerifyIosPayment(string productId, string transactionId, string receipt, string privateKey) 
-		{ 
-			return _verifyPayment(productId, transactionId, receipt, privateKey); 
-		}
-
-		public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
-		{
-			if (callback != null)
-			{
-				callback(false);
-			}
 		}
 
 		public static void TrackState(IDictionary<string, object> state) 

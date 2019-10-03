@@ -77,11 +77,6 @@ extern "C" {
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(payment)];
 		[AppMetr trackPayment:paymentWithPaymentProcessor(dict)];
 	}
-
-	void _trackAdsEvent(const char* event)
-	{
-		[AppMetr trackAdsEvent:charToNSString(event)];
-	}
 	
 	void _trackPaymentWithProperties(const char* payment, const char* properties)
 	{
@@ -109,14 +104,6 @@ extern "C" {
 	void _trackExperimentEnd(const char* experiment)
 	{
 		[AppMetr trackExperimentEnd:charToNSString(experiment)];
-	}
-
-	bool _verifyPayment(const char* productId, const char* transactionId, const char* receipt, const char* privateKey) 
-	{
-		return [AppMetr verifyPaymentWithProductId:charToNSString(productId) 
-											transactionId:charToNSString(transactionId) 
-												  receipt:charToNSString(receipt) 
-											   privateKey:charToNSString(privateKey)];
 	}
 
 	void _trackState(const char* state)
