@@ -174,11 +174,6 @@ namespace Appmetr.Unity.Impl
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackPayment", paymentJson, propertiesJson); });
         }
 
-        public static void TrackAdsEvent(string eventName)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackAdsEvent", eventName); });
-        }
-
         public static void AttachProperties()
         {
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachProperties"); });
@@ -198,23 +193,6 @@ namespace Appmetr.Unity.Impl
         public static void TrackExperimentEnd(string experiment)
         {
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentEnd", experiment); });
-        }
-
-        public static bool VerifyIosPayment(string productId, string transactionId, string receipt, string privateKey)
-        {
-            return false;
-        }
-
-        public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
-        {
-            DispatchJni(() =>
-            {
-                var result = _clsAppMetr.CallStatic<bool>("verifyPayment", purchaseInfo, signature, privateKey);
-                if (callback != null)
-                {
-                    callback(result);
-                }
-            });
         }
 
         public static void TrackState(IDictionary<string, object> state)

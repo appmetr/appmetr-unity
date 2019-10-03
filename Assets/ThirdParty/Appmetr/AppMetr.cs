@@ -156,17 +156,6 @@ namespace Appmetr.Unity
 		}
 
 		/// <summary>
-		/// Method for tracking advertising events.
-		/// </summary>
-		/// <param name="eventName">
-		///	Name of the event to track.
-		/// </param>
-		public static void TrackAdsEvent(string eventName)
-		{
-			AppmetrPlatformPlugin.TrackAdsEvent(eventName);
-		}
-
-		/// <summary>
 		/// Method for attaching only built-in user properties.
 		/// </summary>
 		public static void AttachProperties()
@@ -208,46 +197,6 @@ namespace Appmetr.Unity
 		public static void TrackExperimentEnd(string experiment)
 		{
 			AppmetrPlatformPlugin.TrackExperimentEnd(experiment);
-		}
-
-		/// <summary>
-		/// Verify payment for iOS platform
-		/// </summary>
-		/// <param name='productId'>
-		/// Product ID.
-		/// </param>
-		/// <param name='transactionId'>
-		/// Transaction ID.
-		/// </param>
-		/// <param name='receipt'>
-		/// Base64 encoded receipt.
-		/// </param>
-		/// <param name='privateKey'>
-		/// AppMetr private key.
-		/// </param>
-		public static bool VerifyIosPayment(string productId, string transactionId, string receipt, string privateKey)
-		{
-			return AppmetrPlatformPlugin.VerifyIosPayment(productId, transactionId, receipt, privateKey);
-		}
-
-		/// <summary>
-		/// Verify payment for Android platform
-		/// </summary>
-		/// <param name='purchaseInfo'>
-		/// Purchase original JSON.
-		/// </param>
-		/// <param name='signature'>
-		/// Purchase signature.
-		/// </param>
-		/// <param name='privateKey'>
-		/// AppMetr private key.
-		/// </param>
-		/// <param name="callback">
-		/// Callback for returning result
-		/// </param>
-		public static void VerifyAndroidPayment(string purchaseInfo, string signature, string privateKey, Action<bool> callback)
-		{
-			AppmetrPlatformPlugin.VerifyAndroidPayment(purchaseInfo, signature, privateKey, callback);
 		}
 
 		/// <summary>
