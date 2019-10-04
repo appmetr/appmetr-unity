@@ -139,17 +139,6 @@ namespace Appmetr.Unity.Impl
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackSession", propertiesJson); });
         }
 
-        public static void TrackLevel(int level)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackLevel", level); });
-        }
-
-        public static void TrackLevel(int level, IDictionary<string, object> properties)
-        {
-            var propertiesJson = ToJson(properties);
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackLevel", level, propertiesJson); });
-        }
-
         public static void TrackEvent(string eventName)
         {
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackEvent", eventName); });
@@ -183,16 +172,6 @@ namespace Appmetr.Unity.Impl
         {
             var propertiesJson = ToJson(properties);
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachProperties", propertiesJson); });
-        }
-
-        public static void TrackExperimentStart(string experiment, string groupId)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentStart", experiment, groupId); });
-        }
-
-        public static void TrackExperimentEnd(string experiment)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentEnd", experiment); });
         }
 
         public static void TrackState(IDictionary<string, object> state)

@@ -20,12 +20,6 @@ namespace Appmetr.Unity.Impl
 		private static extern void _trackSessionWithProperties(string properties);
 	
 		[DllImport("__Internal")]
-		private static extern void _trackLevel(int level);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackLevelWithProperties(int level, string properties);
-	
-		[DllImport("__Internal")]
 		private static extern void _trackEvent(string eventName);
 	
 		[DllImport("__Internal")]
@@ -42,12 +36,6 @@ namespace Appmetr.Unity.Impl
 	
 		[DllImport("__Internal")]
 		private static extern void _attachProperties(string properties);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackExperimentStart(string experiment, string groupId);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackExperimentEnd(string experiment);
 	
 		[DllImport("__Internal")]
 		private static extern void _trackState(string state);
@@ -104,16 +92,6 @@ namespace Appmetr.Unity.Impl
 			_trackSessionWithProperties(ToJson(properties));
 		}
 
-		public static void TrackLevel(int level)
-		{
-			_trackLevel(level);
-		}
-
-		public static void TrackLevel(int level, IDictionary<string, object> properties)
-		{
-			_trackLevelWithProperties(level, ToJson(properties));
-		}
-
 		public static void TrackEvent(string _event)
 		{
 			_trackEvent(_event);
@@ -142,16 +120,6 @@ namespace Appmetr.Unity.Impl
 		public static void AttachProperties(IDictionary<string, object> properties)
 		{
 			_attachProperties(ToJson(properties));
-		}
-
-		public static void TrackExperimentStart(string experiment, string groupId)
-		{
-			_trackExperimentStart(experiment, groupId);
-		}
-
-		public static void TrackExperimentEnd(string experiment)
-		{
-			_trackExperimentEnd(experiment);
 		}
 
 		public static void TrackState(IDictionary<string, object> state) 

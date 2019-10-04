@@ -80,31 +80,6 @@ namespace Appmetr.Unity
 		}
 
 		/// <summary>
-		/// Method for tracking game event as "track level" with parameters.
-		/// </summary>
-		/// <param name="level">
-		/// Parameter required for this event. Displays player's level.
-		/// </param>
-		public static void TrackLevel(int level)
-		{
-			AppmetrPlatformPlugin.TrackLevel(level);
-		}
-
-		/// <summary>
-		/// Method for tracking game event as "track level" with parameter "level" and additional parameters.
-		/// </summary>
-		/// <param name="level">
-		/// Parameter which is needed for data upload.
-		/// </param>
-		/// <param name="properties">
-		/// Aadditional parameter for this event.
-		/// </param>
-		public static void TrackLevel(int level, IDictionary<string, object> properties)
-		{
-			AppmetrPlatformPlugin.TrackLevel(level, properties);
-		}
-
-		/// <summary>
 		/// Method for tracking game event as "track event" with parameter "event".
 		/// </summary>
 		/// <param name="eventName">
@@ -172,31 +147,6 @@ namespace Appmetr.Unity
 		public static void AttachProperties(IDictionary<string, object> properties)
 		{
 			AppmetrPlatformPlugin.AttachProperties(properties);
-		}
-
-		/// <summary>
-		/// Registering start of experiment.
-		/// </summary>
-		/// <param name='experiment'>
-		/// Experiment.
-		/// </param>
-		/// <param name='groupId'>
-		/// Group identifier.
-		/// </param>
-		public static void TrackExperimentStart(string experiment, string groupId)
-		{
-			AppmetrPlatformPlugin.TrackExperimentStart(experiment, groupId);
-		}
-
-		/// <summary>
-		/// Registering end of experiment.
-		/// </summary>
-		/// <param name='experiment'>
-		/// Experiment.
-		/// </param>
-		public static void TrackExperimentEnd(string experiment)
-		{
-			AppmetrPlatformPlugin.TrackExperimentEnd(experiment);
 		}
 
 		/// <summary>

@@ -16,10 +16,6 @@ namespace Appmetr.Unity.Impl
 
 		public static void TrackSession(IDictionary<string, object> properties) {}
 
-		public static void TrackLevel(int level) {}
-
-		public static void TrackLevel(int level, IDictionary<string, object> properties) {}
-
 		public static void TrackEvent(string eventName) {}
 
 		public static void TrackEvent(string eventName, IDictionary<string, object> properties) {}
@@ -31,10 +27,6 @@ namespace Appmetr.Unity.Impl
 		public static void AttachProperties() {}
 
 		public static void AttachProperties(IDictionary<string, object> properties) {}
-
-		public static void TrackExperimentStart(string experiment, string groupId) {}
-
-		public static void TrackExperimentEnd(string experiment) {}
 
 		public static void TrackState(IDictionary<string, object> state) {}
 
