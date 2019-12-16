@@ -20,6 +20,12 @@ namespace Appmetr.Unity.Impl
 		private static extern void _trackSessionWithProperties(string properties);
 	
 		[DllImport("__Internal")]
+		private static extern void _trackLevel(int level);
+	
+		[DllImport("__Internal")]
+		private static extern void _trackLevelWithProperties(int level, string properties);
+	
+		[DllImport("__Internal")]
 		private static extern void _trackEvent(string eventName);
 	
 		[DllImport("__Internal")]
@@ -90,6 +96,16 @@ namespace Appmetr.Unity.Impl
 		public static void TrackSession(IDictionary<string, object> properties)
 		{
 			_trackSessionWithProperties(ToJson(properties));
+		}
+
+		public static void TrackLevel(int level)
+		{
+			_trackLevel(level);
+		}
+
+		public static void TrackLevel(int level, IDictionary<string, object> properties)
+		{
+			_trackLevelWithProperties(level, ToJson(properties));
 		}
 
 		public static void TrackEvent(string _event)

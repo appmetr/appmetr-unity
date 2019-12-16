@@ -50,6 +50,17 @@ extern "C" {
 		[AppMetr trackSessionWithProperties:dict];
 	}
 	
+	void _trackLevel(int level)
+	{
+		[AppMetr trackLevel:level];
+	}
+	
+	void _trackLevelWithProperties(int level, const char* properties)
+	{
+		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
+		[AppMetr trackLevel:level properties:dict];
+	}
+	
 	void _trackEvent(const char* eventName)
 	{
 		[AppMetr trackEvent:charToNSString(eventName)];

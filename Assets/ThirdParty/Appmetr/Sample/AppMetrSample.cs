@@ -328,11 +328,11 @@ namespace Appmetr.Unity.Sample
 				{
 					if (checkDictionary(_levelProperties))
 					{
-						//AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel), _levelProperties);
+						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel), _levelProperties);
 					}
 					else
 					{
-						//AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel));
+						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel));
 					}
 				}
 			}
