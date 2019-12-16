@@ -32,10 +32,6 @@ namespace Appmetr.Unity.Impl
 
 		public static void AttachProperties(IDictionary<string, object> properties) {}
 
-		public static void TrackExperimentStart(string experiment, string groupId) {}
-
-		public static void TrackExperimentEnd(string experiment) {}
-
 		public static void TrackState(IDictionary<string, object> state) {}
 
 		public static void Identify(string userId) {}

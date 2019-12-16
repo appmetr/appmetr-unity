@@ -44,12 +44,6 @@ namespace Appmetr.Unity.Impl
 		private static extern void _attachProperties(string properties);
 	
 		[DllImport("__Internal")]
-		private static extern void _trackExperimentStart(string experiment, string groupId);
-	
-		[DllImport("__Internal")]
-		private static extern void _trackExperimentEnd(string experiment);
-	
-		[DllImport("__Internal")]
 		private static extern void _trackState(string state);
 	
 		[DllImport("__Internal")]
@@ -142,16 +136,6 @@ namespace Appmetr.Unity.Impl
 		public static void AttachProperties(IDictionary<string, object> properties)
 		{
 			_attachProperties(ToJson(properties));
-		}
-
-		public static void TrackExperimentStart(string experiment, string groupId)
-		{
-			_trackExperimentStart(experiment, groupId);
-		}
-
-		public static void TrackExperimentEnd(string experiment)
-		{
-			_trackExperimentEnd(experiment);
 		}
 
 		public static void TrackState(IDictionary<string, object> state) 

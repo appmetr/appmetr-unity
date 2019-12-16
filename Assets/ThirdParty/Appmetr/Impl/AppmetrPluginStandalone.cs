@@ -166,10 +166,6 @@ namespace Appmetr.Unity.Impl
             _appMetr.Track(new AttachProperties() { Properties = properties });
         }
 
-        public static void TrackExperimentStart(string experiment, string groupId) {}
-
-        public static void TrackExperimentEnd(string experiment) {}
-
         public static void TrackState(IDictionary<string, object> state)
         {
             var stateDict = new Dictionary<string, object>(state);

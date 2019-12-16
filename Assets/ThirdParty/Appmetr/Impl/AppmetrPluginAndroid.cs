@@ -190,16 +190,6 @@ namespace Appmetr.Unity.Impl
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachProperties", propertiesJson); });
         }
 
-        public static void TrackExperimentStart(string experiment, string groupId)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentStart", experiment, groupId); });
-        }
-
-        public static void TrackExperimentEnd(string experiment)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentEnd", experiment); });
-        }
-
         public static void TrackState(IDictionary<string, object> state)
         {
             var stateJson = ToJson(state);

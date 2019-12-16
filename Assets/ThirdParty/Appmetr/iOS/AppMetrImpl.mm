@@ -145,16 +145,6 @@ extern "C" {
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr attachProperties:dict];
 	}
-	
-	void _trackExperimentStart(const char* experiment, const char* groupId)
-	{
-		[AppMetr trackExperimentStart:charToNSString(experiment) group:charToNSString(groupId)];
-	}
-	
-	void _trackExperimentEnd(const char* experiment)
-	{
-		[AppMetr trackExperimentEnd:charToNSString(experiment)];
-	}
 
 	void _trackState(const char* state)
 	{
