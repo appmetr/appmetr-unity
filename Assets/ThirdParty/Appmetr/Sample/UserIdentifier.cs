@@ -9,6 +9,7 @@ namespace Appmetr.Unity.Sample
 	public class UserIdentifier : MonoBehaviour {
 		IEnumerator Start()
 		{
+			AppMetr.Identify("testUserId");
 			string userId = AppMetr.GetInstanceIdentifier();
 			string deviceKey = AppMetr.GetDeviceKey() ?? "null";
 			GetComponent<GUIText>().text += string.Format("UID: {0}\nDevice key: {1}", userId, deviceKey);

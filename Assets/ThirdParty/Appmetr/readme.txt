@@ -8,26 +8,6 @@ AppMetr Unity Plugin
 
 3. Вызывайте статические методы AppMetr для регистрации игровых событий (см. AppMetr API)
 
-4. Опционально. Подписываетесь на события AppMetrCommandListener.OnCommand, чтобы выполнять удаленные серверные вызовы. Пример кода:
-
-using UnityEngine;
-using System.Collections;
-using Appmetr.Unity;
-
-public class AppMetrManager : MonoBehaviour {
-
-	void Awake() {
-		AppMetrBehaviour.OnCommand += HandleAppMetrCommand; 
-	}
-	
-	void OnDisable() {
-		AppMetrBehaviour.OnCommand -= HandleAppMetrOnCommand;
-	
-	public void HandleAppMetrCommand(string commandJson) {
-		Debug.Log("AppMetrManager: HandleAppMetrCommand\n" + commandJson);
-	}
-}
-
 AppMetr API
 
 Класс AppMetrBehaviour
@@ -42,6 +22,7 @@ AppMetr API
 Инициализирует библиотеку
 Параметры:
 token - токен приложения
+platform - имя платформы только для Standalone приложений, определяющее store: gameroom, steam, windows store
 
 - TrackSession
 Регистрирует запуск приложения
@@ -71,24 +52,28 @@ properties - дополнительные параметры
 Параметры:
 properties - параметры
 
-- TrackExperimentStart
-Регистрирует начало эксперимента
-Параметры:
-experiment - имя эксперимента
-groupId - группа
-
-- TrackExperimentEnd
-Регистрирует конец эксперимента
-Параметры:
-experiment - имя эксперимента
-
 - Identify
 Идентификация пользователя
 Параметры:
 userId - идентификатор пользователя
 
+- AttachEntityAttributes
+Добавление параметров для отдельной сущности вместо пользователя
+entityName - имя сущности
+entityValue - значение сущности
+properties - параметры сущности
+
 - Flush
 Форсированная отправка событий на сервер
+
+-FlushLocal
+Форсированное сохранение событий на диск
+
+- GetDeviceKey
+Получить ключ идентификации пользователя, чтобы отправить его на сервер и использовать там в s2s запросах Appmetr
+
+- GetInstanceIdentifier
+Получить идентификатор пользователя в данном сетапе апметра
 
 Пример использования плагина можно посмотреть в *Assets/ThirdParty/Appmetr/Sample/TestScene.unity*.
 

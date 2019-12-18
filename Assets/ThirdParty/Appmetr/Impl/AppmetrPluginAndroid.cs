@@ -11,6 +11,7 @@ namespace Appmetr.Unity.Impl
     {
         private static AndroidJavaClass _clsAppMetr;
         private static AndroidJavaClass _clsAppMetrHelper;
+        private static AndroidJavaClass _clsUnityPlayer;
         private static readonly object AppMetrMutex = new object();
         private static readonly ConcurrentQueue<Action> AppMetrActionQueue = new ConcurrentQueue<Action>();
         private static bool _appMetrThreadInitialized;
@@ -32,8 +33,11 @@ namespace Appmetr.Unity.Impl
         public static void SetupWithToken(string token, string platform)
         {
             AndroidJNI.AttachCurrentThread();
-            var activityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            var currentActivity = activityClass.GetStatic<AndroidJavaObject>("currentActivity");
+            if (_clsUnityPlayer == null)
+            {
+                _clsUnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            }
+            var currentActivity = _clsUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             if (_clsAppMetr == null)
             {
                 _clsAppMetr = new AndroidJavaClass("com.appmetr.android.AppMetr");
@@ -42,23 +46,20 @@ namespace Appmetr.Unity.Impl
             {
                 _clsAppMetrHelper = new AndroidJavaClass("com.appmetr.android.integration.AppMetrHelper");
             }
-            var context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
             lock (AppMetrMutex)
             {
                 currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
                 {
                     lock (AppMetrMutex)
                     {
-                        _clsAppMetr.CallStatic("setup", token, context);
+                        _clsAppMetr.CallStatic("setup", token, currentActivity);
                         _instanceIdentifier = _clsAppMetr.CallStatic<string>("getInstanceIdentifier");
-                        context.Dispose();
+                        currentActivity.Dispose();
                         Monitor.Pulse(AppMetrMutex);
                     }
                 }));
                 Monitor.Wait(AppMetrMutex);
             }
-            currentActivity.Dispose();
-            activityClass.Dispose();
             if (_appMetrThreadInitialized)
             {
                 return;
@@ -125,7 +126,11 @@ namespace Appmetr.Unity.Impl
         public static void OnResume()
         {
             _jniPaused = false;
-            DispatchJni(() => { _clsAppMetr.CallStatic("onResume"); });
+            DispatchJni(() => {
+                var activity = _clsUnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+                _clsAppMetr.CallStatic("onResume", activity);
+                activity.Dispose();
+            });
         }
 
         public static void TrackSession()
@@ -183,16 +188,6 @@ namespace Appmetr.Unity.Impl
         {
             var propertiesJson = ToJson(properties);
             DispatchJni(() => { _clsAppMetrHelper.CallStatic("attachProperties", propertiesJson); });
-        }
-
-        public static void TrackExperimentStart(string experiment, string groupId)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentStart", experiment, groupId); });
-        }
-
-        public static void TrackExperimentEnd(string experiment)
-        {
-            DispatchJni(() => { _clsAppMetrHelper.CallStatic("trackExperimentEnd", experiment); });
         }
 
         public static void TrackState(IDictionary<string, object> state)

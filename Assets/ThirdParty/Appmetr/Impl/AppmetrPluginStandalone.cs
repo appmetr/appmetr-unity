@@ -35,8 +35,9 @@ namespace Appmetr.Unity.Impl
             }
 
             LogUtils.CustomLog = new AppmetrPluginLogger();
+            var serverUserId = PlayerPrefs.GetString(PlayerPrefsServerUserId, null);
             var persister = new AppmetrCS.Persister.FileBatchPersister(Path.Combine(Application.persistentDataPath, AppmetrCacheFolder), NewtonsoftSerializerTyped.Instance);
-            _appMetr = new AppMetrWin(_serverAddress, token, MobUuid, platform, DeviceType, persister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
+            _appMetr = new AppMetrWin(_serverAddress, token, MobUuid, platform, serverUserId, DeviceType, persister, new HttpRequestService(NewtonsoftSerializerTyped.Instance));
             _appMetr.Start();
             AttachProperties();
             SessionInit();
@@ -166,10 +167,6 @@ namespace Appmetr.Unity.Impl
             _appMetr.Track(new AttachProperties() { Properties = properties });
         }
 
-        public static void TrackExperimentStart(string experiment, string groupId) {}
-
-        public static void TrackExperimentEnd(string experiment) {}
-
         public static void TrackState(IDictionary<string, object> state)
         {
             var stateDict = new Dictionary<string, object>(state);
@@ -179,6 +176,15 @@ namespace Appmetr.Unity.Impl
         public static void Identify(string userId)
         {
             _appMetr.Track(new TrackIdentify(userId));
+            _appMetr.UserId = userId;
+            if (string.IsNullOrEmpty(userId))
+            {
+                PlayerPrefs.DeleteKey(PlayerPrefsServerUserId);
+            }
+            else
+            {
+                PlayerPrefs.SetString(PlayerPrefsServerUserId, userId);
+            }
         }
 
         public static void Flush()
@@ -346,6 +352,7 @@ namespace Appmetr.Unity.Impl
         private const string PlayerPrefsMobUuidKey = "AppmetrUuid";
         private const string PlayerPrefsSessionDuration = "AppmetrSessionDuration";
         private const string PlayerPrefsSessionCurrent = "AppmetrSessionCurrent";
+        private const string PlayerPrefsServerUserId = "AppmetrServerUserId";
 
         private static int _sessionStartTick;
         private static long _sessionDuration;

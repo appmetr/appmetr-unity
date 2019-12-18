@@ -1,4 +1,6 @@
 #import "AppMetr.h"
+#import "UnityAppController.h"
+#import "AppDelegateListener.h"
 
 NSString* charToNSString(const char* string)
 {
@@ -31,6 +33,54 @@ NSDictionary* paymentWithPaymentProcessor(NSDictionary *dict)
 	return dict;
 }
 
+@interface AppMetrAppDelegateListener : NSObject <AppDelegateListener>
+- (instancetype)init;
+- (void)onOpenURL:(NSNotification*)notification;
+- (void)didFinishLaunching:(NSNotification*)notification;
+@end
+
+@implementation AppMetrAppDelegateListener {
+    NSString* _launchUrl;
+}
+
+- (instancetype)init
+{
+    if(self = [super init]) {
+        UnityRegisterAppDelegateListener(self);
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    UnityUnregisterAppDelegateListener(self);
+}
+
+- (void)onOpenURL:(NSNotification*)notification
+{
+    if(notification.userInfo == nil) return;
+    [self trackLaunchUrl:[notification.userInfo valueForKey:@"url"]];
+}
+
+- (void)didFinishLaunching:(NSNotification*)notification
+{
+    if(notification.userInfo == nil) return;
+    [self trackLaunchUrl:[notification.userInfo valueForKey:UIApplicationLaunchOptionsURLKey]];
+}
+
+- (void)trackLaunchUrl:(NSURL*)launchUrl
+{
+    if(launchUrl == nil) return;
+    NSString* openUrlString = launchUrl.absoluteString;
+    if(openUrlString == nil || openUrlString.length == 0) return;
+    if(_launchUrl != nil && [_launchUrl isEqualToString:openUrlString]) return;
+    _launchUrl = [openUrlString copy];
+    [AppMetr trackEvent:@"devices/launch_url" properties:@{@"link": _launchUrl}];
+}
+
+@end
+
+static AppMetrAppDelegateListener* _appmetrDelegateListener = [[AppMetrAppDelegateListener alloc] init];
 	
 extern "C" {
 
@@ -94,16 +144,6 @@ extern "C" {
 	{
 		NSDictionary* dict = [AppMetr stringToDictionary:charToNSString(properties)];
 		[AppMetr attachProperties:dict];
-	}
-	
-	void _trackExperimentStart(const char* experiment, const char* groupId)
-	{
-		[AppMetr trackExperimentStart:charToNSString(experiment) group:charToNSString(groupId)];
-	}
-	
-	void _trackExperimentEnd(const char* experiment)
-	{
-		[AppMetr trackExperimentEnd:charToNSString(experiment)];
 	}
 
 	void _trackState(const char* state)

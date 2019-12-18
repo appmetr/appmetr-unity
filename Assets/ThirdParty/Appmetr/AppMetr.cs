@@ -175,31 +175,6 @@ namespace Appmetr.Unity
 		}
 
 		/// <summary>
-		/// Registering start of experiment.
-		/// </summary>
-		/// <param name='experiment'>
-		/// Experiment.
-		/// </param>
-		/// <param name='groupId'>
-		/// Group identifier.
-		/// </param>
-		public static void TrackExperimentStart(string experiment, string groupId)
-		{
-			AppmetrPlatformPlugin.TrackExperimentStart(experiment, groupId);
-		}
-
-		/// <summary>
-		/// Registering end of experiment.
-		/// </summary>
-		/// <param name='experiment'>
-		/// Experiment.
-		/// </param>
-		public static void TrackExperimentEnd(string experiment)
-		{
-			AppmetrPlatformPlugin.TrackExperimentEnd(experiment);
-		}
-
-		/// <summary>
 		/// Method for tracking user state.
 		/// </summary>
 		/// <param name='state'>
