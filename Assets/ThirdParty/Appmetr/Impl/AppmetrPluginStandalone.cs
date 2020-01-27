@@ -1,6 +1,7 @@
 #if UNITY_STANDALONE
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using Appmetr.Unity.Json;
@@ -129,15 +130,15 @@ namespace Appmetr.Unity.Impl
             {
                 properties = new Dictionary<string, object>();
             }
-            var orderId = payment.ContainsKey("orderId") ? payment["orderId"].ToString() : null;
-            var transactionId = payment.ContainsKey("transactionId") ? payment["transactionId"].ToString() : null;
-            var processor = payment.ContainsKey("processor") ? payment["processor"].ToString() : null;
-            var psUserSpentCurrencyCode = payment.ContainsKey("psUserSpentCurrencyCode") ? payment["psUserSpentCurrencyCode"].ToString() : null;
-            var psUserSpentCurrencyAmount = payment.ContainsKey("psUserSpentCurrencyAmount") ? payment["psUserSpentCurrencyAmount"].ToString() : null;
-            var psReceivedCurrencyCode = payment.ContainsKey("psReceivedCurrencyCode") ? payment["psReceivedCurrencyCode"].ToString() : null;
-            var psReceivedCurrencyAmount = payment.ContainsKey("psReceivedCurrencyAmount") ? payment["psReceivedCurrencyAmount"].ToString() : null;
-            var appCurrencyCode = payment.ContainsKey("appCurrencyCode") ? payment["appCurrencyCode"].ToString() : null;
-            var appCurrencyAmount = payment.ContainsKey("appCurrencyAmount") ? payment["appCurrencyAmount"].ToString() : null;
+            var orderId = ValueToString(payment, "orderId");
+            var transactionId = ValueToString(payment, "transactionId");
+            var processor = ValueToString(payment, "processor");
+            var psUserSpentCurrencyCode = ValueToString(payment, "psUserSpentCurrencyCode");
+            var psUserSpentCurrencyAmount = ValueToString(payment, "psUserSpentCurrencyAmount");
+            var psReceivedCurrencyCode = ValueToString(payment, "psReceivedCurrencyCode");
+            var psReceivedCurrencyAmount = ValueToString(payment, "psReceivedCurrencyAmount");
+            var appCurrencyCode = ValueToString(payment, "appCurrencyCode");
+            var appCurrencyAmount = ValueToString(payment, "appCurrencyAmount");
             
             _appMetr.Track(new TrackPayment(orderId, transactionId, processor, psUserSpentCurrencyCode, psUserSpentCurrencyAmount, psReceivedCurrencyCode, psReceivedCurrencyAmount, appCurrencyCode, appCurrencyAmount)
             {
@@ -331,6 +332,17 @@ namespace Appmetr.Unity.Impl
             }
 
             _sessionStartTick = tk;
+        }
+
+        private static string ValueToString(IDictionary<string, object> dict, string valueName)
+        {
+            if (!dict.ContainsKey(valueName)) return null;
+            var value = dict[valueName];
+            if (value == null) return null;
+            if (value is float) return ((float) value).ToString(CultureInfo.InvariantCulture);
+            if (value is int) return ((int) value).ToString(CultureInfo.InvariantCulture);
+            if (value is bool) return (bool) value ? "true" : "false";
+            return value.ToString();
         }
         
         /// <summary>
