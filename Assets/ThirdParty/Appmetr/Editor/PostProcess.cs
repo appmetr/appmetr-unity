@@ -20,7 +20,11 @@ namespace Appmetr.Unity.Editor
             var projPath = Path.Combine(Path.Combine(pathToBuiltProject, "Unity-iPhone.xcodeproj"), "project.pbxproj");
             var proj = new PBXProject();
             proj.ReadFromFile(projPath);
-            var targetGuid = proj.TargetGuidByName("Unity-iPhone");
+#if UNITY_2019_3
+            var targetGuid = proj.GetUnityFrameworkTargetGuid();
+#else
+            var targetGuid = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
+#endif
             if(string.IsNullOrEmpty(proj.FindFileGuidByRealPath("usr/lib/libz.tbd", PBXSourceTree.Sdk)))
                 proj.AddFileToBuild(targetGuid, proj.AddFile("usr/lib/libz.tbd", "Frameworks/libz.tbd", PBXSourceTree.Sdk));
             proj.WriteToFile(projPath);
