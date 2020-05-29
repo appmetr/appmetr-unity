@@ -91,20 +91,6 @@ namespace Appmetr.Unity.Impl
             }
         }
 
-        public static void TrackLevel(int level)
-        {
-            _appMetr.Track(new TrackLevel(level));
-        }
-
-        public static void TrackLevel(int level, IDictionary<string, object> properties)
-        {
-            if (properties == null)
-            {
-                properties = new Dictionary<string, object>();
-            }
-            _appMetr.Track(new TrackLevel(level) { Properties = properties });
-        }
-
         public static void TrackEvent(string eventName)
         {
             _appMetr.Track(new TrackEvent(eventName));

@@ -85,9 +85,13 @@ namespace Appmetr.Unity
 		/// <param name="level">
 		/// Parameter required for this event. Displays player's level.
 		/// </param>
+		[Obsolete("Use attachProperties with $level=level instead")]
 		public static void TrackLevel(int level)
 		{
-			AppmetrPlatformPlugin.TrackLevel(level);
+			AppmetrPlatformPlugin.AttachProperties(new Dictionary<string, object>
+			{
+				{"$level", level}
+			});
 		}
 
 		/// <summary>
@@ -99,9 +103,13 @@ namespace Appmetr.Unity
 		/// <param name="properties">
 		/// Aadditional parameter for this event.
 		/// </param>
+		[Obsolete("Use attachProperties with $level=level instead")]
 		public static void TrackLevel(int level, IDictionary<string, object> properties)
 		{
-			AppmetrPlatformPlugin.TrackLevel(level, properties);
+			if (properties == null)
+				properties = new Dictionary<string, object>();
+			properties.Add("$level", level);
+			AppmetrPlatformPlugin.AttachProperties(properties);
 		}
 
 		/// <summary>

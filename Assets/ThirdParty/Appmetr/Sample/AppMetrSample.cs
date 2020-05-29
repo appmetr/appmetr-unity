@@ -7,21 +7,18 @@ namespace Appmetr.Unity.Sample
 {
 	public class AppMetrSample : MonoBehaviour
 	{	
-		private string _fieldTrackLevel = "3";
 		private string _fieldTrackEvent = "testEvent";
 
 		private const string LabelProperties = "Properties";
-		private const string LabelLevel = "Level";
 		private const string LabelEvent = "Event";
 		private const string LabelPayment = "Payment";
 
 		private int _selectedTrack;
-		private readonly string[] _trackLabels = {"Track Session", "Track Level", "Track Event", "Track Payment"};
+		private readonly string[] _trackLabels = {"Track Session", "Track Event", "Track Payment"};
 
 		private const int IdSession = 0;
-		private const int IdLevel = 1;
-		private const int IdEvent = 2;
-		private const int IdPayment = 3;
+		private const int IdEvent = 1;
+		private const int IdPayment = 2;
 
 		private float _leftFieldCenter;
 		private float _rightFieldCenter;
@@ -41,14 +38,12 @@ namespace Appmetr.Unity.Sample
 		private int _maxPropFields;
 
 		private readonly Dictionary<string, object> _sessionProperties = new Dictionary<string, object>();
-		private readonly Dictionary<string, object> _levelProperties = new Dictionary<string, object>();
 		private readonly Dictionary<string, object> _eventProperties = new Dictionary<string, object>();
 		private readonly Dictionary<string, object> _paymentProperties = new Dictionary<string, object>();
 		private readonly Dictionary<string, object> _paymentList = new Dictionary<string, object>();
 		private readonly Dictionary<string, object> _tempList = new Dictionary<string, object>();
 	
 		private string _sessionLastKey = "";
-		private string _levelLastKey = "";
 		private string _eventLastKey = "";
 		private string _paymentLastKey = "";
 		private string _paymentPropLastKey = "";
@@ -77,10 +72,6 @@ namespace Appmetr.Unity.Sample
 			if (_selectedTrack == IdSession)
 			{
 				DoSessionGui(spacer);
-			}
-			else if (_selectedTrack == IdLevel)
-			{
-				DoLevelGui(spacer);
 			}
 			else if (_selectedTrack == IdEvent)
 			{
@@ -142,49 +133,6 @@ namespace Appmetr.Unity.Sample
 				_sessionLastKey = pair.Key;
 			}
 		}
-	
-		private void DoLevelGui(float spacer)
-		{
-			GUI.Label(new Rect (_leftFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelLevel);
-			GUI.Label(new Rect (_rightFieldCenter - labelWidth / 2, spacer, labelWidth, 24), LabelProperties);
-		
-			spacer += 30;
-		
-			_fieldTrackLevel = GUI.TextField(new Rect(_leftFieldCenter - _fieldWidth / 2, spacer, _fieldWidth, fieldHeight), _fieldTrackLevel);
-		
-			if (_levelProperties.Count < _maxPropFields && GUI.Button(new Rect(_rightFieldCenter - propButtonOffset, spacer, propButtonWidth, propButtonHeight), "+"))
-			{
-				if (!_levelProperties.ContainsKey(""))
-				{
-					_levelProperties.Add("", "");
-					_levelLastKey = "";
-				}
-			}
-			if (_levelProperties.Count > 0 && GUI.Button(new Rect(_rightFieldCenter + propButtonOffset, spacer, propButtonWidth, propButtonHeight), "-"))
-			{
-				_levelProperties.Remove(_levelLastKey);
-			}
-		
-			float fieldSpacer = spacer + propButtonHeight + propFieldIndent;
-			_tempList.Clear();
-			foreach (KeyValuePair<string, object> pair in _levelProperties)
-			{
-				string key = GUI.TextField(new Rect(_rightFieldCenter - _propFieldWidth - 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Key);
-				string value = GUI.TextField(new Rect(_rightFieldCenter + 5, fieldSpacer, _propFieldWidth, fieldHeight), pair.Value.ToString());
-				if ((key == "" && !checkDictionary(_levelProperties)) || _levelProperties.ContainsKey(key))
-				{
-					key = pair.Key;
-				}
-				_tempList.Add(key, value);
-				fieldSpacer += fieldHeight + propFieldIndent;
-			}
-			_levelProperties.Clear();
-			foreach (KeyValuePair<string, object> pair in _tempList)
-			{
-				_levelProperties.Add(pair.Key, pair.Value);
-				_levelLastKey = pair.Key;
-			}
-		}	
 	
 		private void DoEventGui(float spacer)
 		{
@@ -315,25 +263,6 @@ namespace Appmetr.Unity.Sample
 				else
 				{
 					AppMetr.TrackSession();
-				}
-			}
-			else if (_selectedTrack == IdLevel)
-			{
-				if (_fieldTrackLevel == "")
-				{
-					// error
-					ShowAlert("Please fill in all fields");
-				}
-				else
-				{
-					if (checkDictionary(_levelProperties))
-					{
-						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel), _levelProperties);
-					}
-					else
-					{
-						AppMetr.TrackLevel(Convert.ToInt32(_fieldTrackLevel));
-					}
 				}
 			}
 			else if (_selectedTrack == IdEvent)
