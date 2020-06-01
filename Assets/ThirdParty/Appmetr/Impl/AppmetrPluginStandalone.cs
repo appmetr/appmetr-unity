@@ -65,10 +65,7 @@ namespace Appmetr.Unity.Impl
 
         public static void TrackSession(IDictionary<string, object> properties)
         {
-            if (properties == null)
-            {
-                properties = new Dictionary<string, object>();
-            }
+            properties = FillProperties(properties);
 
             int duration = (int)(_sessionDuration / 1000L);
 
@@ -139,19 +136,7 @@ namespace Appmetr.Unity.Impl
 
         public static void AttachProperties(IDictionary<string, object> properties)
         {
-            if (properties == null)
-            {
-                properties = new Dictionary<string, object>();
-            }
-            if (!properties.ContainsKey(AttachPropertiesLanguage))
-            {
-                properties[AttachPropertiesLanguage] = Get2LetterIsoCodeFromSystemLanguage();
-            }
-            if (!properties.ContainsKey(AttachPropertiesVersion))
-            {
-                properties[AttachPropertiesVersion] = Application.version;
-            }
-            _appMetr.Track(new AttachProperties() { Properties = properties });
+            _appMetr.Track(new AttachProperties {Properties = FillProperties(properties)});
         }
 
         public static void TrackState(IDictionary<string, object> state)
@@ -318,6 +303,24 @@ namespace Appmetr.Unity.Impl
             }
 
             _sessionStartTick = tk;
+        }
+
+        private static IDictionary<string, object> FillProperties(IDictionary<string, object> properties)
+        {
+            if (properties == null)
+            {
+                properties = new Dictionary<string, object>();
+            }
+            if (!properties.ContainsKey(AttachPropertiesLanguage))
+            {
+                properties[AttachPropertiesLanguage] = Get2LetterIsoCodeFromSystemLanguage();
+            }
+            if (!properties.ContainsKey(AttachPropertiesVersion))
+            {
+                properties[AttachPropertiesVersion] = Application.version;
+            }
+
+            return properties;
         }
 
         private static string ValueToString(IDictionary<string, object> dict, string valueName)
