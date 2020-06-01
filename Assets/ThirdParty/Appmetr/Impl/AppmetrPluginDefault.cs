@@ -16,10 +16,6 @@ namespace Appmetr.Unity.Impl
 
 		public static void TrackSession(IDictionary<string, object> properties) {}
 
-		public static void TrackLevel(int level) {}
-
-		public static void TrackLevel(int level, IDictionary<string, object> properties) {}
-
 		public static void TrackEvent(string eventName) {}
 
 		public static void TrackEvent(string eventName, IDictionary<string, object> properties) {}
