@@ -20,7 +20,7 @@ namespace Appmetr.Unity.Editor
             var projPath = Path.Combine(Path.Combine(pathToBuiltProject, "Unity-iPhone.xcodeproj"), "project.pbxproj");
             var proj = new PBXProject();
             proj.ReadFromFile(projPath);
-#if UNITY_2019_3
+#if UNITY_2019_3_OR_NEWER
             var targetGuid = proj.GetUnityFrameworkTargetGuid();
 #else
             var targetGuid = proj.TargetGuidByName(PBXProject.GetUnityTargetName());
