@@ -20,25 +20,25 @@ namespace Appmetr.Unity
 	public static class AppMetr
 	{
 		/// <summary>
-		/// Setting up plugin.
-		/// </summary>
-		/// <param name="token">
-		/// Parameter which is needed for data upload.
-		/// </param>
-		public static void Setup(string token)
-		{
-			AppmetrPlatformPlugin.SetupWithToken(token, null);
-		}
-		
-		/// <summary>
 		/// Sets mandatory plugin parameters
 		/// </summary>
 		/// <param name="token">Deploy token as assigned on backend</param>
 		/// <param name="platform">Platform or store name. Changes behaviour of 
-		/// certain events, especially payment tracking.</param>
-		public static void Setup(string token, string platform)
+		/// certain events, especially payment tracking. Optional</param>
+		public static void Setup(string token, string platform = null)
 		{
 			AppmetrPlatformPlugin.SetupWithToken(token, platform);
+			AppmetrPlatformPlugin.AttachProperties(new Dictionary<string, object>
+			{
+				{"cpu", SystemInfo.processorType},
+				{"cpu_cores", SystemInfo.processorCount},
+				{"cpu_frequency", SystemInfo.processorFrequency},
+				{"gpu", SystemInfo.graphicsDeviceName},
+				{"ram", SystemInfo.systemMemorySize},
+				{"screen_size", GetScreenDiagonal()},
+				{"screen_resolution", $"{Screen.currentResolution.width}x{Screen.currentResolution.height}"},
+				{"device_model", SystemInfo.deviceModel}
+			});
 		}
 
 
@@ -203,7 +203,7 @@ namespace Appmetr.Unity
 		{
 			AppmetrPlatformPlugin.Identify(userId);
 		}
-		
+
 		/// <summary>
 		/// Method for attaching properties to separate entity instead of user
 		/// </summary>
@@ -238,7 +238,7 @@ namespace Appmetr.Unity
 		{
 			AppmetrPlatformPlugin.Flush();
 		}
-		
+
 		/// <summary>
 		/// Force flush events to disk. Flushing execute in new thread.
 		/// </summary>
@@ -254,7 +254,7 @@ namespace Appmetr.Unity
 		{
 			return AppmetrPlatformPlugin.GetInstanceIdentifier();
 		}
-		
+
 		/// <summary>
 		/// Return a set of device ids, encoded in a query string
 		/// </summary>
@@ -264,5 +264,13 @@ namespace Appmetr.Unity
 		}
 
 		public const string AppmetrPropertyTimestamp = "timestamp";
+
+		private static double GetScreenDiagonal()
+		{
+			var width = Screen.width / Screen.dpi;
+			var height = Screen.height / Screen.dpi;
+			var diagonal = Mathf.Sqrt(width * width + height * height);
+			return Math.Round(diagonal, 2);
+		}
 	}
 }
