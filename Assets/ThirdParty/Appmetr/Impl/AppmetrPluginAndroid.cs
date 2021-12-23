@@ -52,7 +52,8 @@ namespace Appmetr.Unity.Impl
                 {
                     lock (AppMetrMutex)
                     {
-                        _clsAppMetr.CallStatic("setup", token, currentActivity);
+                        var macAddress = GetMacAddress(currentActivity);
+                        _clsAppMetr.CallStatic("setup", token, macAddress, currentActivity);
                         _instanceIdentifier = _clsAppMetr.CallStatic<string>("getInstanceIdentifier");
                         currentActivity.Dispose();
                         Monitor.Pulse(AppMetrMutex);
@@ -114,6 +115,28 @@ namespace Appmetr.Unity.Impl
             jniThread.Start();
             _appMetrThreadInitialized = true;
         }
+
+        private static string GetMacAddress(AndroidJavaObject currentActivity)
+        {
+            var macAddr = string.Empty;
+#if APPMETR_ALLOW_MACADDRESS
+            const string WifiContext = "wifi";
+            
+            var wifiManager = currentActivity.Call<AndroidJavaObject>("getSystemService", WifiContext);
+            if (wifiManager == null)
+            {
+                return macAddr;
+            }
+            var connectionInfo = wifiManager.Call<AndroidJavaObject>("getConnectionInfo");
+            if (connectionInfo == null)
+            {
+                return macAddr;
+            }
+            
+            macAddr = connectionInfo.Call<string>("getMacAddress");
+#endif
+            return macAddr;
+        }        
 
         public static void OnPause()
         {
