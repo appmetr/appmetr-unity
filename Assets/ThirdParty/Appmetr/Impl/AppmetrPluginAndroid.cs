@@ -53,7 +53,7 @@ namespace Appmetr.Unity.Impl
                     lock (AppMetrMutex)
                     {
                         var macAddress = GetMacAddress(currentActivity);
-                        _clsAppMetr.CallStatic("setup", token, macAddress, currentActivity);
+                        _clsAppMetr.CallStatic("setup", currentActivity, token, macAddress);
                         _instanceIdentifier = _clsAppMetr.CallStatic<string>("getInstanceIdentifier");
                         currentActivity.Dispose();
                         Monitor.Pulse(AppMetrMutex);
