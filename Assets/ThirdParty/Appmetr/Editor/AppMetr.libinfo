@@ -1,5 +1,5 @@
 {
   "Defines": [
-    "APPMETR_ALLOW_MACADDRESS"
+    "APPMETR_DISABLE_MAC_SENDING"
   ]
 }

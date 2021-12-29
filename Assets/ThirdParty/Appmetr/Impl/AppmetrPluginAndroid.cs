@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using System.Threading;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Appmetr.Unity.Json;
 
 namespace Appmetr.Unity.Impl
@@ -119,7 +121,7 @@ namespace Appmetr.Unity.Impl
         private static string GetMacAddress(AndroidJavaObject currentActivity)
         {
             var macAddr = string.Empty;
-#if APPMETR_ALLOW_MACADDRESS
+#if !APPMETR_DISABLE_MAC_SENDING
             const string WifiContext = "wifi";
             
             var wifiManager = currentActivity.Call<AndroidJavaObject>("getSystemService", WifiContext);
@@ -134,6 +136,7 @@ namespace Appmetr.Unity.Impl
             }
             
             macAddr = connectionInfo.Call<string>("getMacAddress");
+            macAddr = Regex.Replace(macAddr, @"\W", "").ToUpper(CultureInfo.GetCultureInfo("en-US"));
 #endif
             return macAddr;
         }        
